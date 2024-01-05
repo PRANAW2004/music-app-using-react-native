@@ -1,9 +1,11 @@
 import { View,Text,StyleSheet,TextInput,TouchableOpacity,Pressable } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
 import { useState } from "react";
 import Toast from "react-native-root-toast";
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function Register({navigation}){
 
@@ -32,6 +34,7 @@ export default function Register({navigation}){
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
+                AsyncStorage.setItem("Signin",true);
                 Toast.show("Registration Successfuly,Login to HearFree",{
                     duration: Toast.durations.LONG,
                 });      
@@ -61,6 +64,11 @@ export default function Register({navigation}){
                         duration: Toast.durations.LONG,
                     })
                 }
+                if(errorCode === "auth/missing-email"){
+                    Toast.show("Please Enter your Email address", {
+                        duration: Toast.durations.LONG,
+                    })
+                }
             });
         }
 
@@ -75,15 +83,23 @@ export default function Register({navigation}){
                 <Text style={[styles.headregtext,{fontWeight: 700}]}>Create free HearFree account</Text>
             </View>
             <View style={styles.registercontainer}>
+            <View style={{display:"flex",flexDirection:"row",justifyContent:"center",marginBottom:10,marginTop:20}}>
+                <View style={{backgroundColor:"white",height:50,display:"flex",justifyContent:"center",alignItems:"center"}}>
+                    <MaterialIcons name="email" size={30} color="black"/>
+                </View>
                 <TextInput 
-                style={[styles.textinput,{width: 244,margin: 10,height: 40}]} 
+                style={[styles.textinput,{width: 244,height: 50}]} 
                 placeholder="Email"
                 onChangeText={(e)=>setUsername(e)}
                 >
                 </TextInput>
-                <View style={styles.passwordblock}>
+            </View>
+            <View style={styles.passwordblock}>
+                <View style={{backgroundColor:"white",height:50,display:"flex",justifyContent:"center"}}>
+                    <MaterialIcons name="lock" size={30} color="black"/>
+                </View>
                     <TextInput 
-                    style={[styles.textinput,{width: 222,height: 40}]} 
+                    style={[styles.textinput,{width: 220,height: 50}]} 
                     placeholder="password"
                     textContentType='newPassword' 
                     secureTextEntry={securetext} 
@@ -102,6 +118,16 @@ export default function Register({navigation}){
                     <Text style={[{color: "white",fontSize:20}]}>Register</Text>
                 </TouchableOpacity>
             </View>
+            <View style={styles.downtext}>
+                <View>
+                <Text style={{color: "white",fontSize:17,marginTop:30,display: "flex",justifyContent:"center",alignItems:"center"}}>Go back to </Text>
+                </View>
+                <View>
+                    <Pressable style={{marginTop:30}} onPress={()=>navigation.navigate("Login")}>
+                        <Text style={{color:"yellow",fontSize:17}}>Login Page</Text>
+                    </Pressable>
+                </View>
+                </View>
         </View>
     )
 }
@@ -145,5 +171,9 @@ const styles = StyleSheet.create({
     passwordblock:{
         display:"flex",
         flexDirection: "row",
-    }
+    },
+    downtext: {
+        display: "flex",
+        flexDirection: "row"
+      }
 })
