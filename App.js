@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './components/Login';
 import Register from './components/register';
 import ForgotPassword from './components/ForgotPassword';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import MainPage from './components/mainPage';
+import { View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +40,8 @@ export default function App() {
     //   {/* <Carousel1 /> */}
     //   <MainCarousel />
     // </View>
+    <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
+    <RootSiblingParent>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -59,9 +64,16 @@ export default function App() {
           component={ForgotPassword}
           options={{headerShown: false}}
         />
+        <Stack.Screen 
+          name="mainPage"
+          component={MainPage}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     <StatusBar backgroundColor={'transparent'}/>
     </NavigationContainer>
+    </RootSiblingParent>
+    </View>
   );
 }
 

@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import { initializeApp } from "firebase/app";
 import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup, GoogleAuthProvider, signInWithRedirect,getRedirectResult } from "firebase/auth";
-
+import Toast from "react-native-root-toast";
 
 
 export default function Login({navigation}){
@@ -33,53 +33,74 @@ export default function Login({navigation}){
     //   webClientId: "48669470679-nci0rsr9jg7upn4p54j8jdnrq5qjavuh.apps.googleusercontent.com",
     // })
 
-    function press(){
-        console.log("inside press");
-        createUserWithEmailAndPassword(auth, username, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorMessage,errorCode)
-        });
+    // function press(){
+    //     console.log("inside press");
+    //     createUserWithEmailAndPassword(auth, username, password)
+    //     .then((userCredential) => {
+    //       const user = userCredential.user;
+    //       console.log(user);
+    //     })
+    //     .catch((error) => {
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       console.log(errorMessage,errorCode)
+    //     });
 
-      }
+    //   }
 
       function signin(){
         signInWithEmailAndPassword(auth,username,password)
         .then((userCredential) => {
           console.log("inside firebase signin");
           const user = userCredential.user;
-          navigation.navigate("Register");
+          navigation.navigate("mainPage");
           console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode);
+          if(errorCode === "auth/invalid-email"){
+            Toast.show("Invalid Email Id", {
+              duration: Toast.durations.LONG,
+            })
+          }
+          if(errorCode === "auth/invalid-credential"){
+            console.log("inside if");
+            Toast.show("Check your Password", {
+              duration: Toast.durations.LONG,
+            })
+          }
+          if(errorCode === "auth/too-many-requests"){
+            Toast.show("Please try again later",{
+              duration: Toast.durations.LONG,
+            })
+          }
+          if(errorCode === "auth/missing-password"){
+            Toast.show("Please enter you password",{
+              duration: Toast.durations.LONG,
+            })
+          }
         });
       }
 
-    function GoogleSignIn(){
+  //   function GoogleSignIn(){
 
-  const provider = new GoogleAuthProvider(app1);
+  // const provider = new GoogleAuthProvider(app1);
 
-      signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
+  //     signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential.accessToken;
+  //       const user = result.user;
 
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      })
-    }
+  //     }).catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       const email = error.customData.email;
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //     })
+  //   }
 
     function onPress(){
         setsecuretext(securetext?false : true);
