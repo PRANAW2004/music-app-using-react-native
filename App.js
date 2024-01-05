@@ -1,76 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import MainCarousel from './components/main_carousel';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './components/Login';
-import Register from './components/register';
-import ForgotPassword from './components/ForgotPassword';
-import { RootSiblingParent } from 'react-native-root-siblings';
-import MainPage from './components/mainPage';
-import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useCallback } from 'react';
 import FirstNavigation from './components/firstNavigation';
 import SecondNavigation from './components/secondNavigation';
-import { FirebaseError } from 'firebase/app';
 
-const Stack = createNativeStackNavigator();
 
 export default function App() {
 
   const [loggedin,isloggedin] = useState(false);
 
-  const _retrieveData = async () => {
-    try{
+  const data3 = useCallback(async() => {
       const value = await AsyncStorage.getItem("Login");
       isloggedin(value);
-      console.log("inside _retireveData",value);
-    }
-    catch(err){
-    }
-  }
-  useEffect(()=>{
-    _retrieveData();
-  },[])
+  })
 
-  if(loggedin){
-    return(<SecondNavigation />)
-  }
-  else{
-    return(<FirstNavigation />)
-  }
+  useEffect(data3,[]);
 
-  //  return (
-  //   <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
-  //   <RootSiblingParent>
-  //   {/* <NavigationContainer>
-  //     <Stack.Navigator>
-  //     <Stack.Screen name="Home" component={MainCarousel} options={{headerShown: false}} />
-        
-  //       <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
-  //       <Stack.Screen 
-  //         name="Register"
-  //         component={Register}
-  //         options={{headerShown: false}}
-  //       />
-  //       <Stack.Screen 
-  //         name="ForgotPassword"
-  //         component={ForgotPassword}
-  //         options={{headerShown: false}}
-  //       />
-  //       <Stack.Screen 
-  //         name="mainPage"
-  //         component={MainPage}
-  //         options={{headerShown: false}}
-  //       />
-  //     </Stack.Navigator>
-  //   <StatusBar backgroundColor={'transparent'}/>
-  //   </NavigationContainer> */}
-
-  //   {loggedin?<SecondNavigation /> : <FirstNavigation />}
-  //   </RootSiblingParent>
-  //   </View>
-  // );
+  if(loggedin==="true"){
+    console.log("loggedin value is ",loggedin);
+    return(<SecondNavigation />);
+  }else{
+    return(<FirstNavigation />);
+  }
 
 }
 

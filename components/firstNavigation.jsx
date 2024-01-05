@@ -7,10 +7,14 @@ import ForgotPassword from './ForgotPassword';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { View } from 'react-native';
 import MainPage from './mainPage';
+import { StatusBar } from 'expo-status-bar';
+
 
 const Stack = createNativeStackNavigator();
 
 export default function FirstNavigation(){
+
+
     return(
         <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
     <RootSiblingParent>
@@ -44,7 +48,7 @@ export default function FirstNavigation(){
         </Stack.Navigator>
         </NavigationContainer>
         </RootSiblingParent>
+        <StatusBar backgroundColor='transparent' />
         </View>
     )
-
 }

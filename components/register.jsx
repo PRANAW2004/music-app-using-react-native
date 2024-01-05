@@ -8,7 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Register({navigation}){
-
         const [eye,setEye] = useState('eye');
         const [securetext,setsecuretext] = useState(true);
         const [username,setUsername] = useState('');

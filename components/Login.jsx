@@ -1,17 +1,25 @@
 import { View,Text,StyleSheet,TextInput,Pressable,Button } from "react-native";
 import { StatusBar } from 'expo-status-bar';
-import { useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 import { MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import { initializeApp } from "firebase/app";
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup, GoogleAuthProvider, signInWithRedirect,getRedirectResult } from "firebase/auth";
+import { getAuth,signInWithEmailAndPassword} from "firebase/auth";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default function Login({navigation}){
 
-  const firebaseConfig = {
+  const data3 = useCallback(async() => {
+    console.log("in async function");
+      const value = await AsyncStorage.getItem("check");
+      if(value){
+        AsyncStorage.setItem("Login",JSON.stringify(false));
+      }
+  })
+  useEffect(data3,[]);
+
+  const firebaseConfig = { 
     apiKey: "AIzaSyBj52BnrmS18P_gHVHPUHTH3hBou8h_Qe8",
     authDomain: "musicapp-c920a.firebaseapp.com",
     projectId: "musicapp-c920a",
@@ -33,7 +41,6 @@ export default function Login({navigation}){
       function signin(){
         signInWithEmailAndPassword(auth,username,password)
         .then((userCredential) => {
-          console.log("inside firebase signin");
           const user = userCredential.user;
           AsyncStorage.setItem("Login",JSON.stringify(true));
           navigation.navigate("mainPage");

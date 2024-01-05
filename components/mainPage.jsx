@@ -2,10 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View,Text,StyleSheet,Button } from "react-native";
 
 export default function MainPage({navigation}){
+
     return(
         <View style={styles.maincontainer}>
             <Text style={styles.maincontainertext}>This is a main page</Text>
-            <Button title="Logout" onPress={()=>{AsyncStorage.setItem("Login",JSON.stringify(false));navigation.navigate("Login")}}></Button>
+            <Button title="Logout" onPress={()=>{AsyncStorage.setItem("check",JSON.stringify(true));navigation.navigate("Login")}}></Button>
         </View>
     )
 }
