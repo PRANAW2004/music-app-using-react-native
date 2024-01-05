@@ -9,85 +9,68 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import MainPage from './components/mainPage';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState,useEffect } from 'react';
+import FirstNavigation from './components/firstNavigation';
+import SecondNavigation from './components/secondNavigation';
+import { FirebaseError } from 'firebase/app';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-  let value = AsyncStorage.getItem("Login");
+  const [loggedin,isloggedin] = useState(false);
 
-  if(value === "true"){
-    console.log(value);
-    return(
-      <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
-    <RootSiblingParent>
-      <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={MainCarousel}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Login"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Register"
-          component={Register}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="ForgotPassword"
-          component={ForgotPassword}
-          options={{headerShown: false}}
-        />
-        </Stack.Navigator>
-        </NavigationContainer>
-        </RootSiblingParent>
-        </View>
-    )
+  const _retrieveData = async () => {
+    try{
+      const value = await AsyncStorage.getItem("Login");
+      isloggedin(value);
+      console.log("inside _retireveData",value);
+    }
+    catch(err){
+    }
+  }
+  useEffect(()=>{
+    _retrieveData();
+  },[])
+
+  if(loggedin){
+    return(<SecondNavigation />)
+  }
+  else{
+    return(<FirstNavigation />)
   }
 
-else{ 
-  console.log(value);
-   return (
-    <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
-    <RootSiblingParent>
-    <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen
-          name="Home"
-          component={MainCarousel}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Login"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Register"
-          component={Register}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="ForgotPassword"
-          component={ForgotPassword}
-          options={{headerShown: false}}
-        /> */}
-        <Stack.Screen 
-          name="mainPage"
-          component={MainPage}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    <StatusBar backgroundColor={'transparent'}/>
-    </NavigationContainer>
-    </RootSiblingParent>
-    </View>
-  );
-}
+  //  return (
+  //   <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
+  //   <RootSiblingParent>
+  //   {/* <NavigationContainer>
+  //     <Stack.Navigator>
+  //     <Stack.Screen name="Home" component={MainCarousel} options={{headerShown: false}} />
+        
+  //       <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+  //       <Stack.Screen 
+  //         name="Register"
+  //         component={Register}
+  //         options={{headerShown: false}}
+  //       />
+  //       <Stack.Screen 
+  //         name="ForgotPassword"
+  //         component={ForgotPassword}
+  //         options={{headerShown: false}}
+  //       />
+  //       <Stack.Screen 
+  //         name="mainPage"
+  //         component={MainPage}
+  //         options={{headerShown: false}}
+  //       />
+  //     </Stack.Navigator>
+  //   <StatusBar backgroundColor={'transparent'}/>
+  //   </NavigationContainer> */}
+
+  //   {loggedin?<SecondNavigation /> : <FirstNavigation />}
+  //   </RootSiblingParent>
+  //   </View>
+  // );
+
 }
 

@@ -35,7 +35,7 @@ export default function Login({navigation}){
         .then((userCredential) => {
           console.log("inside firebase signin");
           const user = userCredential.user;
-          AsyncStorage.setItem("Login","true");
+          AsyncStorage.setItem("Login",JSON.stringify(true));
           navigation.navigate("mainPage");
           console.log(user);
         })
