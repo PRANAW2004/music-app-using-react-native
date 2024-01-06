@@ -26,7 +26,6 @@ export default function SecondNavigation(){
           component={Login}
           options={{headerShown: false}}
         />
-      
           <Stack.Screen 
           name="ForgotPassword"
           component={ForgotPassword}

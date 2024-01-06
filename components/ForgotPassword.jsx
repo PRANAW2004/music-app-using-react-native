@@ -1,8 +1,8 @@
-import { View,Text,StyleSheet,TextInput,Button, TouchableOpacity } from "react-native";
+import { View,Text,StyleSheet,TextInput,Button, TouchableOpacity,Pressable,BackHandler } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { sendPasswordResetEmail,getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -10,6 +10,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function ForgotPassword({navigation}){
 
     const [email,setemail] = useState('');
+
+    useEffect(() => {
+        console.log("inside useEffect in register");
+        BackHandler.addEventListener("hardwareBackPress", () => {
+            navigation.goBack();
+            return true;
+        })
+    },[])
 
     const firebaseConfig = {
         apiKey: "AIzaSyBj52BnrmS18P_gHVHPUHTH3hBou8h_Qe8",
@@ -64,6 +72,16 @@ export default function ForgotPassword({navigation}){
              >
                 <Text style={{color:"white",fontSize:18}}>Send Email</Text>
             </TouchableOpacity>
+            <View style={styles.downtext}>
+                <View>
+                <Text style={{color: "white",fontSize:17,marginTop:30,display: "flex",justifyContent:"center",alignItems:"center"}}>Go back to </Text>
+                </View>
+                <View>
+                    <Pressable style={{marginTop:30}} onPress={()=>navigation.navigate("Login")}>
+                        <Text style={{color:"yellow",fontSize:17}}>Login Page</Text>
+                    </Pressable>
+                </View>
+                </View>
         </View>
     )
 }
@@ -87,5 +105,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent:"center",
         marginBottom:30,
-    }
+    },
+    downtext: {
+        display: "flex",
+        flexDirection: "row"
+      }
 });

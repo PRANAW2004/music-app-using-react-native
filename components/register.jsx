@@ -1,6 +1,6 @@
-import { View,Text,StyleSheet,TextInput,TouchableOpacity,Pressable } from "react-native";
+import { View,Text,StyleSheet,TextInput,TouchableOpacity,Pressable, BackHandler } from "react-native";
 import { MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toast from "react-native-root-toast";
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
@@ -12,6 +12,16 @@ export default function Register({navigation}){
         const [securetext,setsecuretext] = useState(true);
         const [username,setUsername] = useState('');
         const [password,setPassword] = useState('');
+
+
+        useEffect(() => {
+            console.log("inside useEffect in register");
+            BackHandler.addEventListener("hardwareBackPress", () => {
+                navigation.goBack();
+                return true;
+            })
+        },[])
+
 
         const firebaseConfig = {
             apiKey: "AIzaSyBj52BnrmS18P_gHVHPUHTH3hBou8h_Qe8",

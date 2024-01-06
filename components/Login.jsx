@@ -2,13 +2,20 @@ import { View,Text,StyleSheet,TextInput,Pressable,Button } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState,useCallback } from "react";
 import { MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity,BackHandler } from "react-native";
 import { initializeApp } from "firebase/app";
 import { getAuth,signInWithEmailAndPassword} from "firebase/auth";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({navigation}){
+
+  useEffect(()=>{
+  BackHandler.addEventListener("hardwareBackPress",() => {
+    BackHandler.exitApp();
+    return true;
+  });
+  },[]);
 
   const data3 = useCallback(async() => {
     console.log("in async function");
@@ -18,6 +25,8 @@ export default function Login({navigation}){
       }
   })
   useEffect(data3,[]);
+
+  
 
   const firebaseConfig = { 
     apiKey: "AIzaSyBj52BnrmS18P_gHVHPUHTH3hBou8h_Qe8",
@@ -44,7 +53,6 @@ export default function Login({navigation}){
           const user = userCredential.user;
           AsyncStorage.setItem("Login",JSON.stringify(true));
           navigation.navigate("mainPage");
-          console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -81,7 +89,6 @@ export default function Login({navigation}){
     <View style={styles.mainLogin}>
         <Text style={{color: "white",fontSize: 30,marginBottom: 30,fontWeight: 700}}>Welcome to HearFree</Text>
          <View style={styles.container1}>
-            {/* <Text style={[styles.headlogintext,{fontWeight: 500}]}>Login</Text> */}
             <View style={{display:'flex',flexDirection:"row",marginBottom:20,marginTop:20}}>
             <View style={{backgroundColor:"white",height:50,display:"flex",justifyContent:"center",alignItems:"center"}}>
                 <MaterialIcons name="email" size={30} color="black"/>
@@ -112,29 +119,25 @@ export default function Login({navigation}){
                   </Pressable>
             </View>
             <View>
-              <Pressable style={{marginBottom: 20}} onPress={()=>navigation.navigate("ForgotPassword")}><Text style={{color: "yellow"}}>Forgot Password ?</Text></Pressable>
+              <Pressable style={{marginBottom: 20}} onPress={()=>navigation.navigate("ForgotPassword")}><Text style={{color: "#7BD3EA"}}>Forgot Password ?</Text></Pressable>
             </View>
             </View>
             
             <TouchableOpacity style={styles.loginbutton} onPress={signin}>
                 <Text style={{color: "white",fontSize: 20}}>Login</Text>
             </TouchableOpacity>
-            {/* <Text style={{color: "white",marginBottom: 10,}}>Or</Text>
-            <TouchableOpacity 
-              style={{marginBottom: 20,backgroundColor: "red",height: 50,width: 200,display:"flex",justifyContent:"center",alignItems:"center"}}
-              onPress={GoogleSignIn}
-              >
-                <Text style={{color: "white",fontSize: 20}}>SignIn with Google</Text>
-            </TouchableOpacity> */}
         </View>
-        {/* <Button title='submit'></Button> */}
         <View style={styles.downtext}>
         <View>
         <Text style={{color: "white",fontSize:17,marginTop:30,display: "flex",justifyContent:"center",alignItems:"center"}}>Don't have a account already? </Text>
         </View>
         <View>
-            <Pressable style={{marginTop:30}} onPress={()=>navigation.navigate("Register")}>
-                <Text style={{color:"red",fontSize:17}}>Register Now</Text>
+            <Pressable 
+            style={{marginTop:30}} 
+            onPress={
+              ()=>{navigation.navigate("Register");}}              
+              >
+                <Text style={{color:"#F2AFEF",fontSize:17}}>Register Now</Text>
             </Pressable>
         </View>
         </View>
@@ -195,5 +198,6 @@ const styles = StyleSheet.create({
       container22: {
         display: "flex",
         flexDirection: "row",
+        marginBottom: 5,
       }
 })

@@ -1,7 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View,Text,StyleSheet,Button } from "react-native";
+import { useEffect } from "react";
+import { View,Text,StyleSheet,Button,BackHandler } from "react-native";
+import { NavigationAction } from "@react-navigation/native";
 
 export default function MainPage({navigation}){
+
+    useEffect(()=>{
+        BackHandler.addEventListener("hardwareBackPress",()=>{
+            BackHandler.exitApp();
+            return true;
+        });
+    },[]);
+
 
     return(
         <View style={styles.maincontainer}>
