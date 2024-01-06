@@ -12,7 +12,6 @@ export default function ForgotPassword({navigation}){
     const [email,setemail] = useState('');
 
     useEffect(() => {
-        console.log("inside useEffect in register");
         BackHandler.addEventListener("hardwareBackPress", () => {
             navigation.goBack();
             return true;

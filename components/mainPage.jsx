@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { View,Text,StyleSheet,Button,BackHandler } from "react-native";
-import { NavigationAction } from "@react-navigation/native";
 
 export default function MainPage({navigation}){
 

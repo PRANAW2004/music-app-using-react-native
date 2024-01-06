@@ -12,7 +12,6 @@ export default function App() {
       const value = await AsyncStorage.getItem("Login");
       isloggedin(value);
   })
-
   useEffect(data3,[]);
 
   if(loggedin==="true"){

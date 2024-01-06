@@ -20,7 +20,7 @@ export default function Login({navigation}){
   const data3 = useCallback(async() => {
     console.log("in async function");
       const value = await AsyncStorage.getItem("check");
-      if(value){
+      if(value==="true"){
         AsyncStorage.setItem("Login",JSON.stringify(false));
       }
   })
