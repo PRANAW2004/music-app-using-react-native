@@ -175,7 +175,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems:"center",
         marginBottom: 10,
-        width: 150
+        width: 150,
+        borderRadius: 10
     },
     passwordblock:{
         display:"flex",

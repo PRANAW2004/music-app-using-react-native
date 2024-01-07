@@ -185,11 +185,12 @@ const styles = StyleSheet.create({
         // borderColor: "red",
         backgroundColor: "red",
         height: 50,
-        width: 100,
+        width: 150,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 10,
+        borderRadius: 10,
       },
       downtext: {
         display: "flex",

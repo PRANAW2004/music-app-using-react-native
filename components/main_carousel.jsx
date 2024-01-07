@@ -1,24 +1,25 @@
 import Carousel from 'react-native-snap-carousel';
 import data from './data';
 import { Dimensions,View,StyleSheet,Image,Text,Pressable } from 'react-native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Pagination } from 'react-native-snap-carousel';
-
+import * as Font from "expo-font";
 
 const dwidth = Dimensions.get('window').width;
 
 export default function MainCarousel({navigation}){
   const [index,setIndex] = useState(0);
+    
 
   function Carousel1({index,item}){
     return(<View style = {styles.carouselcontainer}>
       <Image style={styles.image} source={item.image}></Image>
       <View style={styles.carouselText}>
-      <Text style={styles.maintext}>{item.mainText}</Text>
+      <Text style={[styles.maintext,{fontSize: 40,marginBottom: 20}]}>{item.mainText}</Text>
       <Text style={styles.text1}>{item.text}</Text>
       </View>
       <View style={styles.pressable}>
-      <Pressable onPress={() => navigation.navigate("Login")} style={[{display: item.id===3?'flex':'none',backgroundColor: item.id===3?"red":"none"},styles.Login]}>
+      <Pressable onPress={() => navigation.navigate("Login")} style={[{display: item.id===3?'flex':'none',backgroundColor: item.id===3?"red":"none",borderRadius: 36},styles.Login]}>
           <Text style={{color: "white",fontSize: 25}}>{item.button}</Text>
       </Pressable>
       </View>
@@ -29,26 +30,34 @@ export default function MainCarousel({navigation}){
      <Carousel
         data={data}
         layout="default"
-        layoutCardOffset={9}
+        // layoutCardOffset={9}
         renderItem={Carousel1}
         sliderWidth={dwidth}
         itemWidth={dwidth}
-        inactiveSlideShift={0}
+        inactiveSlideShift={1}
         useScrollView={true}
         onSnapToItem={(index) => setIndex(index)}
+        inactiveSlideScale={0}
+      inactiveSlideOpacity={0} 
+      enableMomentum={false}
+     decelerationRate={0.5}
+    //  cubicBezierCurve={{ x1: 0.2, y1: 0.4, x2: 0.6, y2: 0.8 }}
       />
       <Pagination 
         dotsLength={data.length}
         activeDotIndex={index}
         dotStyle={{
-          color: "red",
-          height: 20,
+          // color: "red",
+          height: 10,
           width: 20,
-          backgroundColor: "white",
-          borderRadius: 36
+          backgroundColor: "red",
+          borderRadius: 36,
+          borderColor: "white",
+          borderWidth: 10,
         }}
         inactiveDotOpacity={0.3}
         inactiveDotScale={0.6}
+        dotColor='red'
       />
   </View>)
 
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
       // marginTop: 20,
   },
   maintext: {
-      fontSize: 40,
+      // fontSize: 40,
       color: "white",
   },
   container: {

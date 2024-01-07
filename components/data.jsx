@@ -16,7 +16,7 @@ const data = [
     {
         id:3,
         image: require('../images/image3.png'),
-        mainText: "No Subscription needed",
+        mainText: "No Subscription",
         text: "No Subscription needed, Play and enjoy the music without any ads",
         button: "Login"
     }
