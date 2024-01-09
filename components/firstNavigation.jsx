@@ -5,20 +5,24 @@ import Login from './Login';
 import Register from './register';
 import ForgotPassword from './ForgotPassword';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { View } from 'react-native';
+import { View,Pressable } from 'react-native';
 import MainPage from './mainPage';
 import { StatusBar } from 'expo-status-bar';
-
+import BottomNavigator from './bottomtabnavigator';
+import { Ionicons } from '@expo/vector-icons';
+import Settings from './settings';
 
 const Stack = createNativeStackNavigator();
 
-export default function FirstNavigation(){
+export default function FirstNavigation({navigation}){
 
+  const date = new Date();
+  const time = date.getHours();
 
     return(
         <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
     <RootSiblingParent>
-      <NavigationContainer>
+      {/* <NavigationContainer> */}
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -40,13 +44,50 @@ export default function FirstNavigation(){
           component={ForgotPassword}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        {/* <Stack.Screen 
           name="mainPage"
           component={MainPage}
-          options={{headerShown: false}}
+          options={
+        {
+          title: time > 0 && time < 12?"Good Morning":time >= 12 && time <18?"Good Afternoon":"Good Evening",
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerTintColor: "white",
+          
+        }
+        }
+        /> */}
+        <Stack.Screen 
+          name="BottomNavigator"
+          component={BottomNavigator}
+          options={
+        {
+          title: time > 0 && time < 12?"Good Morning":time >= 12 && time <18?"Good Afternoon":"Good Evening",
+          headerStyle: {
+            backgroundColor: "#212529",
+          },
+          headerTintColor: "white",
+          headerRight: ()=>(
+          <Pressable onPress={()=>{navigation.navigate("Settings")}}>
+            <Ionicons name={"settings"} color={"grey"} size={25}/>
+          </Pressable>
+          )
+
+        }
+        }
+        />
+        <Stack.Screen 
+          name="Settings"
+          component={Settings}
         />
         </Stack.Navigator>
-        </NavigationContainer>
+        {/* <Stack.Screen 
+          name="BottomNavigator"
+          component={BottomNavigator}
+          options={{headerShown: false}}
+        /> */}
+        {/* </NavigationContainer> */}
         </RootSiblingParent>
         <StatusBar backgroundColor='transparent' />
         </View>

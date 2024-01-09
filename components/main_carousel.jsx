@@ -3,7 +3,6 @@ import data from './data';
 import { Dimensions,View,StyleSheet,Image,Text,Pressable } from 'react-native';
 import {useEffect, useState} from 'react';
 import { Pagination } from 'react-native-snap-carousel';
-import * as Font from "expo-font";
 
 const dwidth = Dimensions.get('window').width;
 

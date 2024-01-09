@@ -8,6 +8,7 @@ import { getAuth,signInWithEmailAndPassword} from "firebase/auth";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 export default function Login({navigation}){
 
   useEffect(()=>{
@@ -52,7 +53,7 @@ export default function Login({navigation}){
         .then((userCredential) => {
           const user = userCredential.user;
           AsyncStorage.setItem("Login",JSON.stringify(true));
-          navigation.navigate("mainPage");
+          navigation.navigate("BottomNavigator");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -167,10 +168,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: "center",
         alignItems: "center",
-        borderColor: "white",
+        // borderColor: "white",
         width: 300,
         // height: "50%",
-        borderWidth: 2,
+        // borderWidth: 2,
       },
       container2: {
         display:"flex",

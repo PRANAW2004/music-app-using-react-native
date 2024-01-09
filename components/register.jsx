@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
     registercontainer: {
         display:"flex",
         flexDirection:"column",
-        borderColor: "white",
-        borderWidth: 2,
+        // borderColor: "white",
+        // borderWidth: 2,
         marginTop: 20,
         width: 300,
         justifyContent: "center",
