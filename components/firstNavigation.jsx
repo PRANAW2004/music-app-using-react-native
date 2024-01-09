@@ -70,7 +70,7 @@ export default function FirstNavigation({navigation}){
           headerTintColor: "white",
           headerRight: ()=>(
           <Pressable onPress={()=>{navigation.navigate("Settings")}}>
-            <Ionicons name={"settings"} color={"grey"} size={25}/>
+            <Ionicons name={"settings-outline"} color={"white"} size={25}/>
           </Pressable>
           )
 
