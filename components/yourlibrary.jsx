@@ -7,18 +7,18 @@ export default function YourLibrary({navigation}){
 
     console.log("inside local");
 
-    // useEffect(() => {
-    //     BackHandler.addEventListener("hardwareBackPress", () => {
-    //         console.log("back button is pressed in local");
-    //         AsyncStorage.setItem("local",JSON.stringify("local"));
-    //         AsyncStorage.setItem("homeback",JSON.stringify(true));
-    //         navigation.navigate("Home");
-    //         return true;
-    //     })
-    // },[])
-
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
+            console.log("inside local backhandler");
+            console.log(navigation.getState()['history']);
+            // console.log(navigation.getState()['history'][1]["key"].split("-")[0]);
+            console.log(navigation.getState()['history'].length)
+            let backstring;
+            if(navigation.getState()['history'].length === 2){
+                backstring = navigation.getState()['history'][1]["key"].split("-")[0];
+            }else{
+                backstring = navigation.getState()['history'][0]["key"].split("-")[0];
+            }
             if(navigation.isFocused()){
                 if(navigation.canGoBack()){
                     navigation.goBack();
@@ -26,10 +26,29 @@ export default function YourLibrary({navigation}){
                 }
             }
             if(!navigation.isFocused()){
+                // if(navigation.getState()['history'][1]["key"] === "Search-Zw90Pnd8288cZL5RVLII1"){
+                // if(navigation.canGoBack()){
+                //     BackHandler.exitApp();
+                //     return true;
+                // }
+                // }
+                // else{
+                //     if(navigation.canGoBack()){
+                //         BackHandler.exitApp();
+                //         return true;
+                //     }
+                // }
+                if(backstring === "Search"){
+                    if(navigation.canGoBack()){
+                        navigation.goBack();
+                        return true;
+                    }
+                }else if(backstring === "Home"){
                 if(navigation.canGoBack()){
                     BackHandler.exitApp();
                     return true;
                 }
+            }
             }
            
 

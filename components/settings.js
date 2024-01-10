@@ -22,16 +22,6 @@ export default function Settings({navigation}){
                     return true;
                 }
             }
-            // if(navigation.canGoBack()){
-            //     navigation.goBack();
-            //     console.log("inside back handler settings");
-            //     return true;
-            // }else{
-            //     BackHandler.exitApp();
-            //     return true;
-            // }   
-            // navigation.goBack();
-            // return true;
         })
     },[])
 

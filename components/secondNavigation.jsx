@@ -25,11 +25,9 @@ export default function SecondNavigation({navigation}){
     return(
         <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
     <RootSiblingParent>
-       {/* <NavigationContainer> */}
        <Stack.Navigator       
        >
-       {/* {loggedin?<Stack.Screen name="mainPage" component={MainPage} options={{headerShown: false}} />:<Stack.Screen name="Login" component={Login} options={{headerShown: false}} />} */}
-
+     
         <Stack.Screen 
           name="BottomNavigator"
           component={BottomNavigator}
@@ -45,8 +43,6 @@ export default function SecondNavigation({navigation}){
             <Ionicons name={"settings-outline"} color={"white"} size={25}/>
           </Pressable>
           ),
-          // headerLeft: null,
-
         }
         }
         />
@@ -77,24 +73,8 @@ export default function SecondNavigation({navigation}){
             headerTintColor: "white",
           }}
         />
-        {/* <Stack.Screen 
-          name="Local"
-          component={YourLibrary}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Search"
-          component={Search}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="MainPage"
-          component={MainPage}
-          options={{headerShown: false}}
-        /> */}
         
          </Stack.Navigator>
-         {/* </NavigationContainer> */}
          </RootSiblingParent>
          <StatusBar backgroundColor='transparent' />
          </View>

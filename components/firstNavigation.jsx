@@ -24,7 +24,6 @@ export default function FirstNavigation({navigation}){
     return(
         <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>
     <RootSiblingParent>
-      {/* <NavigationContainer> */}
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -46,20 +45,6 @@ export default function FirstNavigation({navigation}){
           component={ForgotPassword}
           options={{headerShown: false}}
         />
-        {/* <Stack.Screen 
-          name="mainPage"
-          component={MainPage}
-          options={
-        {
-          title: time > 0 && time < 12?"Good Morning":time >= 12 && time <18?"Good Afternoon":"Good Evening",
-          headerStyle: {
-            backgroundColor: "black",
-          },
-          headerTintColor: "white",
-          
-        }
-        }
-        /> */}
         <Stack.Screen 
           name="BottomNavigator"
           component={BottomNavigator}
@@ -92,28 +77,7 @@ export default function FirstNavigation({navigation}){
             headerTintColor: "white",
           }}
         />
-        {/* <Stack.Screen 
-          name="Local"
-          component={YourLibrary}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="Search"
-          component={Search}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen 
-          name="MainPage"
-          component={MainPage}
-          options={{headerShown: false}}
-        /> */}
         </Stack.Navigator>
-        {/* <Stack.Screen 
-          name="BottomNavigator"
-          component={BottomNavigator}
-          options={{headerShown: false}}
-        /> */}
-        {/* </NavigationContainer> */}
         </RootSiblingParent>
         <StatusBar backgroundColor='transparent' />
         </View>
