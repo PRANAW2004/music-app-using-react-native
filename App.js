@@ -35,7 +35,10 @@ export default function App() {
   }else{
     return(
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+        screenOptions={{
+          headerLeft: null,
+        }}>
           <Stack.Screen 
             name="FirstNavigation"
             component={FirstNavigation}

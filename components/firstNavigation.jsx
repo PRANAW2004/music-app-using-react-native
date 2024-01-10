@@ -11,6 +11,8 @@ import { StatusBar } from 'expo-status-bar';
 import BottomNavigator from './bottomtabnavigator';
 import { Ionicons } from '@expo/vector-icons';
 import Settings from './settings';
+import YourLibrary from './yourlibrary';
+import Search from './search';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +65,7 @@ export default function FirstNavigation({navigation}){
           component={BottomNavigator}
           options={
         {
+          headerLeft: null,
           title: time > 0 && time < 12?"Good Morning":time >= 12 && time <18?"Good Afternoon":"Good Evening",
           headerStyle: {
             backgroundColor: "#212529",
@@ -72,15 +75,38 @@ export default function FirstNavigation({navigation}){
           <Pressable onPress={()=>{navigation.navigate("Settings")}}>
             <Ionicons name={"settings-outline"} color={"white"} size={25}/>
           </Pressable>
-          )
-
+          ),
+          // headerLeft: null,
+          headerBackVisible: false,
         }
         }
         />
         <Stack.Screen 
           name="Settings"
           component={Settings}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
         />
+        {/* <Stack.Screen 
+          name="Local"
+          component={YourLibrary}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="MainPage"
+          component={MainPage}
+          options={{headerShown: false}}
+        /> */}
         </Stack.Navigator>
         {/* <Stack.Screen 
           name="BottomNavigator"

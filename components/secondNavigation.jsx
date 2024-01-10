@@ -10,6 +10,8 @@ import { StatusBar } from 'expo-status-bar';
 import BottomNavigator from './bottomtabnavigator';
 import { Ionicons } from 'react-native-vector-icons';
 import Settings from './settings';
+import YourLibrary from './yourlibrary';
+import Search from './search';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,18 +29,7 @@ export default function SecondNavigation({navigation}){
        <Stack.Navigator       
        >
        {/* {loggedin?<Stack.Screen name="mainPage" component={MainPage} options={{headerShown: false}} />:<Stack.Screen name="Login" component={Login} options={{headerShown: false}} />} */}
-       {/* <Stack.Screen name="mainPage" 
-       component={MainPage} 
-       options={
-        {
-          title: time > 0 && time < 12?"Good Morning":time >= 12 && time <18?"Good Afternoon":"Good Evening",
-          headerStyle: {
-            backgroundColor: "black",
-          },
-          headerTintColor: "white",
-          
-        }
-        }/> */}
+
         <Stack.Screen 
           name="BottomNavigator"
           component={BottomNavigator}
@@ -53,7 +44,8 @@ export default function SecondNavigation({navigation}){
           <Pressable onPress={()=>{navigation.navigate("Settings")}}>
             <Ionicons name={"settings-outline"} color={"white"} size={25}/>
           </Pressable>
-          )
+          ),
+          // headerLeft: null,
 
         }
         }
@@ -77,7 +69,29 @@ export default function SecondNavigation({navigation}){
         <Stack.Screen 
           name="Settings"
           component={Settings}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
         />
+        {/* <Stack.Screen 
+          name="Local"
+          component={YourLibrary}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="MainPage"
+          component={MainPage}
+          options={{headerShown: false}}
+        /> */}
         
          </Stack.Navigator>
          {/* </NavigationContainer> */}

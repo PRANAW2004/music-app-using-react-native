@@ -1,15 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { View,Text,StyleSheet,Button,BackHandler } from "react-native";
-import TrackPlayer from 'react-native-track-player';
+// import TrackPlayer from 'react-native-track-player';
 // import BottomNavigator from "./bottomtabnavigator";
 
 export default function MainPage({navigation}){
 
-
+    console.log("This is main page");
 
     useEffect(()=>{
         BackHandler.addEventListener("hardwareBackPress",()=>{
+            console.log("back button is pressed in home page");
             BackHandler.exitApp();
             return true;
         });
@@ -18,8 +19,8 @@ export default function MainPage({navigation}){
 
     return(
         <View style={styles.maincontainer}>
+        {console.log("This is inside main page")}
             <Text style={styles.maincontainertext}>This is main page</Text>
-            <Button title="Logout" onPress={()=>{AsyncStorage.setItem("check",JSON.stringify(true));navigation.navigate("Login")}}></Button>
             {/* <BottomNavigator /> */}
         </View>
     )
