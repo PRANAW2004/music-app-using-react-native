@@ -18,37 +18,45 @@ export default function MainPage({navigation}){
         });
     },[]);
 
-
-
     
 
     const setUpTrackPlayer = async () => {
         try{
         await TrackPlayer.setupPlayer();
-        TrackPlayer.updateOptions({
-            stopWithApp: true,
-            capabilities: [Capability.Play,Capability.Pause,Capability.SkipToNext,
-                Capability.SkipToPrevious,
-                Capability.Stop],
-            compactCapabilities: [Capability.Play,Capability.Pause,Capability.SkipToNext,
-                Capability.SkipToPrevious,
-                Capability.Stop],
-        })
+        
+    TrackPlayer.updateOptions({
+        stopWithApp: true,
+        capabilities: [
+            Capability.Play,
+            Capability.Pause,
+            Capability.SkipToNext,
+            Capability.SkipToPrevious,
+            Capability.Stop
+        ],
+        compactCapabilities: [
+            Capability.Play,
+            Capability.Pause,
+            Capability.SkipToNext,
+            Capability.SkipToPrevious,
+            Capability.Stop
+        ]
+    })
+
         await TrackPlayer.add([{
             id:1,
-            url: require("../songs/Animal-Maroon5.mp3"),
-            title: "Animal-Maroon5",
-            artist: "Maroon5"
+            url: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/alan-faded.mp3?alt=media&token=915dfb8f-2feb-40ba-8758-49201ce86ad5",
+            title: "faded",
+            artist: "alan-walker"
         },
         {
             id:2,
-            url: require("../songs/Love-Me-Like-You-Do.mp3"),
+            url: "https://drive.google.com/file/d/1zI3eNMtmMwG0KKu0aBLvr0gZpJ7HTjiy/view?usp=drive_link",
             title: "Love me like you do",
             artist: "Me"
         }])
         }
         catch(err){
-
+            console.log(err);
         }
     }    
 
