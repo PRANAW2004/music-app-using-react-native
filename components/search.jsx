@@ -12,7 +12,6 @@ export default function Search({navigation}){
         
         BackHandler.addEventListener("hardwareBackPress", () => {
             console.log("inside search backhandler");
-            let a =navigation.getState();
             let backstring;
             if(navigation.getState()['history'].length === 2){
                 backstring = navigation.getState()['history'][1]["key"].split("-")[0];
@@ -42,7 +41,7 @@ export default function Search({navigation}){
             )
     },[])
 
-    
+
 
     
 
@@ -60,22 +59,21 @@ export default function Search({navigation}){
         ></TextInput>
         </View>
         <View style={{display:"flex",width:'100%',flexDirection: "row",margin: 0,padding:10,columnGap: 30,height: 120}}>
-            <TouchableOpacity style={{backgroundColor: "red",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}}>
+            <TouchableOpacity style={{backgroundColor: "red",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}} onPress={() => navigation.navigate("Pop")}>
                 <Text style={{color: "white"}}>Pop</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{backgroundColor: "blue",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}}>
+            <TouchableOpacity style={{backgroundColor: "blue",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}} onPress={() => navigation.navigate("Rock")}>
                 <Text style={{color: "white"}}>Rock</Text>
             </TouchableOpacity>
         </View>
         <View style={{display:"flex",width:'100%',flexDirection: "row",margin: 10,padding:10,columnGap: 30,height:120}}>
-            <TouchableOpacity style={{backgroundColor: "orange",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}}>
-                <Text style={{color: "white"}}>emotional</Text>
+            <TouchableOpacity style={{backgroundColor: "orange",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}} onPress={() => navigation.navigate("Soul")}>
+                <Text style={{color: "white"}}>Soul</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{backgroundColor: "grey",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}}>
-                <Text style={{color: "white"}}>Rock</Text>
+            <TouchableOpacity style={{backgroundColor: "green",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}} onPress={() => navigation.navigate("Folk")}>
+                <Text style={{color: "white"}}>Folk</Text>
             </TouchableOpacity>
         </View>
-            
         </View>
     )
 }

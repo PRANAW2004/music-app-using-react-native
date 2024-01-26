@@ -59,9 +59,9 @@ export default function BottomNavigator(){
                 
                 
             >
-            <Tab.Screen name={homeName} component={MainPage} options={{headerShown: false}}/>
-            <Tab.Screen name={searchName} component={Search} options={{headerShown: false}}/>
-            <Tab.Screen name={localName} component={YourLibrary} options={{headerShown: false}}/>
+            <Tab.Screen name={homeName} component={MainPage} options={{headerShown: false}} />
+            <Tab.Screen name={searchName} component={Search} options={{headerShown: false}} />
+            <Tab.Screen name={localName} component={YourLibrary} options={{headerShown: false}} />
 
             </Tab.Navigator>
     )

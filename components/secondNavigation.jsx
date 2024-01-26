@@ -12,6 +12,10 @@ import { Ionicons } from 'react-native-vector-icons';
 import Settings from './settings';
 import YourLibrary from './yourlibrary';
 import Search from './search';
+import Folk from './screens/folk';
+import Pop from './screens/pop';
+import Rock from './screens/rock';
+import Soul from './screens/soul';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +69,50 @@ export default function SecondNavigation({navigation}){
         <Stack.Screen 
           name="Settings"
           component={Settings}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+         <Stack.Screen 
+          name="Pop"
+          component={Pop}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen 
+          name="Rock"
+          component={Rock}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen 
+          name="Soul"
+          component={Soul}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen 
+          name="Folk"
+          component={Folk}
           options={{
             headerTitleAlign: "center",
             headerStyle: {

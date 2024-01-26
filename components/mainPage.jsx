@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect } from "react";
-import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Image } from "react-native";
+import { useEffect, useState } from "react";
+import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Image, Modal } from "react-native";
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
-// import { Capability } from "react-native-track-player";
-// import BottomNavigator from "./bottomtabnavigator";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function MainPage({navigation}){
+
+    const [visible,modalvisible] = useState(false);
 
     useEffect(()=>{
         BackHandler.addEventListener("hardwareBackPress",()=>{
@@ -101,6 +102,25 @@ export default function MainPage({navigation}){
             </Pressable>
             </View>
 
+            <Modal visible={visible}>
+            <View style={styles.modalview}>
+                <MaterialIcons name='close' size={30} onPress={() => modalvisible(false)}/>
+                {/* <Image source={} /> */}
+            </View>
+            </Modal>
+
+            <Pressable style={{width: "100%"}} onPress={() => modalvisible(true)}>
+            <View style={{backgroundColor: "#83C0C1",height:50,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 60}}>
+                <Image source={''} />
+                <Text>This is a text</Text>
+                <View style={{height: 50,width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
+                <MaterialIcons name="play-arrow" color="black" size={40}/>
+                </View>
+                
+            </View>
+            </Pressable>
+            
+
         </View>
     )
 }
@@ -119,5 +139,12 @@ const styles = StyleSheet.create({
         // backgroundColor: "green",
         margin: 20,
         flexDirection: "row",        
+    },
+    modalview: {
+        backgroundColor: "#83C0C1",
+        flex: 1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     }
 })
