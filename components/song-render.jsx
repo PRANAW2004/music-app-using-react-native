@@ -40,6 +40,8 @@ export default function Song_Render(props){
             TrackPlayer.skipToPrevious();
         })
 
+        // TrackPlayer.add(data);
+
         }
         catch(err){
             console.log(err);
@@ -60,11 +62,15 @@ export default function Song_Render(props){
             for(var i=0;i<data.length;i++){
                 if(data[i]['id'] === id){
                     // console.log(data[i]);
-                    TrackPlayer.add([data[i]]);
+                    try{
+                    TrackPlayer.add([data[i],data[i+1]]);
                     // console.log(await TrackPlayer.add([data[i]]));
                     TrackPlayer.play();
                     setbool(true);
                     break;
+                    }catch(err){
+                        console.log(err);
+                    }
                 }
             }
         }else{
@@ -73,10 +79,19 @@ export default function Song_Render(props){
             for(var i=0;i<data.length;i++){
                 if(data[i]['id'] === id){
                     // console.log(data[i]);
-                    TrackPlayer.add([data[i]]);
-                    TrackPlayer.play();
-                    setbool(false);
-                    break;
+                    console.log(i);
+                    try{
+                        if(i === data.length-1){
+                            TrackPlayer.add([data[i],data[i-1]]);
+                        }else{
+                            TrackPlayer.add([data[i]]);
+                        }
+                        TrackPlayer.play();
+                        setbool(false);
+                        break;
+                    }catch(err){
+                        console.log(err);
+                    }
                 }
             }
         }
@@ -99,6 +114,7 @@ export default function Song_Render(props){
                     <Image source={{uri: e['artwork']}} style={{height: 60,width:60,borderRadius:36}}/>
                     </View> 
                     <View>
+                    
                     <Text style={{color: "white",fontSize: 20}}>{e['title']}</Text>
                     <Text style={{color: "white"}}>{e['artist']}</Text>
                     </View>
