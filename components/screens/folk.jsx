@@ -10,6 +10,7 @@ export default function Folk({navigation}){
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
+    // const [tracknum,settracknum] = useState(0);
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -58,12 +59,12 @@ export default function Folk({navigation}){
         TrackPlayer.addEventListener("remote-pause", () => {
             TrackPlayer.pause();
         })
-             TrackPlayer.addEventListener("remote-next", () => {
-            TrackPlayer.skipToNext();
-        })
-         TrackPlayer.addEventListener("remote-previous", () => {
-            TrackPlayer.skipToPrevious();
-        })
+        //      TrackPlayer.addEventListener("remote-next", () => {
+        //     TrackPlayer.skipToNext();
+        // })
+        //  TrackPlayer.addEventListener("remote-previous", () => {
+        //     TrackPlayer.skipToPrevious();
+        // })
 
         // TrackPlayer.add(data);
 
@@ -80,16 +81,30 @@ export default function Folk({navigation}){
     }, [])
 
     async function play(id){
-        console.log("inside the play function");
-        console.log(id);
-        let tracknum = 0;
         await TrackPlayer.reset(); 
-        // if(bool === false){
-            // console.log(bool);
+
+        if(id === data.length){
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious
+                ]
+            })
+        }else{
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
             for(var i=0;i<data.length;i++){
-                // console.log(data.length);
                 if(data[i]['id'] === id){
-                    console.log(data[i]["id"]);
+                    setrenderimage(data[i]['artwork']);
+                    setrendername(data[i]['title']);
                     let arr = [data[i]];
                     try{
                         if(i === 0){
@@ -105,29 +120,28 @@ export default function Folk({navigation}){
                         }
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
-                            tracknum = tracknum-1;
-                            play(tracknum); 
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]-1); 
+                            
                         })
 
                         TrackPlayer.addEventListener("remote-next", async () => {
-                            tracknum = tracknum+1;
-                            play(tracknum);
+                            // tracknum = tracknum+1;
+                            // settracknum(tracknum+1);
+                            // play(tracknum);
+                            let a = await TrackPlayer.getActiveTrack();
+                            // console.log(a["id"]);
+                            play(a["id"]+1);
                         })
-                        
-                    // console.log(await TrackPlayer.add([data[i]]));
                     TrackPlayer.add(arr);
-                    console.log(arr);
-
                     TrackPlayer.play();
-                    let a = await TrackPlayer.getActiveTrack();
-                    tracknum = a["id"];
-                    // setbool(true);
                     break;
                     }catch(err){
                         console.log(1,err);
                     }
                 }
             }
+
         // }else{
         //     console.log(bool);
         //     // TrackPlayer.pause();
@@ -154,6 +168,16 @@ export default function Folk({navigation}){
         
         // TrackPlayer.reset();
     }
+    TrackPlayer.addEventListener("playback-track-changed",async () => {
+        // console.log("Playback track changed");
+        let a = await TrackPlayer.getActiveTrack();
+        setrenderimage(a['artwork']);
+        setrendername(a['title']);
+    })
+
+    // TrackPlayer.getProgress().then((e) => {
+    //     console.log(e/60);
+    // })
 
    
     return(
@@ -177,7 +201,7 @@ export default function Folk({navigation}){
             {data.map((e)=>{
                 return(
                 <View style={{flex:1}}>
-                    <Pressable onPress={()=>{TrackPlayer.pause();play(e['id']);setrenderimage(e['artwork']);setrendername(e['title']);setrenderauthor(e['artist'])}}>
+                    <Pressable onPress={()=>{TrackPlayer.pause();play(e['id']);setrenderauthor(e['artist']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
@@ -202,7 +226,7 @@ export default function Folk({navigation}){
             </View>
             </ScrollView>
             </View>
-            <View style={{backgroundColor: "#83C0C1",width:"100%"}}>
+            <View style={{backgroundColor: "grey",width:"100%"}}>
             <Pressable style={{width: "100%"}}>
             <View style={{backgroundColor: "#83C0C1",height:50,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 60}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}

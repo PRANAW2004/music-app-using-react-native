@@ -17,7 +17,6 @@
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
-    "@yajanarao/react-native-get-music-files": "^2.1.0",
     "expo": "~49.0.15",
     "expo-dev-client": "~2.4.12",
     "expo-font": "^11.6.0",
