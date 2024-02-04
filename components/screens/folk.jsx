@@ -80,49 +80,76 @@ export default function Folk({navigation}){
     }, [])
 
     async function play(id){
-        // console.log(data);
+        console.log("inside the play function");
+        console.log(id);
+        let tracknum = 0;
         await TrackPlayer.reset(); 
-        if(bool === false){
-            console.log(bool);
+        // if(bool === false){
+            // console.log(bool);
             for(var i=0;i<data.length;i++){
+                // console.log(data.length);
                 if(data[i]['id'] === id){
-                    // console.log(data[i]);
+                    console.log(data[i]["id"]);
+                    let arr = [data[i]];
                     try{
-                    TrackPlayer.add([data[i],data[i+1]]);
+                        if(i === 0){
+                            for(j=i+1;j<data.length;j++){
+                                arr.push(data[i+j]);
+                            }
+                        }
+                        else{
+                        for(j=i;j<data.length-1;j++){
+                            arr.push(data[i+j]);
+                            // TrackPlayer.add([data[i]].push(data[i+j]));
+                        }
+                        }
+                        
+                        TrackPlayer.addEventListener("remote-previous",async () => {
+                            tracknum = tracknum-1;
+                            play(tracknum); 
+                        })
+
+                        TrackPlayer.addEventListener("remote-next", async () => {
+                            tracknum = tracknum+1;
+                            play(tracknum);
+                        })
+                        
                     // console.log(await TrackPlayer.add([data[i]]));
+                    TrackPlayer.add(arr);
+                    console.log(arr);
+
                     TrackPlayer.play();
-                    setbool(true);
+                    let a = await TrackPlayer.getActiveTrack();
+                    tracknum = a["id"];
+                    // setbool(true);
                     break;
                     }catch(err){
-                        console.log(err);
+                        console.log(1,err);
                     }
                 }
             }
-        }else{
-            console.log(bool);
-            // TrackPlayer.pause();
-            for(var i=0;i<data.length;i++){
-                if(data[i]['id'] === id){
-                    // console.log(data[i]);
-                    console.log(i);
-                    try{
-                        if(i === data.length-1){
-                            TrackPlayer.add([data[i],data[i-1]]);
-                            TrackPlayer.play();
-                            // await TrackPlayer.reset();
-                            // TrackPlayer.add([data[i-1],data[i]]);
-                        }else{
-                            TrackPlayer.add([data[i]]);
-                        }
-                        TrackPlayer.play();
-                        setbool(false);
-                        break;
-                    }catch(err){
-                        console.log(err);
-                    }
-                }
-            }
-        }
+        // }else{
+        //     console.log(bool);
+        //     // TrackPlayer.pause();
+        //     for(var i=0;i<data.length;i++){
+        //         if(data[i]['id'] === id){
+        //             // console.log(data[i]);
+        //             console.log(i);
+        //             try{
+        //                let arr = [data[i]];
+        //                for(j=i+1;j<data.length;j++){
+        //                 arr.push(data[i+j]);
+        //                }
+        //                TrackPlayer.add(arr);
+        //                 TrackPlayer.play();
+        //                 setbool(false);
+        //                 break;
+        //             }catch(err){
+        //                 console.log(err);
+        //             }
+        //         }
+        //     }
+        // }
         
         
         // TrackPlayer.reset();
@@ -178,7 +205,7 @@ export default function Folk({navigation}){
             <View style={{backgroundColor: "#83C0C1",width:"100%"}}>
             <Pressable style={{width: "100%"}}>
             <View style={{backgroundColor: "#83C0C1",height:50,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 60}}>
-                {console.log(<Image source={{uri: renderimage}} />)}
+                {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <Image source={{uri: renderimage}} style={{height:50,width:50}}/>
                 <Text>{rendername === ''?'Press any song to play':rendername}</Text>
                 <View style={{height: 50,width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
