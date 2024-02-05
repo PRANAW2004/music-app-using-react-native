@@ -3,14 +3,16 @@ import { useEffect,useState } from 'react';
 import data from '../song_data';
 import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function Folk({navigation}){
 
     const [duration,setDuration] = useState(0);
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
-    // const [tracknum,settracknum] = useState(0);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -31,8 +33,6 @@ export default function Folk({navigation}){
         })
     },[])
 
-
-    const [bool,setbool] = useState(false);
 
     const setUpTrackPlayer = async () => {
         try{
@@ -141,32 +141,6 @@ export default function Folk({navigation}){
                     }
                 }
             }
-
-        // }else{
-        //     console.log(bool);
-        //     // TrackPlayer.pause();
-        //     for(var i=0;i<data.length;i++){
-        //         if(data[i]['id'] === id){
-        //             // console.log(data[i]);
-        //             console.log(i);
-        //             try{
-        //                let arr = [data[i]];
-        //                for(j=i+1;j<data.length;j++){
-        //                 arr.push(data[i+j]);
-        //                }
-        //                TrackPlayer.add(arr);
-        //                 TrackPlayer.play();
-        //                 setbool(false);
-        //                 break;
-        //             }catch(err){
-        //                 console.log(err);
-        //             }
-        //         }
-        //     }
-        // }
-        
-        
-        // TrackPlayer.reset();
     }
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed");
@@ -179,6 +153,39 @@ export default function Folk({navigation}){
     //     console.log(e/60);
     // })
 
+    function liked(id){
+        // setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+        console.log("inside liked",id);
+        let liked = [];
+        // setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+        for(var i=0;i<data.length;i++){
+            if(data[i]['id'] === id){
+                data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
+                if(data[i]['liked'] === 'cards-heart'){
+                    liked.push(data[i]['id']);
+                    break;
+                }else{
+                    for(var i=0;i<liked.length;i++){
+                        if(data[i]['id'] === liked[i]){
+                            liked.splice(i,1);
+                            break;
+                        }
+                    }
+                }
+                AsyncStorage.setItem('liked',JSON.stringify(liked));
+                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                
+                break;
+            }
+        }
+
+    }
+    
+    useEffect(async () => {
+        let value = AsyncStorage.getItem('liked');
+        console.log("inside async",JSON.parse(value));
+    })
    
     return(
         <View style={styles.folkview}>
@@ -200,14 +207,15 @@ export default function Folk({navigation}){
             <View style={{flex:1}}>
             {data.map((e)=>{
                 return(
-                <View style={{flex:1}}>
-                    <Pressable onPress={()=>{TrackPlayer.pause();play(e['id']);setrenderauthor(e['artist']);}}>
+                <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{TrackPlayer.pause();play(e['id']);setrenderauthor(e['artist']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
                     {console.log(TrackPlayer.play())} */}
-                    <View style={{width:'100%',display:"flex",alignItems: "center",flex:1}}>
+                    {/* <View style={{width:'100%',display:"flex",alignItems: "center",flex:1}}> */}
                     <View style={styles.songblock}>
+                    <View style={{display: "flex",flexDirection: "row",alignItems: "center",width:'50%'}}>
                     <View style={{marginRight: 10}}>
                     <Image source={{uri: e['artwork']}} style={{height: 60,width:60,borderRadius:36}}/>
                     </View> 
@@ -215,10 +223,15 @@ export default function Folk({navigation}){
                     <Text style={{color: "white",fontSize: 20}}>{e['title']}</Text>
                     <Text style={{color: "white"}}>{e['artist']}</Text>
                     </View>
-
+                    </View>
+                    <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
+                    <Pressable onPress={() => {liked(e['id'])}}>
+                        <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
+                    </Pressable>
                     </View>
                     </View> 
                     </Pressable>
+                   
                     </View>
                 )
             })}
@@ -226,16 +239,18 @@ export default function Folk({navigation}){
             </View>
             </ScrollView>
             </View>
-            <View style={{backgroundColor: "grey",width:"100%"}}>
-            <Pressable style={{width: "100%"}}>
-            <View style={{backgroundColor: "#83C0C1",height:50,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 60}}>
+            <View style={{width:"90%",marginBottom: 20}}>
+            <Pressable style={{width: "100%",borderRadius:36}}>
+            <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 10,borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
-                <Image source={{uri: renderimage}} style={{height:50,width:50}}/>
-                <Text>{rendername === ''?'Press any song to play':rendername}</Text>
-                <View style={{height: 50,width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
-                <MaterialIcons name="play-arrow" color="black" size={40}/>
+                <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36}}/>
+                <View>
+                <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
+                <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'':renderauthor}</Text>
                 </View>
-                
+                <View style={{height: 50,width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
+                <MaterialIcons name="play-arrow" color="white" size={40}/>
+                </View>
             </View>
             </Pressable>
             </View>

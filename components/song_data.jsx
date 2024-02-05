@@ -5,6 +5,8 @@ const data = [
         title: "Faded",
         artist: "alan-walker",
         artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/alan.jpeg?alt=media&token=3a50b284-f9e6-4e2a-9e7f-5c62fefd3930",
+        liked: 'cards-heart-outline',
+        color: 'white',
     },
     {
         id:2,
@@ -12,6 +14,8 @@ const data = [
         title: "Beleiver",
         artist: "Imagine Dragons",
         artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/believer.jpeg?alt=media&token=1d7f892b-b20e-401f-a16f-d267c37df2bb",
+        liked: 'cards-heart-outline',
+        color:'white'
     },
     {
         id:3,
@@ -19,6 +23,8 @@ const data = [
         title: "Beleiver",
         artist: "Imagine Dragons",
         artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/believer.jpeg?alt=media&token=1d7f892b-b20e-401f-a16f-d267c37df2bb",
+        liked: 'cards-heart-outline',
+        color: "white"
     },
 
 ]
