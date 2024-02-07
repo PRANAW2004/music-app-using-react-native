@@ -28,7 +28,6 @@ export default function App() {
             component={SecondNavigation}
             options={{headerShown:false}}
           />
-          {/* <SecondNavigation /> */}
       </Stack.Navigator>
       </NavigationContainer>
     );
