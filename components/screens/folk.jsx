@@ -7,6 +7,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Folk({navigation}){
+    console.log("inside folk");
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
@@ -19,14 +20,15 @@ export default function Folk({navigation}){
 
     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
+    let arr = [];
     let arr1 = [];
+    let arr2 = [];
 
     let value;
    
     const likeddata = useCallback(async() => {
-      console.log("in async function");
+    //   console.log("in async function");
         value = await AsyncStorage.getItem("liked");
-        let arr = [];
       for(var k=0;k<value.length;k++){
         //   console.log(isNaN(value[k]));
           if(isNaN(value[k]) === false){
@@ -43,19 +45,21 @@ export default function Folk({navigation}){
               console.log("inside async if");
              console.log(i,j);
              console.log(data[i]['liked']);
-             data[i]['liked'] = data[i]['liked'] === 'cards-heart-outline'?'cards-heart':'cards-heart-outline';
-             data[i]['color'] = data[i]['color'] === 'white'?'red':'white';
+             data[i]['liked'] = 'cards-heart';
+             data[i]['color'] = 'red';
              setlikedsong(current => [...current,data[i]['id']]);
           //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
            }
   
           }
         }
-            setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+        //     setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
   
         
     })
     useEffect(likeddata,[]);
+
+        //   setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
 
     if(likedsong.length > 0){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
@@ -240,8 +244,11 @@ export default function Folk({navigation}){
     }
 
     async function position(){
-        const progress = useProgress();
-        console.log("progress is ",progress.duration);
+        // const progress = useProgress();
+        // console.log("progress is ",progress.duration);
+        console.log("inside the position");
+        let a = await TrackPlayer.getProgress();
+        console.log(a['duration']/60);
     }
     
     // let value = AsyncStorage.getItem('liked');
@@ -303,7 +310,7 @@ export default function Folk({navigation}){
             <Modal visible={visible}>
             <View style={styles.modalview}>
                 <View>
-                    <MaterialIcons name='close' size={30} onPress={() => modalvisible(false)}/>
+                    <MaterialIcons name='close' size={30} color='white' onPress={() => modalvisible(false)}/>
                 </View>
                 <View style={styles.modelcontent}>
                     <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
