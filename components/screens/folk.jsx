@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable } from 'react-native';
+import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } from 'react-native';
 import { useEffect,useState,useCallback } from 'react';
 import data from '../song_data';
 import Song_Render from '../song-render';
@@ -13,8 +13,49 @@ export default function Folk({navigation}){
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(0);
+    const [visible,modalvisible] = useState(false);
+
+    console.log("likedsong is ",likedsong);
 
     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+
+    let arr1 = [];
+
+    let value;
+   
+    const likeddata = useCallback(async() => {
+      console.log("in async function");
+        value = await AsyncStorage.getItem("liked");
+        let arr = [];
+      for(var k=0;k<value.length;k++){
+        //   console.log(isNaN(value[k]));
+          if(isNaN(value[k]) === false){
+              arr.push(value[k]*1);
+              arr1.push(value[k]*1);
+          }
+      }
+      console.log(arr);
+        for(var i=0;i<data.length;i++){
+          for(var j=0;j<arr.length;j++){
+              // console.log("123",data[i]['id'],arr[j]);
+           if(data[i]['id'] === arr[j]){
+              console.log(data[i]['id'],arr[j]);
+              console.log("inside async if");
+             console.log(i,j);
+             console.log(data[i]['liked']);
+             data[i]['liked'] = data[i]['liked'] === 'cards-heart-outline'?'cards-heart':'cards-heart-outline';
+             data[i]['color'] = data[i]['color'] === 'white'?'red':'white';
+             setlikedsong(current => [...current,data[i]['id']]);
+          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+           }
+  
+          }
+        }
+            setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+  
+        
+    })
+    useEffect(likeddata,[]);
 
     if(likedsong.length > 0){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
@@ -167,11 +208,13 @@ export default function Folk({navigation}){
                 // console.log("inside liked for if");
                 data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
+                console.log(data[i]['liked'])
                 if(data[i]['liked'] === 'cards-heart'){
                     // liked.push(data[i]['id']);
                     // console.log(likedsong.includes(data[i]['id']));
-                    setlikedsong(current => [...current,data[i]['id']]);
                     console.log("inside if liked song is ",likedsong);
+                    setlikedsong(current => [...current,data[i]['id']]);
+
                     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
                     // setbool(true);
@@ -195,35 +238,12 @@ export default function Folk({navigation}){
         }
 
     }
-    
-    let value;
-   
-  const likeddata = useCallback(async() => {
-    console.log("in async function");
-      value = await AsyncStorage.getItem("liked");
-      let arr = [];
-    for(var k=0;k<value.length;k++){
-        console.log(isNaN(value[k]));
-        if(isNaN(value[k]) === false){
-            arr.push(value[k]*1);
-        }
-    }
-    console.log(arr);
-      for(var i=0;i<data.length;i++){
-        for(var j=0;j<arr.length;j++){
-            // console.log("123",data[i]['id'],arr[j]);
-         if(data[i]['id'] === arr[j]){
-            console.log(data[i]['id'],arr[j]);
-            console.log("inside async if");
-            data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
-         }
 
-        }
-      }
-      
-  })
-  useEffect(likeddata,[]);
+    async function position(){
+        const progress = useProgress();
+        console.log("progress is ",progress.duration);
+    }
+    
     // let value = AsyncStorage.getItem('liked');
     // console.log("inside async",value);
    
@@ -279,8 +299,26 @@ export default function Folk({navigation}){
             </View>
             </ScrollView>
             </View>
+
+            <Modal visible={visible}>
+            <View style={styles.modalview}>
+                <View>
+                    <MaterialIcons name='close' size={30} onPress={() => modalvisible(false)}/>
+                </View>
+                <View style={styles.modelcontent}>
+                    <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
+                    <Text style={{color: "grey",fontSize: 40}}>{rendername}</Text>
+                    <Text style={{color: "grey",fontSize:20}}>{renderauthor}</Text>
+                </View>
+                <View>
+
+                </View>
+                {/* <Image source={} /> */}
+            </View>
+            </Modal>
+
             <View style={{width:"90%",marginBottom: 20}}>
-            <Pressable style={{width: "100%",borderRadius:36}}>
+            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {position();modalvisible(true)}}>
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 10,borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36}}/>
@@ -318,5 +356,19 @@ const styles = StyleSheet.create({
         height: 60,
         flexDirection: "row",
         alignItems: "center",
+    },
+    modalview: {
+        backgroundColor: "#0A1D56",
+        flex: 1,
+        display: "flex",
+        // justifyContent: "center",
+        // alignItems: "center",
+    },
+    modelcontent: {
+        display:"flex",
+        justifyContent: "center",
+        alignItems:"center",
+        marginTop: 70,
+        // marginBottom: 40,
     }
 })
