@@ -107,6 +107,7 @@ export default function MainPage({navigation}){
             </View>
             </Modal>
 
+            <View>
             <Pressable style={{width: "100%"}} onPress={() => modalvisible(true)}>
             <View style={{backgroundColor: "#83C0C1",height:50,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 60}}>
                 <Image source={''} />
@@ -117,6 +118,8 @@ export default function MainPage({navigation}){
                 
             </View>
             </Pressable>
+            </View>
+            
             
 
         </View>

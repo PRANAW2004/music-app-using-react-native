@@ -5,7 +5,7 @@ import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Slider from "@react-native-community/slider";
+// import Slider from "@react-native-community/slider";
 
 export default function Folk({navigation}){
     console.log("inside folk");
@@ -16,6 +16,8 @@ export default function Folk({navigation}){
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(0);
     const [visible,modalvisible] = useState(false);
+
+    const progress = useProgress();
 
     console.log("likedsong is ",likedsong);
 
@@ -42,10 +44,10 @@ export default function Folk({navigation}){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
            if(data[i]['id'] === arr[j]){
-              console.log(data[i]['id'],arr[j]);
-              console.log("inside async if");
-             console.log(i,j);
-             console.log(data[i]['liked']);
+            //   console.log(data[i]['id'],arr[j]);
+            //   console.log("inside async if");
+            //  console.log(i,j);
+            //  console.log(data[i]['liked']);
              data[i]['liked'] = 'cards-heart';
              data[i]['color'] = 'red';
              setlikedsong(current => [...current,data[i]['id']]);
@@ -59,6 +61,23 @@ export default function Folk({navigation}){
         
     })
     useEffect(likeddata,[]);
+
+    let currentplaying;
+
+    const currentPlaying = useCallback(async () => {
+        currentplaying = await AsyncStorage.getItem("current-playing");
+        console.log("currently playing song is",currentplaying*1);
+        currentplaying = currentplaying*1;
+        for(var i = 0;i<data.length;i++){
+            if(currentplaying === data[i]['id']){
+                setrenderimage(data[i]['artwork']);
+                setrendername(data[i]['title']);
+                setrenderauthor(data[i]['artist'])
+            }
+        }
+    });
+
+    useEffect(currentPlaying,[]);
 
         //   setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
 
@@ -155,6 +174,7 @@ export default function Folk({navigation}){
                     setrenderimage(data[i]['artwork']);
                     setrendername(data[i]['title']);
                     setrenderauthor(data[i]['artist']);
+                    AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
                     // setrenderauthor(data[i]['author']);
                     let arr = [data[i]];
                     try{
@@ -196,9 +216,11 @@ export default function Folk({navigation}){
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed");
         let a = await TrackPlayer.getActiveTrack();
+        // console.log("playback track changed");
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
+        AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
     })
 
     async function liked(id){
@@ -213,11 +235,11 @@ export default function Folk({navigation}){
                 // console.log("inside liked for if");
                 data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
-                console.log(data[i]['liked'])
+                // console.log(data[i]['liked'])
                 if(data[i]['liked'] === 'cards-heart'){
                     // liked.push(data[i]['id']);
                     // console.log(likedsong.includes(data[i]['id']));
-                    console.log("inside if liked song is ",likedsong);
+                    // console.log("inside if liked song is ",likedsong);
                     setlikedsong(current => [...current,data[i]['id']]);
 
                     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
@@ -226,7 +248,7 @@ export default function Folk({navigation}){
                     
                 }
                 else{
-                    console.log("inside else",likedsong);
+                    // console.log("inside else",likedsong);
                         for(var i=0;i<likedsong.length;i++){
                                 if(id === likedsong[i]){
                                     // console.log("inside else and if");
@@ -247,7 +269,7 @@ export default function Folk({navigation}){
     async function position(){
         // const progress = useProgress();
         // console.log("progress is ",progress.duration);
-        console.log("inside the position");
+        // console.log("inside the position");
         let a = await TrackPlayer.getProgress();
         console.log(a['duration']/60);
     }
@@ -317,6 +339,14 @@ export default function Folk({navigation}){
                     <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
                     <Text style={{color: "grey",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "grey",fontSize:20}}>{renderauthor}</Text>
+                    {/* <Slider 
+                        style={styles.progressBar}
+                        value = {progress.position}
+                        minimumValue = {0}
+                        thubmTintColor = "#FFD369"
+                        minimumTrackTintColor="#FFD369"
+                        maximumTrackTintColor="#fff"
+                    /> */}
                 </View>
                 <View>
 
@@ -378,5 +408,11 @@ const styles = StyleSheet.create({
         alignItems:"center",
         marginTop: 70,
         // marginBottom: 40,
-    }
+    },
+    progressBar: {
+        width: 350,
+        height: 40,
+        marginTop: 25,
+        flexDirection: 'row',
+      },
 })
