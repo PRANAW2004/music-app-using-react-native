@@ -5,10 +5,9 @@ import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import Slider from "@react-native-community/slider";
+import Slider from "@react-native-community/slider";
 
 export default function Folk({navigation}){
-    console.log("inside folk");
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
@@ -16,10 +15,9 @@ export default function Folk({navigation}){
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(0);
     const [visible,modalvisible] = useState(false);
+    const [icon,seticon] = useState("play-arrow");
 
     const progress = useProgress();
-
-    console.log("likedsong is ",likedsong);
 
     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
@@ -121,12 +119,14 @@ export default function Folk({navigation}){
             ],
         })
 
-        TrackPlayer.addEventListener("remote-play", () => {
-            TrackPlayer.play();
-        })
-        TrackPlayer.addEventListener("remote-pause", () => {
-            TrackPlayer.pause();
-        })
+        // TrackPlayer.addEventListener("remote-play", () => {
+        //     seticon('pause');
+        //     TrackPlayer.play();
+        // })
+        // TrackPlayer.addEventListener("remote-pause", () => {
+        //     seticon('play-arrow');
+        //     TrackPlayer.pause();
+        // })
         //      TrackPlayer.addEventListener("remote-next", () => {
         //     TrackPlayer.skipToNext();
         // })
@@ -150,6 +150,7 @@ export default function Folk({navigation}){
 
     async function play(id){
         await TrackPlayer.reset(); 
+        seticon("pause");
 
         if(id === data.length){
             TrackPlayer.updateOptions({
@@ -175,6 +176,7 @@ export default function Folk({navigation}){
                     setrendername(data[i]['title']);
                     setrenderauthor(data[i]['artist']);
                     AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
+                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     // setrenderauthor(data[i]['author']);
                     let arr = [data[i]];
                     try{
@@ -189,6 +191,16 @@ export default function Folk({navigation}){
                             // TrackPlayer.add([data[i]].push(data[i+j]));
                         }
                         }
+
+                        TrackPlayer.addEventListener("remote-play", ()=>{
+                            seticon("pause");
+                            TrackPlayer.play();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-pause", () => {
+                            seticon("play-arrow");
+                            TrackPlayer.pause();
+                        })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
                             let a = await TrackPlayer.getActiveTrack();
@@ -222,6 +234,8 @@ export default function Folk({navigation}){
         setrenderauthor(a['artist'])
         AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
     })
+
+
 
     async function liked(id){
         // console.log("i am pressed")
@@ -272,6 +286,11 @@ export default function Folk({navigation}){
         // console.log("inside the position");
         let a = await TrackPlayer.getProgress();
         console.log(a['duration']/60);
+    }
+
+    function handlePlayback(){
+        seticon(icon === 'play-arrow'?'pause':'play-arrow');
+        icon === 'play-arrow'?TrackPlayer.play():TrackPlayer.pause();
     }
     
     // let value = AsyncStorage.getItem('liked');
@@ -339,14 +358,14 @@ export default function Folk({navigation}){
                     <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
                     <Text style={{color: "grey",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "grey",fontSize:20}}>{renderauthor}</Text>
-                    {/* <Slider 
+                    <Slider 
                         style={styles.progressBar}
                         value = {progress.position}
                         minimumValue = {0}
                         thubmTintColor = "#FFD369"
                         minimumTrackTintColor="#FFD369"
                         maximumTrackTintColor="#fff"
-                    /> */}
+                    />
                 </View>
                 <View>
 
@@ -357,16 +376,22 @@ export default function Folk({navigation}){
 
             <View style={{width:"90%",marginBottom: 20}}>
             <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {position();modalvisible(true)}}>
-            <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",gap: 10,borderRadius:36}}>
+            <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
-                <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36}}/>
-                <View>
-                <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
-                <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
+                <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
+                    <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
+                    <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
+                        <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
+                        <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
+                    </View>
+
                 </View>
-                <View style={{height: 50,width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
-                <MaterialIcons name="play-arrow" color="white" size={40}/>
+                <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
+                <Pressable onPress={() => handlePlayback()}>
+                    <MaterialIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
+                </Pressable>
                 </View>
+                
             </View>
             </Pressable>
             </View>
