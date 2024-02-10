@@ -3,6 +3,7 @@ import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Ima
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './song_data';
+import Souldata from './soul_data';
 import TrackPlayer,{useProgress} from 'react-native-track-player';
 
 export default function MainPage({navigation}){
@@ -11,6 +12,10 @@ export default function MainPage({navigation}){
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
+    const [icon,seticon] = useState("play-arrow");
+    const [bool,setbool] = useState(false);
+    // const [genre,setgenre] = useState('');
+
 
     let progress = useProgress();
 
@@ -29,33 +34,61 @@ export default function MainPage({navigation}){
         let value = await AsyncStorage.getItem("current-genre");
         console.log("Value is ",value);
         console.log(JSON.parse(value) === 'folk');
-        if(JSON.parse(value) === 'folk'){
-            console.log("inside the folk");
+        let valuegenre = JSON.parse(value);
+        let arr = []
+        arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
+        console.log(arr);
+        for(var i=0;i<arr.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
-            console.log(JSON.parse(value1));
-            for(var i=0;i<data.length;i++){
-                if(data[i]['id'] === JSON.parse(value1)){
-                    setrenderimage(data[i]['artwork']);
-                    setrendername(data[i]['title']);
-                    setrenderauthor(data[i]['artist']);
-                    break;
-                }
+            if(arr[i]['id'] === JSON.parse(value1)){
+                setrenderimage(arr[i]['artwork']);
+                setrendername(arr[i]['title']);
+                setrenderauthor(arr[i]['artist']);
+                break;
             }
-        }else{
-            console.log("inside else");
         }
+        // if(JSON.parse(value) === 'folk'){
+        //     console.log("inside the folk");
+        //     let value1 = await AsyncStorage.getItem("current-playing");
+        //     console.log(JSON.parse(value1));
+        //     for(var i=0;i<data.length;i++){
+        //         if(data[i]['id'] === JSON.parse(value1)){
+        //             setrenderimage(data[i]['artwork']);
+        //             setrendername(data[i]['title']);
+        //             setrenderauthor(data[i]['artist']);
+        //             break;
+        //         }
+        //     }
+        // }else{
+        //     console.log("inside else");
+        // }
     })
 
     useEffect(currentGenre,[]);
+
+    async function play(id){
+        console.log("inside play");
+        
+        let genre1 = await AsyncStorage.getItem("current-genre");
+        let value = JSON.parse(genre1);
+        console.log(JSON.parse(genre1));
+        let arr = []
+        arr = value === 'folk'?data:value==='soul'?Souldata:[];
+        console.log(arr.length);
+        seticon(pause);
+    }
     
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed");
         let a = await TrackPlayer.getActiveTrack();
+        seticon("pause");
+        // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         // console.log("playback track changed");
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
+        // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
     })
 
@@ -64,6 +97,19 @@ export default function MainPage({navigation}){
         let a = await TrackPlayer.getProgress();
         console.log(a['duration']/60);
         console.log("progress is",progress);
+    }
+
+    async function handlePlayback(){
+        seticon(icon === 'play-arrow'?'pause':'play-arrow');
+        icon === 'play-arrow'?TrackPlayer.play():TrackPlayer.pause();
+        if(bool === false){
+            if(icon === 'play-arrow'){
+                let currentplayingsong = await AsyncStorage.getItem("current-playing");
+                play(JSON.parse(currentplayingsong));
+            }
+        }
+        
+
     }
 
 
@@ -110,7 +156,9 @@ export default function MainPage({navigation}){
                 </View>
                 </View>
                 <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end",borderRadius: 36}}>
-                <MaterialIcons name="play-arrow" color="white" size={40} style={{marginRight: 10}}/>
+                <Pressable onPress={() => handlePlayback()}>
+                    <MaterialIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
+                </Pressable>
                 </View>
             </View>
             </Pressable>

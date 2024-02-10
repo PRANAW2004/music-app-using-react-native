@@ -13,11 +13,13 @@ export default function Folk({navigation}){
     const [renderauthor,setrenderauthor] = useState('');
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedsong,setlikedsong] = useState([]);
-    const [bool,setbool] = useState(0);
+    const [bool,setbool] = useState(false);
     const [visible,modalvisible] = useState(false);
     const [icon,seticon] = useState("play-arrow");
 
     const progress = useProgress();
+    // seticon(icon === 'play-arrow'?'pause':'play-arrow');
+
 
     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
@@ -172,9 +174,9 @@ export default function Folk({navigation}){
         }
             for(var i=0;i<data.length;i++){
                 if(data[i]['id'] === id){
-                    setrenderimage(data[i]['artwork']);
-                    setrendername(data[i]['title']);
-                    setrenderauthor(data[i]['artist']);
+                    // setrenderimage(data[i]['artwork']);
+                    // setrendername(data[i]['title']);
+                    // setrenderauthor(data[i]['artist']);
                     AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     // setrenderauthor(data[i]['author']);
@@ -193,11 +195,13 @@ export default function Folk({navigation}){
                         }
 
                         TrackPlayer.addEventListener("remote-play", ()=>{
+                            
                             seticon("pause");
                             TrackPlayer.play();
                         })
                         
                         TrackPlayer.addEventListener("remote-pause", () => {
+                           
                             seticon("play-arrow");
                             TrackPlayer.pause();
                         })
@@ -227,6 +231,7 @@ export default function Folk({navigation}){
     }
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed");
+        // seticon("pause");
         let a = await TrackPlayer.getActiveTrack();
         // console.log("playback track changed");
         setrenderimage(a['artwork']);
@@ -234,6 +239,8 @@ export default function Folk({navigation}){
         setrenderauthor(a['artist'])
         AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
     })
+
+  
 
 
 
@@ -288,9 +295,20 @@ export default function Folk({navigation}){
         console.log(a['duration']/60);
     }
 
-    function handlePlayback(){
+    async function handlePlayback(){
         seticon(icon === 'play-arrow'?'pause':'play-arrow');
         icon === 'play-arrow'?TrackPlayer.play():TrackPlayer.pause();
+        if(bool === false){
+            if(icon === 'play-arrow'){
+                let currentplayingsong = await AsyncStorage.getItem("current-playing");
+                // setbool(true);
+                play(JSON.parse(currentplayingsong));
+                setbool(true);
+
+            }
+        }
+        
+        
     }
     
     // let value = AsyncStorage.getItem('liked');
