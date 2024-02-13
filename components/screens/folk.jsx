@@ -5,7 +5,7 @@ import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Slider from "@react-native-community/slider";
+import Slider from 'react-native-slider';
 
 export default function Folk({navigation}){
     const [renderimage,setrenderimage] = useState(null);
@@ -291,8 +291,7 @@ export default function Folk({navigation}){
         // const progress = useProgress();
         // console.log("progress is ",progress.duration);
         // console.log("inside the position");
-        let a = await TrackPlayer.getProgress();
-        console.log(a['duration']/60);
+        console.log(progress);
     }
 
     async function handlePlayback(){
@@ -374,19 +373,38 @@ export default function Folk({navigation}){
                 </View>
                 <View style={styles.modelcontent}>
                     <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
-                    <Text style={{color: "grey",fontSize: 40}}>{rendername}</Text>
-                    <Text style={{color: "grey",fontSize:20}}>{renderauthor}</Text>
+                    <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
+                    <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
+                    <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
+                    </View>
+
                     <Slider 
                         style={styles.progressBar}
                         value = {progress.position}
                         minimumValue = {0}
-                        thubmTintColor = "#FFD369"
-                        minimumTrackTintColor="#FFD369"
-                        maximumTrackTintColor="#fff"
+                        maximumValue = {progress.duration}
+                        thumbTintColor = "grey"
+                        minimumTrackTintColor="green"
+                        maximumTrackTintColor="white"
+                        onSlidingComplete = {async value => {
+                            await TrackPlayer.seekTo(value);
+                        }}
                     />
                 </View>
+                <View style={{display: "flex",alignItems: "center"}}>
+                <View style={{width: '90%',flexDirection: "row"}}>
+                <View style={{width: '50%'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.position*1000).toLocaleTimeString().substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                <View style={{width: '50%',alignItems: 'flex-end'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.duration* 1000)
+                .toLocaleTimeString()
+                .substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                </View>
+                </View>
                 <View>
-
+                    <MaterialCommunityIcons name={'motion-pause'} size={40} color={"white"} />
                 </View>
                 {/* <Image source={} /> */}
             </View>
@@ -450,12 +468,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems:"center",
         marginTop: 70,
+        marginBottom: 20
         // marginBottom: 40,
     },
     progressBar: {
-        width: 350,
-        height: 40,
-        marginTop: 25,
-        flexDirection: 'row',
+        width: '90%',
+        height: 1,
+        // marginTop: 25,
+        // flexDirection: 'row',
+        color: 'white',
+        backgroundColor :"white"
       },
 })
