@@ -2,7 +2,7 @@ import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } f
 import { useEffect,useState,useCallback } from 'react';
 import data from '../song_data';
 import Song_Render from '../song-render';
-import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event} from 'react-native-track-player';
+import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
@@ -15,7 +15,9 @@ export default function Folk({navigation}){
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(false);
     const [visible,modalvisible] = useState(false);
-    const [icon,seticon] = useState("play-arrow");
+    const [icon,seticon] = useState("motion-play");
+    const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [repeatMode,setRepeatMode] = useState('repeat-once');
 
     const progress = useProgress();
     // seticon(icon === 'play-arrow'?'pause':'play-arrow');
@@ -31,6 +33,16 @@ export default function Folk({navigation}){
    
     const likeddata = useCallback(async() => {
     //   console.log("in async function");
+
+        let bool1 = await AsyncStorage.getItem('song-playing-bool');
+        if(bool1 === 'true'){
+            seticon('motion-pause');
+        }
+
+        let iconcurrentplayingsong = await AsyncStorage.getItem("current-playing-song");
+        console.log("current playing song is: ",JSON.parse(iconcurrentplayingsong));
+        setcurrentPlaying(JSON.parse(iconcurrentplayingsong)*1);
+
         value = await AsyncStorage.getItem("liked");
       for(var k=0;k<value.length;k++){
         //   console.log(isNaN(value[k]));
@@ -44,10 +56,6 @@ export default function Folk({navigation}){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
            if(data[i]['id'] === arr[j]){
-            //   console.log(data[i]['id'],arr[j]);
-            //   console.log("inside async if");
-            //  console.log(i,j);
-            //  console.log(data[i]['liked']);
              data[i]['liked'] = 'cards-heart';
              data[i]['color'] = 'red';
              setlikedsong(current => [...current,data[i]['id']]);
@@ -151,10 +159,20 @@ export default function Folk({navigation}){
     }, [])
 
     async function play(id){
-        await TrackPlayer.reset(); 
-        seticon("pause");
 
-        if(id === data.length){
+        console.log(id);
+
+        if(id > data.length){
+            return null;
+        }
+
+        await TrackPlayer.reset(); 
+        seticon("motion-pause");
+
+        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        await AsyncStorage.setItem('current-playing-song',JSON.stringify(id));
+
+        if(id > data.length){
             TrackPlayer.updateOptions({
                 capabilities: [
                     Capability.Play,
@@ -196,13 +214,13 @@ export default function Folk({navigation}){
 
                         TrackPlayer.addEventListener("remote-play", ()=>{
                             
-                            seticon("pause");
+                            seticon("motion-pause");
                             TrackPlayer.play();
                         })
                         
                         TrackPlayer.addEventListener("remote-pause", () => {
                            
-                            seticon("play-arrow");
+                            seticon("motion-play");
                             TrackPlayer.pause();
                         })
                         
@@ -248,6 +266,7 @@ export default function Folk({navigation}){
         // console.log("i am pressed")
         // let liked = []; 
 
+
         // console.log(likedsong);
         for(var i=0;i<data.length;i++){
             if(data[i]['id'] === id){
@@ -287,24 +306,36 @@ export default function Folk({navigation}){
 
     }
 
-    async function position(){
-        // const progress = useProgress();
-        // console.log("progress is ",progress.duration);
-        // console.log("inside the position");
-        console.log(progress);
+    function repeatmode(){
+        if(repeatMode === 'repeat-once'){
+            TrackPlayer.setRepeatMode(RepeatMode.Queue);
+            setRepeatMode('repeat')
+        }
+        if(repeatMode === 'repeat'){
+            TrackPlayer.setRepeatMode(RepeatMode.Off);
+            setRepeatMode('repeat-off')
+        }
+        if(repeatMode === 'repeat-off'){
+            TrackPlayer.setRepeatMode(RepeatMode.Track);
+            setRepeatMode('repeat-once');
+        }
+
     }
 
     async function handlePlayback(){
-        seticon(icon === 'play-arrow'?'pause':'play-arrow');
-        icon === 'play-arrow'?TrackPlayer.play():TrackPlayer.pause();
+        seticon(icon === 'motion-play'?'motion-pause':'motion-play');
+        icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
         if(bool === false){
-            if(icon === 'play-arrow'){
+            if(icon === 'motion-play'){
                 let currentplayingsong = await AsyncStorage.getItem("current-playing");
                 // setbool(true);
                 play(JSON.parse(currentplayingsong));
                 setbool(true);
 
             }
+        }
+        if(icon === 'motion-pause'){
+            await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
         }
         
         
@@ -334,7 +365,7 @@ export default function Folk({navigation}){
             {data.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
@@ -403,15 +434,44 @@ export default function Folk({navigation}){
                 </View>
                 </View>
                 </View>
-                <View>
-                    <MaterialCommunityIcons name={'motion-pause'} size={40} color={"white"} />
+                <View style={{display:"flex",flexDirection: "row",justifyContent: "center",alignItems: "center",gap:20,marginTop:30}}>
+                <View style={{marginRight: 30}}>
+                <Pressable onPress={() => repeatmode()}>
+                        <MaterialCommunityIcons name={repeatMode} size={25} color={'white'}/>
+                    </Pressable>
+                </View>
+                   
+                    
+                    <Pressable onPress={() => {play(currentplayingsong-1);setcurrentPlaying(currentplayingsong-1)}}>
+                        <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
+                    </Pressable>
+                    <Pressable onPress={() => handlePlayback()}>
+                    <MaterialCommunityIcons name={icon} size={60} color={"white"} />
+                    </Pressable>
+                    <Pressable style={{display: currentplayingsong >= data.length?'block':'none'}} onPress={async () => {play(currentplayingsong+1);setcurrentPlaying(currentplayingsong+1)}}>
+                        <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
+                    </Pressable>
+                    <View style={{marginLeft: 30}}>
+                    {data.map((e) => {
+                        if(e['id'] === currentplayingsong){
+                            return(
+                            <Pressable onPress={() => {liked(e['id'])}}>
+                                <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
+                            </Pressable>
+                        )
+                        }
+                        
+                    })}
+                    </View>
+                    
+                    
                 </View>
                 {/* <Image source={} /> */}
             </View>
             </Modal>
 
             <View style={{width:"90%",marginBottom: 20}}>
-            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {position();modalvisible(true)}}>
+            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
@@ -424,7 +484,7 @@ export default function Folk({navigation}){
                 </View>
                 <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
                 <Pressable onPress={() => handlePlayback()}>
-                    <MaterialIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
+                    <MaterialCommunityIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
                 </Pressable>
                 </View>
                 
@@ -457,7 +517,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalview: {
-        backgroundColor: "#0A1D56",
+        backgroundColor: "#00898a",
         flex: 1,
         display: "flex",
         // justifyContent: "center",

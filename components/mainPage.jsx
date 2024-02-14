@@ -1,6 +1,6 @@
 import { useEffect, useState,useCallback } from "react";
 import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Image, Modal } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons,MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './song_data';
 import Souldata from './soul_data';
@@ -12,7 +12,7 @@ export default function MainPage({navigation}){
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
-    const [icon,seticon] = useState("play-arrow");
+    const [icon,seticon] = useState("motion-play");
     const [bool,setbool] = useState(false);
     // const [genre,setgenre] = useState('');
 
@@ -82,7 +82,7 @@ export default function MainPage({navigation}){
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed");
         let a = await TrackPlayer.getActiveTrack();
-        seticon("pause");
+        seticon("motion-pause");
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         // console.log("playback track changed");
         setrenderimage(a['artwork']);
@@ -100,10 +100,10 @@ export default function MainPage({navigation}){
     }
 
     async function handlePlayback(){
-        seticon(icon === 'play-arrow'?'pause':'play-arrow');
-        icon === 'play-arrow'?TrackPlayer.play():TrackPlayer.pause();
+        seticon(icon === 'motion-play'?'motion-pause':'motion-play');
+        icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
         if(bool === false){
-            if(icon === 'play-arrow'){
+            if(icon === 'motion-play'){
                 let currentplayingsong = await AsyncStorage.getItem("current-playing");
                 play(JSON.parse(currentplayingsong));
             }
@@ -157,7 +157,7 @@ export default function MainPage({navigation}){
                 </View>
                 <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end",borderRadius: 36}}>
                 <Pressable onPress={() => handlePlayback()}>
-                    <MaterialIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
+                    <MaterialCommunityIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
                 </Pressable>
                 </View>
             </View>
