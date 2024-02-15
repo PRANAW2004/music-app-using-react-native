@@ -1,4 +1,4 @@
-import { View,Text,StyleSheet,TextInput, TouchableOpacity } from "react-native";
+import { View,Text,StyleSheet,TextInput, TouchableOpacity,Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
@@ -41,9 +41,7 @@ export default function Search({navigation}){
             )
     },[])
 
-
-
-    
+    const [changeText,setchangeText] = useState('');
 
 
 
@@ -57,6 +55,7 @@ export default function Search({navigation}){
         style={[{backgroundColor: "grey",width: '70%',height:'70%',color: "black",marginTop: 20}]}
         placeholder="Search"
         ></TextInput>
+        
         </View>
         <View style={{display:"flex",width:'100%',flexDirection: "row",margin: 0,padding:10,columnGap: 30,height: 120}}>
             <TouchableOpacity style={{backgroundColor: "red",height: 100,width:'45%',display:"flex",justifyContent:"center",alignItems:"center",borderRadius: 20}} onPress={() => navigation.navigate("Pop")}>

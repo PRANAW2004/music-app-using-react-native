@@ -2,13 +2,16 @@ import { View,Text,StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
-// import { Permission } from "react-native";
-// import { Permission } from "react-native-permissions";
-// import ReactNativeGetMusicFiles from 'react-native-get-music-files';
 // import MusicFiles from 'react-native-get-music-files';
+// import Permissions from 'react-native-permissions';
+
 export default function YourLibrary({navigation}){
 
     console.log("inside local");
+
+    // Permissions.request('storage').then((response) => {
+    //     console.log(response);
+    // })
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {

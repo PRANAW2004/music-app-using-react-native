@@ -18,6 +18,7 @@ export default function Folk({navigation}){
     const [icon,seticon] = useState("motion-play");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
     const [repeatMode,setRepeatMode] = useState('repeat-once');
+    const [skipnextbool,setskipnextbool] = useState(false);
 
     const progress = useProgress();
     // seticon(icon === 'play-arrow'?'pause':'play-arrow');
@@ -129,23 +130,6 @@ export default function Folk({navigation}){
             ],
         })
 
-        // TrackPlayer.addEventListener("remote-play", () => {
-        //     seticon('pause');
-        //     TrackPlayer.play();
-        // })
-        // TrackPlayer.addEventListener("remote-pause", () => {
-        //     seticon('play-arrow');
-        //     TrackPlayer.pause();
-        // })
-        //      TrackPlayer.addEventListener("remote-next", () => {
-        //     TrackPlayer.skipToNext();
-        // })
-        //  TrackPlayer.addEventListener("remote-previous", () => {
-        //     TrackPlayer.skipToPrevious();
-        // })
-
-        // TrackPlayer.add(data);
-
         }
         catch(err){
             console.log(err);
@@ -160,19 +144,14 @@ export default function Folk({navigation}){
 
     async function play(id){
 
-        console.log(id);
-
-        if(id > data.length){
-            return null;
-        }
-
         await TrackPlayer.reset(); 
         seticon("motion-pause");
 
         await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem('current-playing-song',JSON.stringify(id));
 
-        if(id > data.length){
+        if(id >= data.length){
+            setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
                     Capability.Play,
@@ -181,6 +160,7 @@ export default function Folk({navigation}){
                 ]
             })
         }else{
+            setskipnextbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
                     Capability.Play,
@@ -192,13 +172,15 @@ export default function Folk({navigation}){
         }
             for(var i=0;i<data.length;i++){
                 if(data[i]['id'] === id){
-                    // setrenderimage(data[i]['artwork']);
-                    // setrendername(data[i]['title']);
-                    // setrenderauthor(data[i]['artist']);
+                    setrenderimage(data[i]['artwork']);
+                    setrendername(data[i]['title']);
+                    setrenderauthor(data[i]['artist']);
                     AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     // setrenderauthor(data[i]['author']);
                     let arr = [data[i]];
+                    // console.log(arr);
+                    console.log(i);
                     try{
                         if(i === 0){
                             for(j=i+1;j<data.length;j++){
@@ -207,7 +189,10 @@ export default function Folk({navigation}){
                         }
                         else{
                         for(j=i;j<data.length-1;j++){
-                            arr.push(data[i+j]);
+                            // console.log(j+1);
+                            // console.log(data[i+1])
+                            arr.push(data[i+1]);
+                            // console.log(arr);
                             // TrackPlayer.add([data[i]].push(data[i+j]));
                         }
                         }
@@ -225,6 +210,7 @@ export default function Folk({navigation}){
                         })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
+                            setcurrentPlaying(currentplayingsong-1);
                             let a = await TrackPlayer.getActiveTrack();
                             play(a["id"]-1); 
                             
@@ -234,12 +220,15 @@ export default function Folk({navigation}){
                             // tracknum = tracknum+1;
                             // settracknum(tracknum+1);
                             // play(tracknum);
+                            setcurrentPlaying(currentplayingsong+1);
                             let a = await TrackPlayer.getActiveTrack();
                             // console.log(a["id"]);
                             play(a["id"]+1);
                         })
+                    console.log(arr);
                     TrackPlayer.add(arr);
                     TrackPlayer.play();
+                    TrackPlayer.setRepeatMode(RepeatMode.Track);
                     break;
                     }catch(err){
                         console.log(1,err);
@@ -307,15 +296,19 @@ export default function Folk({navigation}){
     }
 
     function repeatmode(){
+        console.log("inside repeat mode function")
         if(repeatMode === 'repeat-once'){
+            console.log("inside repeat once")
             TrackPlayer.setRepeatMode(RepeatMode.Queue);
             setRepeatMode('repeat')
         }
         if(repeatMode === 'repeat'){
+            console.log("inside repeat")
             TrackPlayer.setRepeatMode(RepeatMode.Off);
             setRepeatMode('repeat-off')
         }
         if(repeatMode === 'repeat-off'){
+            console.log("inside repeat off")
             TrackPlayer.setRepeatMode(RepeatMode.Track);
             setRepeatMode('repeat-once');
         }
@@ -415,7 +408,7 @@ export default function Folk({navigation}){
                         minimumValue = {0}
                         maximumValue = {progress.duration}
                         thumbTintColor = "grey"
-                        minimumTrackTintColor="green"
+                        minimumTrackTintColor="#006550"
                         maximumTrackTintColor="white"
                         onSlidingComplete = {async value => {
                             await TrackPlayer.seekTo(value);
@@ -446,9 +439,9 @@ export default function Folk({navigation}){
                         <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
                     </Pressable>
                     <Pressable onPress={() => handlePlayback()}>
-                    <MaterialCommunityIcons name={icon} size={60} color={"white"} />
+                    <MaterialCommunityIcons name={icon} size={70} color={"white"} />
                     </Pressable>
-                    <Pressable style={{display: currentplayingsong >= data.length?'block':'none'}} onPress={async () => {play(currentplayingsong+1);setcurrentPlaying(currentplayingsong+1)}}>
+                    <Pressable style={{opacity: skipnextbool?0.5:1}} onPress={async () => {play(currentplayingsong+1);setcurrentPlaying(currentplayingsong+1)}} disabled={skipnextbool}>
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
@@ -470,7 +463,7 @@ export default function Folk({navigation}){
             </View>
             </Modal>
 
-            <View style={{width:"90%",marginBottom: 20}}>
+            <View style={{width:"90%",marginBottom: 20,marginTop:10}}>
             <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
@@ -480,7 +473,6 @@ export default function Folk({navigation}){
                         <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
                         <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
                     </View>
-
                 </View>
                 <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
                 <Pressable onPress={() => handlePlayback()}>
