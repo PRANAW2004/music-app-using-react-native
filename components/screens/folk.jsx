@@ -2,7 +2,7 @@ import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } f
 import { useEffect,useState,useCallback } from 'react';
 import data from '../song_data';
 import Song_Render from '../song-render';
-import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode} from 'react-native-track-player';
+import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
@@ -20,11 +20,24 @@ export default function Folk({navigation}){
     const [repeatMode,setRepeatMode] = useState('repeat-once');
     const [skipnextbool,setskipnextbool] = useState(false);
 
+    const events = [
+        Event.PlaybackState,
+        Event.PlaybackError,
+      ];
+
+    useTrackPlayerEvents(events, (event) => {
+          if (event.type === Event.PlaybackState) {
+                console.log(event.state);
+                if(event.state === 'paused'){
+                    seticon('motion-play');
+                }
+                if(event.state === 'playing'){
+                    seticon('motion-pause');
+                }
+          }
+    })
+
     const progress = useProgress();
-    // seticon(icon === 'play-arrow'?'pause':'play-arrow');
-
-
-    // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
     let arr = [];
     let arr1 = [];
@@ -41,7 +54,6 @@ export default function Folk({navigation}){
         }
 
         let iconcurrentplayingsong = await AsyncStorage.getItem("current-playing-song");
-        console.log("current playing song is: ",JSON.parse(iconcurrentplayingsong));
         setcurrentPlaying(JSON.parse(iconcurrentplayingsong)*1);
 
         value = await AsyncStorage.getItem("liked");
@@ -52,7 +64,7 @@ export default function Folk({navigation}){
               arr1.push(value[k]*1);
           }
       }
-      console.log(arr);
+    //   console.log(arr);
         for(var i=0;i<data.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
@@ -75,7 +87,7 @@ export default function Folk({navigation}){
 
     const currentPlaying = useCallback(async () => {
         currentplaying = await AsyncStorage.getItem("current-playing");
-        console.log("currently playing song is",currentplaying*1);
+        // console.log("currently playing song is",currentplaying*1);
         currentplaying = currentplaying*1;
         for(var i = 0;i<data.length;i++){
             if(currentplaying === data[i]['id']){
@@ -132,7 +144,7 @@ export default function Folk({navigation}){
 
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     }    
 
@@ -180,7 +192,7 @@ export default function Folk({navigation}){
                     // setrenderauthor(data[i]['author']);
                     let arr = [data[i]];
                     // console.log(arr);
-                    console.log(i);
+                    // console.log(i);
                     try{
                         if(i === 0){
                             for(j=i+1;j<data.length;j++){
@@ -198,13 +210,14 @@ export default function Folk({navigation}){
                         }
 
                         TrackPlayer.addEventListener("remote-play", ()=>{
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                             
                             seticon("motion-pause");
                             TrackPlayer.play();
                         })
                         
                         TrackPlayer.addEventListener("remote-pause", () => {
-                           
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
                             seticon("motion-play");
                             TrackPlayer.pause();
                         })
@@ -225,19 +238,19 @@ export default function Folk({navigation}){
                             // console.log(a["id"]);
                             play(a["id"]+1);
                         })
-                    console.log(arr);
+                    // console.log(arr);
                     TrackPlayer.add(arr);
                     TrackPlayer.play();
                     TrackPlayer.setRepeatMode(RepeatMode.Track);
                     break;
                     }catch(err){
-                        console.log(1,err);
+                        // console.log(1,err);
                     }
                 }
             }
     }
     TrackPlayer.addEventListener("playback-track-changed",async () => {
-        // console.log("Playback track changed");
+        // console.log("Playback track changed")
         // seticon("pause");
         let a = await TrackPlayer.getActiveTrack();
         // console.log("playback track changed");
@@ -298,17 +311,17 @@ export default function Folk({navigation}){
     function repeatmode(){
         console.log("inside repeat mode function")
         if(repeatMode === 'repeat-once'){
-            console.log("inside repeat once")
+            // console.log("inside repeat once")
             TrackPlayer.setRepeatMode(RepeatMode.Queue);
             setRepeatMode('repeat')
         }
         if(repeatMode === 'repeat'){
-            console.log("inside repeat")
+            // console.log("inside repeat")
             TrackPlayer.setRepeatMode(RepeatMode.Off);
             setRepeatMode('repeat-off')
         }
         if(repeatMode === 'repeat-off'){
-            console.log("inside repeat off")
+            // console.log("inside repeat off")
             TrackPlayer.setRepeatMode(RepeatMode.Track);
             setRepeatMode('repeat-once');
         }
@@ -318,8 +331,10 @@ export default function Folk({navigation}){
     async function handlePlayback(){
         seticon(icon === 'motion-play'?'motion-pause':'motion-play');
         icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
+        // console.log(icon);
         if(bool === false){
             if(icon === 'motion-play'){
+                // console.log("inside motion play");
                 let currentplayingsong = await AsyncStorage.getItem("current-playing");
                 // setbool(true);
                 play(JSON.parse(currentplayingsong));
@@ -328,9 +343,9 @@ export default function Folk({navigation}){
             }
         }
         if(icon === 'motion-pause'){
+            // console.log("inside motion pause");
             await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
         }
-        
         
     }
     

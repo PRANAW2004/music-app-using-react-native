@@ -41,8 +41,6 @@ export default function Search({navigation}){
             )
     },[])
 
-    const [changeText,setchangeText] = useState('');
-
 
 
     return(

@@ -4,9 +4,27 @@ import { MaterialCommunityIcons,MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './song_data';
 import Souldata from './soul_data';
-import TrackPlayer,{useProgress} from 'react-native-track-player';
+import TrackPlayer,{useProgress,useTrackPlayerEvents,Event} from 'react-native-track-player';
 
 export default function MainPage({navigation}){
+
+
+    const events = [
+        Event.PlaybackState,
+        Event.PlaybackError,
+      ];
+
+    useTrackPlayerEvents(events, (event) => {
+          if (event.type === Event.PlaybackState) {
+                console.log(event.state);
+                if(event.state === 'paused'){
+                    seticon('motion-play');
+                }
+                if(event.state === 'playing'){
+                    seticon('motion-pause');
+                }
+          }
+    })
 
     const [visible,modalvisible] = useState(false);
     const [renderimage,setrenderimage] = useState(null);
@@ -14,7 +32,6 @@ export default function MainPage({navigation}){
     const [renderauthor,setrenderauthor] = useState('');
     const [icon,seticon] = useState("motion-play");
     const [bool,setbool] = useState(false);
-    // const [genre,setgenre] = useState('');
 
 
     let progress = useProgress();
@@ -31,6 +48,18 @@ export default function MainPage({navigation}){
 
 
     const currentGenre = useCallback(async () => {
+
+        console.log("inside the call back in mainpage");
+
+        let playBool = await AsyncStorage.getItem("song-playing-bool");
+        if(JSON.parse(playBool) === "true"){
+            console.log("inside playbool");
+            seticon("motion-pause");
+        }else{
+            console.log("inside else playbool");
+            seticon("motion-play")
+        }
+
         let value = await AsyncStorage.getItem("current-genre");
         console.log("Value is ",value);
         console.log(JSON.parse(value) === 'folk');
@@ -66,8 +95,23 @@ export default function MainPage({navigation}){
 
     useEffect(currentGenre,[]);
 
+    useEffect(async () => {
+        console.log("Main Page status state");
+
+        let playBool = await AsyncStorage.getItem("song-playing-bool");
+        if(JSON.parse(playBool) === "true"){
+            console.log("inside playbool");
+            seticon("motion-pause");
+        }else{
+            console.log("inside else playbool");
+            seticon("motion-play")
+        }
+    },[])
+
     async function play(id){
         console.log("inside play");
+
+        console.log(TrackPlayer.STATE_PAUSED)
         
         let genre1 = await AsyncStorage.getItem("current-genre");
         let value = JSON.parse(genre1);
@@ -77,14 +121,10 @@ export default function MainPage({navigation}){
         console.log(arr.length);
         seticon(pause);
     }
-    
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
-        // console.log("Playback track changed");
         let a = await TrackPlayer.getActiveTrack();
         seticon("motion-pause");
-        // seticon(icon === 'play-arrow'?'pause':'play-arrow');
-        // console.log("playback track changed");
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
