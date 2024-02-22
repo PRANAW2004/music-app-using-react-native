@@ -57,21 +57,24 @@ export default function Folk({navigation}){
         setcurrentPlaying(JSON.parse(iconcurrentplayingsong)*1);
 
         value = await AsyncStorage.getItem("liked");
-      for(var k=0;k<value.length;k++){
-        //   console.log(isNaN(value[k]));
-          if(isNaN(value[k]) === false){
-              arr.push(value[k]*1);
-              arr1.push(value[k]*1);
-          }
-      }
-    //   console.log(arr);
+        arr = JSON.parse(value);
+    //   for(var k=0;k<arr2.length;k++){
+    //     //   console.log(isNaN(value[k]));
+    //     // console.log(value[k]);
+    //     //   if(isNaN(value[k]) === false){
+    //     //     console.log(value[k]);
+    //     //       arr.push(value[k]*1);
+    //     //       arr1.push(value[k]*1);
+    //     //   }
+    //     console.log(arr2[k].toString());
+    //   }
         for(var i=0;i<data.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
-           if(data[i]['id'] === arr[j]){
+           if(data[i]['title'] === arr[j]){
              data[i]['liked'] = 'cards-heart';
              data[i]['color'] = 'red';
-             setlikedsong(current => [...current,data[i]['id']]);
+             setlikedsong(current => [...current,data[i]['title']]);
           //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
            }
   
@@ -99,15 +102,13 @@ export default function Folk({navigation}){
     });
 
     useEffect(currentPlaying,[]);
-
-        //   setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
-
+    // if(likedsong.length === 0){
+    //     AsyncStorage.setItem('liked',JSON.stringify(""));
+    // }
     if(likedsong.length > 0){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
 
-
-    // console.log("likedsong is ",likedsong);
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -264,14 +265,14 @@ export default function Folk({navigation}){
 
 
 
-    async function liked(id){
+    async function liked(title){
         // console.log("i am pressed")
         // let liked = []; 
 
 
         // console.log(likedsong);
         for(var i=0;i<data.length;i++){
-            if(data[i]['id'] === id){
+            if(data[i]['title'] === title){
                 // console.log(data[i]['liked']);
 
                 // console.log("inside liked for if");
@@ -282,7 +283,7 @@ export default function Folk({navigation}){
                     // liked.push(data[i]['id']);
                     // console.log(likedsong.includes(data[i]['id']));
                     // console.log("inside if liked song is ",likedsong);
-                    setlikedsong(current => [...current,data[i]['id']]);
+                    setlikedsong(current => [...current,data[i]['title']]);
 
                     // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
 
@@ -290,15 +291,21 @@ export default function Folk({navigation}){
                     
                 }
                 else{
-                    // console.log("inside else",likedsong);
+                    if(likedsong.length === 1){
+                        setlikedsong([]);
+                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                    }else{
                         for(var i=0;i<likedsong.length;i++){
-                                if(id === likedsong[i]){
+                                if(title === likedsong[i]){
                                     // console.log("inside else and if");
                                     // console.log(likedsong[i],i);
-                                    setlikedsong((products) => products.filter((_,a) => a !== i));
+                                    
+                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }
+                           
                 }
+            }
             }
                 setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
                 // setbool(true);
@@ -390,7 +397,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked(e['id'])}}>
+                    <Pressable onPress={() => {liked(e['title'])}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -463,7 +470,7 @@ export default function Folk({navigation}){
                     {data.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked(e['id'])}}>
+                            <Pressable onPress={() => {liked(e['title'])}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )

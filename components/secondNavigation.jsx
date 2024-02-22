@@ -16,6 +16,7 @@ import Folk from './screens/folk';
 import Pop from './screens/pop';
 import Rock from './screens/rock';
 import Soul from './screens/soul';
+import Liked from './screens/liked';
 
 const Stack = createNativeStackNavigator();
 
@@ -113,6 +114,17 @@ export default function SecondNavigation({navigation}){
         <Stack.Screen 
           name="Folk"
           component={Folk}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+         <Stack.Screen 
+          name="Liked Songs"
+          component={Liked}
           options={{
             headerTitleAlign: "center",
             headerStyle: {

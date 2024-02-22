@@ -76,42 +76,24 @@ export default function MainPage({navigation}){
                 break;
             }
         }
-        // if(JSON.parse(value) === 'folk'){
-        //     console.log("inside the folk");
-        //     let value1 = await AsyncStorage.getItem("current-playing");
-        //     console.log(JSON.parse(value1));
-        //     for(var i=0;i<data.length;i++){
-        //         if(data[i]['id'] === JSON.parse(value1)){
-        //             setrenderimage(data[i]['artwork']);
-        //             setrendername(data[i]['title']);
-        //             setrenderauthor(data[i]['artist']);
-        //             break;
-        //         }
-        //     }
-        // }else{
-        //     console.log("inside else");
-        // }
     })
 
     useEffect(currentGenre,[]);
 
-    useEffect(async () => {
-        console.log("Main Page status state");
+    // useEffect(async () => {
+    //     console.log("Main Page status state");
 
-        let playBool = await AsyncStorage.getItem("song-playing-bool");
-        if(JSON.parse(playBool) === "true"){
-            console.log("inside playbool");
-            seticon("motion-pause");
-        }else{
-            console.log("inside else playbool");
-            seticon("motion-play")
-        }
-    },[])
+    //     let playBool = await AsyncStorage.getItem("song-playing-bool");
+    //     if(JSON.parse(playBool) === "true"){
+    //         console.log("inside playbool");
+    //         seticon("motion-pause");
+    //     }else{
+    //         console.log("inside else playbool");
+    //         seticon("motion-play")
+    //     }
+    // },[])
 
     async function play(id){
-        console.log("inside play");
-
-        console.log(TrackPlayer.STATE_PAUSED)
         
         let genre1 = await AsyncStorage.getItem("current-genre");
         let value = JSON.parse(genre1);
@@ -148,15 +130,13 @@ export default function MainPage({navigation}){
                 play(JSON.parse(currentplayingsong));
             }
         }
-        
-
     }
-
 
     return(
         <View style={styles.maincontainer}>
+            <View style={{display:"flex",flexDirection: "column",flex:1}}>
             <View style={styles.firstsection}>
-                 <Pressable onPress={()=>console.log("liked songs button is pressed")}>
+                 <Pressable onPress={()=>{navigation.navigate("Liked Songs")}} style={{height: 60}}>
                     <View style={{height:60,width:150,borderColor: "grey",borderWidth: 1,flexDirection:'row',alignItems: "center",borderRadius: 36}}>
                         <Image source={require("../images/main-page-icons/liked.png")} style={[{height: 60,width:60,marginRight:10}]}/>
                         <View style={{}}>
@@ -165,7 +145,7 @@ export default function MainPage({navigation}){
                         </View>
                     </View>
                 </Pressable>
-                <Pressable onPress={()=>console.log("history button is pressed")}>
+                <Pressable onPress={()=>console.log("history button is pressed")} style={{height:60}}>
                     <View style={{height: 60,width:150,borderRadius:36,borderColor: "grey",borderWidth:1,flexDirection: "row",alignItems: "center"}}>
                         <Image source={require("../images/main-page-icons/history.png")} style={[{height: 60,width:60,marginRight:10}]} />
                         <View>
@@ -173,9 +153,12 @@ export default function MainPage({navigation}){
                         </View>
                     </View>
                 </Pressable>
-
-
+                </View>
+                <View style={{display:"flex",justifyContent:"center",alignItems: "center"}}>
+                    <Text style={{color: "white"}}>This is the native language section</Text>
+                </View>
             </View>
+            
 
             <Modal visible={visible}>
             <View style={styles.modalview}>
@@ -220,7 +203,7 @@ const styles = StyleSheet.create({
     },
     firstsection: {
         display: "flex",
-        flex:1,
+        // flex:1,
         // backgroundColor: "green",
         margin: 20,
         flexDirection: "row",       
