@@ -7,7 +7,29 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
 
+
 export default function Folk({navigation}){
+
+    // console.log("inside folk");
+
+    const events = [
+        Event.PlaybackState,
+        Event.PlaybackError,
+      ];
+
+    useTrackPlayerEvents(events, (event) => {
+            // console.log("inside use track player events");
+            if (event.type === Event.PlaybackState) {
+                  console.log("Iniside folk ",event.state);
+                  if(event.state === 'paused'){
+                      seticon('motion-play');
+                  }
+                  if(event.state === 'playing'){
+                      seticon('motion-pause');
+                  }
+            }
+      })
+
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
@@ -17,25 +39,12 @@ export default function Folk({navigation}){
     const [visible,modalvisible] = useState(false);
     const [icon,seticon] = useState("motion-play");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
-    const [repeatMode,setRepeatMode] = useState('repeat-once');
+    const [repeatMode,setRepeatMode] = useState('repeat');
     const [skipnextbool,setskipnextbool] = useState(false);
+    const [skippreviousbool,setskippreviousbool] = useState(false);
+    
+     
 
-    const events = [
-        Event.PlaybackState,
-        Event.PlaybackError,
-      ];
-
-    useTrackPlayerEvents(events, (event) => {
-          if (event.type === Event.PlaybackState) {
-                console.log(event.state);
-                if(event.state === 'paused'){
-                    seticon('motion-play');
-                }
-                if(event.state === 'playing'){
-                    seticon('motion-pause');
-                }
-          }
-    })
 
     const progress = useProgress();
 
@@ -133,15 +142,15 @@ export default function Folk({navigation}){
     const setUpTrackPlayer = async () => {
         try{
         await TrackPlayer.setupPlayer()
-        TrackPlayer.updateOptions({
-            stopWithApp: true,
-            capabilities: [
-                Capability.Play,
-                Capability.Pause,
-                Capability.SkipToNext,
-                Capability.SkipToPrevious,
-            ],
-        })
+        // TrackPlayer.updateOptions({
+        //     stopWithApp: true,
+        //     capabilities: [
+        //         Capability.Play,
+        //         Capability.Pause,
+        //         Capability.SkipToNext,
+        //         Capability.SkipToPrevious,
+        //     ],
+        // })
 
         }
         catch(err){
@@ -157,13 +166,39 @@ export default function Folk({navigation}){
 
     async function play(id){
 
+        console.log(id);
+
         await TrackPlayer.reset(); 
         seticon("motion-pause");
 
         await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem('current-playing-song',JSON.stringify(id));
 
+        if(id === data.length-(data.length-1)){
+            console.log("inside 1");
+            setskippreviousbool(true);
+            TrackPlayer.updateOptions({     
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToNext
+                ]
+            })
+        }else{
+            console.log("inside 1 else");
+            setskippreviousbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    // Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+
         if(id >= data.length){
+            console.log("inside 2 in folk")
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -241,8 +276,10 @@ export default function Folk({navigation}){
                         })
                     // console.log(arr);
                     TrackPlayer.add(arr);
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
-                    TrackPlayer.setRepeatMode(RepeatMode.Track);
+                    console.log(RepeatMode);
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
                     break;
                     }catch(err){
                         // console.log(1,err);
@@ -455,9 +492,8 @@ export default function Folk({navigation}){
                         <MaterialCommunityIcons name={repeatMode} size={25} color={'white'}/>
                     </Pressable>
                 </View>
-                   
-                    
-                    <Pressable onPress={() => {play(currentplayingsong-1);setcurrentPlaying(currentplayingsong-1)}}>
+                      
+                    <Pressable style={{opacity: skippreviousbool?0.5:1}} onPress={() => {play(currentplayingsong-1);setcurrentPlaying(currentplayingsong-1)}} disabled={skippreviousbool}>
                         <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
                     </Pressable>
                     <Pressable onPress={() => handlePlayback()}>

@@ -8,6 +8,7 @@ import TrackPlayer,{useProgress,useTrackPlayerEvents,Event} from 'react-native-t
 
 export default function MainPage({navigation}){
 
+    // console.log("inside mainpage");
 
     const events = [
         Event.PlaybackState,
@@ -18,9 +19,11 @@ export default function MainPage({navigation}){
           if (event.type === Event.PlaybackState) {
                 console.log(event.state);
                 if(event.state === 'paused'){
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
                     seticon('motion-play');
                 }
                 if(event.state === 'playing'){
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     seticon('motion-pause');
                 }
           }
@@ -49,15 +52,9 @@ export default function MainPage({navigation}){
 
     const currentGenre = useCallback(async () => {
 
-        console.log("inside the call back in mainpage");
-
         let playBool = await AsyncStorage.getItem("song-playing-bool");
-        if(JSON.parse(playBool) === "true"){
-            console.log("inside playbool");
+        if(playBool === "true"){
             seticon("motion-pause");
-        }else{
-            console.log("inside else playbool");
-            seticon("motion-play")
         }
 
         let value = await AsyncStorage.getItem("current-genre");

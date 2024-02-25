@@ -49,7 +49,7 @@ export default function Search({navigation}){
         <View style={{backgroundColor: "grey",width:'10%',height: '70%',display:'flex',justifyContent: 'center',marginTop: 20}}>
         <MaterialIcons name="search" size={30} color="black" />
         </View>
-        <TextInput 
+        <TextInput
         style={[{backgroundColor: "grey",width: '70%',height:'70%',color: "black",marginTop: 20}]}
         placeholder="Search"
         ></TextInput>
