@@ -18,6 +18,7 @@ import Pop from './screens/pop';
 import Rock from './screens/rock';
 import Soul from './screens/soul';
 import Liked from './screens/liked';
+import SearchPage from './searchPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -129,6 +130,17 @@ export default function FirstNavigation({navigation}){
         <Stack.Screen 
           name="Liked Songs"
           component={Liked}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen 
+          name="search"
+          component={SearchPage}
           options={{
             headerTitleAlign: "center",
             headerStyle: {

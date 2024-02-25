@@ -9,9 +9,7 @@ import Slider from 'react-native-slider';
 
 
 export default function Folk({navigation}){
-
-    // console.log("inside folk");
-
+    
     const events = [
         Event.PlaybackState,
         Event.PlaybackError,

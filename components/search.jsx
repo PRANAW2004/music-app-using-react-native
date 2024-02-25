@@ -46,13 +46,15 @@ export default function Search({navigation}){
     return(
         <View style={styles.searchcontainer}>
         <View style={styles.searchbox}>
-        <View style={{backgroundColor: "grey",width:'10%',height: '70%',display:'flex',justifyContent: 'center',marginTop: 20}}>
+        <Pressable style={[{width: '70%',backgroundColor: "grey",height: '70%',marginTop:20,marginBottom: 20,display:"flex",flexDirection: "row"}]} onPress={() => navigation.navigate("search")}>
+        <View style={{backgroundColor: "grey",width:'10%',height: '100%',display:'flex',justifyContent: 'center'}}>
         <MaterialIcons name="search" size={30} color="black" />
         </View>
-        <TextInput
-        style={[{backgroundColor: "grey",width: '70%',height:'70%',color: "black",marginTop: 20}]}
-        placeholder="Search"
-        ></TextInput>
+        <View style={{display:"flex",justifyContent:"center"}}>
+        <Text>Search</Text>
+        </View>
+        
+        </Pressable>
         
         </View>
         <View style={{display:"flex",width:'100%',flexDirection: "row",margin: 0,padding:10,columnGap: 30,height: 120}}>

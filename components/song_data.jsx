@@ -26,6 +26,15 @@ const data = [
         liked: 'cards-heart-outline',
         color: "white"
     },
+    {
+        id:4,
+        url: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/Animals---Maroon-5(PagalWorlld.Com).mp3?alt=media&token=5ef8a75e-3aca-4c9a-aa7e-84fe9560d491",
+        title: "Animals",
+        artist: "Maroon5",
+        artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/animals.png?alt=media&token=7a0cdf53-65fe-4d58-844e-e8d95e09e330",
+        liked: 'cards-heart-outline',
+        color: "white"
+    },
 
 ]
 
