@@ -56,17 +56,26 @@ export default function SecondNavigation({navigation}){
        <Stack.Screen 
           name="Login"
           component={Login}
-          options={{headerShown: false}}
+          options={{headerShown: false,
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',}}
         />
           <Stack.Screen 
           name="ForgotPassword"
           component={ForgotPassword}
-          options={{headerShown: false}}
+          options={{headerShown: false,
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',}}
         />
          <Stack.Screen 
           name="Register"
           component={Register}
-          options={{headerShown: false}}
+          options={{headerShown: false,
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',}}
         />
         <Stack.Screen 
           name="Settings"
@@ -77,6 +86,9 @@ export default function SecondNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
          <Stack.Screen 
@@ -132,6 +144,9 @@ export default function SecondNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         <Stack.Screen 
@@ -143,6 +158,9 @@ export default function SecondNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         

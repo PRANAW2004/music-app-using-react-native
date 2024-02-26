@@ -47,11 +47,31 @@ export default function Folk({navigation}){
     const progress = useProgress();
 
     let arr = [];
-    let arr1 = [];
-    let arr2 = [];
 
     let value;
    
+    const skipprevious = useCallback(async() => {
+        console.log("inside skip previous")
+        let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+        console.log("iconnum1 is ",iconnum1);
+        if(JSON.parse(iconnum1) === 1){
+            // console.log("value is 1 in skipprevious")
+            console.log("inside the skipprevious if");
+            setskippreviousbool(true);
+        }
+      })    
+      useEffect(skipprevious,[]);
+
+      const skipnext = useCallback(async() => {
+        let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+        if(iconnum1 >= data.length){
+            setskipnextbool(true);
+        }
+      })    
+      useEffect(skipnext,[]);
+
+      
+
     const likeddata = useCallback(async() => {
     //   console.log("in async function");
 
@@ -60,8 +80,13 @@ export default function Folk({navigation}){
             seticon('motion-pause');
         }
 
-        let iconcurrentplayingsong = await AsyncStorage.getItem("current-playing-song");
-        setcurrentPlaying(JSON.parse(iconcurrentplayingsong)*1);
+        // let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+        // if(JSON.parse(iconnum1) >= data.length){
+        //     skipnextbool(true);
+        // }
+        // if(JSON.parse(iconnum1) === 1){
+        //     skippreviousbool(true);
+        // }
 
         value = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value);
@@ -98,9 +123,17 @@ export default function Folk({navigation}){
     const currentPlaying = useCallback(async () => {
         currentplaying = await AsyncStorage.getItem("current-playing");
         // console.log("currently playing song is",currentplaying*1);
-        currentplaying = currentplaying*1;
+        // currentplaying = currentplaying*1;
+        console.log("inside current playing, current playing is ",currentplaying)
         for(var i = 0;i<data.length;i++){
-            if(currentplaying === data[i]['id']){
+            if(JSON.parse(currentplaying) === data[i]['title']){
+                console.log(data[i]['id']);
+                setcurrentPlaying(data[i]['id']);
+                // if(data[i]['id'] === data.length){
+                //     skipnextbool(true);
+                // }
+                
+                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
                 setrenderimage(data[i]['artwork']);
                 setrendername(data[i]['title']);
                 setrenderauthor(data[i]['artist'])
@@ -140,15 +173,7 @@ export default function Folk({navigation}){
     const setUpTrackPlayer = async () => {
         try{
         await TrackPlayer.setupPlayer()
-        // TrackPlayer.updateOptions({
-        //     stopWithApp: true,
-        //     capabilities: [
-        //         Capability.Play,
-        //         Capability.Pause,
-        //         Capability.SkipToNext,
-        //         Capability.SkipToPrevious,
-        //     ],
-        // })
+
 
         }
         catch(err){
@@ -164,16 +189,14 @@ export default function Folk({navigation}){
 
     async function play(id){
 
-        console.log(id);
 
         await TrackPlayer.reset(); 
         seticon("motion-pause");
 
         await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-        await AsyncStorage.setItem('current-playing-song',JSON.stringify(id));
+        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
-        if(id === data.length-(data.length-1)){
-            console.log("inside 1");
+        if(id === 1){
             setskippreviousbool(true);
             TrackPlayer.updateOptions({     
                 capabilities: [
@@ -183,7 +206,6 @@ export default function Folk({navigation}){
                 ]
             })
         }else{
-            console.log("inside 1 else");
             setskippreviousbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -218,10 +240,12 @@ export default function Folk({navigation}){
         }
             for(var i=0;i<data.length;i++){
                 if(data[i]['id'] === id){
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(data[i]['title']));
+
                     setrenderimage(data[i]['artwork']);
                     setrendername(data[i]['title']);
                     setrenderauthor(data[i]['artist']);
-                    AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['title']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     // setrenderauthor(data[i]['author']);
                     let arr = [data[i]];
@@ -276,7 +300,7 @@ export default function Folk({navigation}){
                     TrackPlayer.add(arr);
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
-                    console.log(RepeatMode);
+                    // console.log(RepeatMode);
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
                     break;
                     }catch(err){
@@ -289,11 +313,17 @@ export default function Folk({navigation}){
         // console.log("Playback track changed")
         // seticon("pause");
         let a = await TrackPlayer.getActiveTrack();
+        if(a['id'] === 1){
+            setskippreviousbool(true);
+        }
+        if(a['id'] >= data.length){
+            setskipnextbool(true);
+        }
         // console.log("playback track changed");
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
-        AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
+        AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
   
@@ -377,9 +407,11 @@ export default function Folk({navigation}){
         if(bool === false){
             if(icon === 'motion-play'){
                 // console.log("inside motion play");
-                let currentplayingsong = await AsyncStorage.getItem("current-playing");
+                let currentplayingsong = await AsyncStorage.getItem("current-playing-num");
                 // setbool(true);
-                play(JSON.parse(currentplayingsong));
+                currentplayingsong = currentplayingsong*1;
+                play(currentplayingsong);
+                setcurrentPlaying(currentplayingsong);
                 setbool(true);
 
             }
@@ -415,7 +447,7 @@ export default function Folk({navigation}){
             {data.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}

@@ -66,7 +66,8 @@ export default function MainPage({navigation}){
         console.log(arr);
         for(var i=0;i<arr.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
-            if(arr[i]['id'] === JSON.parse(value1)){
+            console.log(value1);
+            if(arr[i]['title'] === JSON.parse(value1)){
                 setrenderimage(arr[i]['artwork']);
                 setrendername(arr[i]['title']);
                 setrenderauthor(arr[i]['artist']);
@@ -108,7 +109,7 @@ export default function MainPage({navigation}){
         setrendername(a['title']);
         setrenderauthor(a['artist'])
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
-        AsyncStorage.setItem("current-playing", JSON.stringify(a['id']));
+        AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
     async function position(){

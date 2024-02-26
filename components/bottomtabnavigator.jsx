@@ -12,6 +12,8 @@ export default function BottomNavigator(){
 
     console.log("inside bottom navigator");
 
+    AsyncStorage.setItem("Login",JSON.stringify(false));
+
     useEffect(()=>{
         BackHandler.addEventListener("hardwareBackPress",() => {
           BackHandler.exitApp();

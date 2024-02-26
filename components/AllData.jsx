@@ -1,4 +1,4 @@
-const data = [
+const alldata = [
     {
         id:1,
         url: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/alan-faded.mp3?alt=media&token=915dfb8f-2feb-40ba-8758-49201ce86ad5",
@@ -29,4 +29,4 @@ const data = [
 
 ]
 
-export default data;
+export default alldata;
