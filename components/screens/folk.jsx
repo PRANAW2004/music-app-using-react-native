@@ -80,26 +80,8 @@ export default function Folk({navigation}){
             seticon('motion-pause');
         }
 
-        // let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-        // if(JSON.parse(iconnum1) >= data.length){
-        //     skipnextbool(true);
-        // }
-        // if(JSON.parse(iconnum1) === 1){
-        //     skippreviousbool(true);
-        // }
-
         value = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value);
-    //   for(var k=0;k<arr2.length;k++){
-    //     //   console.log(isNaN(value[k]));
-    //     // console.log(value[k]);
-    //     //   if(isNaN(value[k]) === false){
-    //     //     console.log(value[k]);
-    //     //       arr.push(value[k]*1);
-    //     //       arr1.push(value[k]*1);
-    //     //   }
-    //     console.log(arr2[k].toString());
-    //   }
         for(var i=0;i<data.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);

@@ -1,15 +1,19 @@
 import {View,Text, TextInput,StyleSheet,KeyboardAvoidingView,ScrollView,Pressable,Image,BackHandler} from 'react-native';
 import { MaterialIcons,MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useCallback } from 'react';
 import alldata from './AllData';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SearchPage({navigation}) {
 
-    
+    const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [likedsong,setlikedsong] = useState([]);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+
+
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
-        // console.log(navigation.getState());
 
             if(navigation.isFocused()){
                 if(navigation.canGoBack()){
@@ -30,11 +34,34 @@ export default function SearchPage({navigation}) {
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
-    useEffect(() => {
-        setUpTrackPlayer();
+    useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
 
-        return () => TrackPlayer.destroy();
-    }, [])
+    let arr1 = [];
+    let value1;
+
+    const likeddata = useCallback(async() => {
+
+            console.log("inside search page use call back");
+    
+            value1= await AsyncStorage.getItem("liked");
+            arr1 = JSON.parse(value1);
+            for(var i=0;i<alldata.length;i++){
+              for(var j=0;j<arr1.length;j++){
+               if(alldata[i]['title'] === arr1[j]){
+                console.log(alldata[i]['title']);
+                 alldata[i]['liked'] = 'cards-heart';
+                 alldata[i]['color'] = 'red';
+                 setlikedsong(current => [...current,alldata[i]['title']]);
+               }
+              }
+            }
+        })
+        useEffect(likeddata,[]);
+
+        if(likedsong.length > 0){
+            console.log("inside the likedsong length");
+            AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+        }
 
     function search(name){
         let arr = [];
@@ -46,114 +73,154 @@ export default function SearchPage({navigation}) {
         setsongname(arr);
     }
 
-    // async function play(title){
+    async function play(id){
 
-    //     await TrackPlayer.reset(); 
+        console.log(id);
 
-    //     await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-    //     await AsyncStorage.setItem('current-playing-song',JSON.stringify(id));
 
-    //     if(id === data.length-(data.length-1)){
-    //         console.log("inside 1");
-    //         setskippreviousbool(true);
-    //         TrackPlayer.updateOptions({     
-    //             capabilities: [
-    //                 Capability.Play,
-    //                 Capability.Pause,
-    //                 Capability.SkipToNext
-    //             ]
-    //         })
-    //     }else{
-    //         console.log("inside 1 else");
-    //         setskippreviousbool(false);
-    //         TrackPlayer.updateOptions({
-    //             capabilities: [
-    //                 Capability.Play,
-    //                 Capability.Pause,
-    //                 // Capability.SkipToPrevious,
-    //                 Capability.SkipToNext
-    //             ]
-    //         })
-    //     }
+        await TrackPlayer.reset(); 
+        // seticon("motion-pause");
 
-    //     if(id >= data.length){
-    //         console.log("inside 2 in folk")
-    //         setskipnextbool(true)
-    //         TrackPlayer.updateOptions({
-    //             capabilities: [
-    //                 Capability.Play,
-    //                 Capability.Pause,
-    //                 Capability.SkipToPrevious
-    //             ]
-    //         })
-    //     }else{
-    //         setskipnextbool(false);
-    //         TrackPlayer.updateOptions({
-    //             capabilities: [
-    //                 Capability.Play,
-    //                 Capability.Pause,
-    //                 Capability.SkipToPrevious,
-    //                 Capability.SkipToNext
-    //             ]
-    //         })
-    //     }
-    //         for(var i=0;i<data.length;i++){
-    //             if(data[i]['id'] === id){
-    //                 AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['id']));
-    //                 AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
-    //                 let arr = [data[i]];
-    //                 try{
-    //                     if(i === 0){
-    //                         for(j=i+1;j<data.length;j++){
-    //                             arr.push(data[i+j]);
-    //                         }
-    //                     }
-    //                     else{
-    //                     for(j=i;j<data.length-1;j++){
-    //                         // console.log(j+1);
-    //                         // console.log(data[i+1])
-    //                         arr.push(data[i+1]);
-    //                         // console.log(arr);
-    //                         // TrackPlayer.add([data[i]].push(data[i+j]));
-    //                     }
-    //                     }
+        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
-    //                     TrackPlayer.addEventListener("remote-play", ()=>{
-    //                         AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-    //                         TrackPlayer.play();
-    //                     })
-                        
-    //                     TrackPlayer.addEventListener("remote-pause", () => {
-    //                         AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
-    //                         TrackPlayer.pause();
-    //                     })
-                        
-    //                     TrackPlayer.addEventListener("remote-previous",async () => {
-    //                         // setcurrentPlaying(currentplayingsong-1);
-    //                         let a = await TrackPlayer.getActiveTrack();
-    //                         play(a["id"]-1); 
+        if(id >= alldata.length){
+            console.log("inside 2 in folk")
+            // setskipnextbool(true)
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious
+                ]
+            })
+        }else{
+            // setskipnextbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+            for(var i=0;i<alldata.length;i++){
+                if(alldata[i]['id'] === id){
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(alldata[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(alldata[i]['title']));
+                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    let arr = [alldata[i]];
+                    try{
+                        if(i === 0){
+                            for(j=i+1;j<alldata.length;j++){
+                                arr.push(alldata[i+j]);
+                            }
+                        }
+                        else{
+                        for(j=i;j<alldata.length-1;j++){
+                            // console.log(j+1);
+                            // console.log(data[i+1])
+                            arr.push(alldata[i+1]);
+                            // console.log(arr);
+                            // TrackPlayer.add([data[i]].push(data[i+j]));
+                        }
+                        }
+
+                        TrackPlayer.addEventListener("remote-play", ()=>{
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                             
-    //                     })
+                            // seticon("motion-pause");
+                            TrackPlayer.play();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-pause", () => {
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                            // seticon("motion-play");
+                            TrackPlayer.pause();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-previous",async () => {
+                            setcurrentPlaying(currentplayingsong-1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]-1); 
+                            
+                        })
 
-    //                     TrackPlayer.addEventListener("remote-next", async () => {
-    //                         // setcurrentPlaying(currentplayingsong+1);
-    //                         let a = await TrackPlayer.getActiveTrack();
-    //                         play(a["id"]+1);
-    //                     })
-    //                 // console.log(arr);
-    //                 TrackPlayer.add(arr);
-    //                 AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-    //                 TrackPlayer.play();
-    //                 console.log(RepeatMode);
-    //                 TrackPlayer.setRepeatMode(RepeatMode.Queue);
-    //                 break;
-    //                 }catch(err){
-    //                     // console.log(1,err);
-    //                 }
-    //             }
-    //         }
-    // }
-    
+                        TrackPlayer.addEventListener("remote-next", async () => {
+                            // tracknum = tracknum+1;
+                            // settracknum(tracknum+1);
+                            // play(tracknum);
+                            setcurrentPlaying(currentplayingsong+1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            // console.log(a["id"]);
+                            play(a["id"]+1);
+                        })
+                    // console.log(arr);
+                    TrackPlayer.add(arr);
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    TrackPlayer.play();
+                    // console.log(RepeatMode);
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                    }catch(err){
+                        // console.log(1,err);
+                    }
+                }
+            }
+    }
+
+    async function liked(title){
+        // console.log("i am pressed")
+        // let liked = []; 
+
+
+        // console.log(likedsong);
+        for(var i=0;i<alldata.length;i++){
+            if(alldata[i]['title'] === title){
+                // console.log(data[i]['liked']);
+
+                // console.log("inside liked for if");
+                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
+                // console.log(data[i]['liked'])
+                if(alldata[i]['liked'] === 'cards-heart'){
+                    // liked.push(data[i]['id']);
+                    // console.log(likedsong.includes(data[i]['id']));
+                    // console.log("inside if liked song is ",likedsong);
+                    setlikedsong(current => [...current,alldata[i]['title']]);
+
+                    // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+
+                    // setbool(true);
+                    
+                }
+                else{
+                    if(likedsong.length === 1){
+                        setlikedsong([]);
+                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                    }else{
+                        for(var i=0;i<likedsong.length;i++){
+                                if(title === likedsong[i]){
+                                    // console.log("inside else and if");
+                                    // console.log(likedsong[i],i);
+                                    
+                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                    break;
+                            }
+                           
+                }
+            }
+            }
+                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                // setbool(true);
+                break;
+            }
+        }
+
+    }
+
+   
 
 
     return(
@@ -176,7 +243,7 @@ export default function SearchPage({navigation}) {
             {songname.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['title']);setcurrentPlaying(e['id'])}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}

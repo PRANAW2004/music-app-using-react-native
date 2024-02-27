@@ -12,7 +12,7 @@ export default function BottomNavigator(){
 
     console.log("inside bottom navigator");
 
-    AsyncStorage.setItem("Login",JSON.stringify(false));
+    AsyncStorage.setItem("Login",JSON.stringify(true));
 
     useEffect(()=>{
         BackHandler.addEventListener("hardwareBackPress",() => {
