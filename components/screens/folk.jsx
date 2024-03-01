@@ -80,6 +80,11 @@ export default function Folk({navigation}){
             seticon('motion-pause');
         }
 
+        for(var i=0;i<data.length;i++){
+            data[i]['liked'] = 'cards-heart-outline';
+            data[i]['color'] = 'white';
+        }
+
         value = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value);
         for(var i=0;i<data.length;i++){

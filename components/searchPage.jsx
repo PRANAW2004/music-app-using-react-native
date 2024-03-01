@@ -31,6 +31,7 @@ export default function SearchPage({navigation}) {
     },[])
 
     const [songname,setsongname] = useState([]);
+    console.log(songname.length);
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
@@ -41,36 +42,72 @@ export default function SearchPage({navigation}) {
 
     const likeddata = useCallback(async() => {
 
-            console.log("inside search page use call back");
-    
+        console.log("inside the search page callback");
+
             value1= await AsyncStorage.getItem("liked");
             arr1 = JSON.parse(value1);
+            // console.log(arr1);
             for(var i=0;i<alldata.length;i++){
               for(var j=0;j<arr1.length;j++){
                if(alldata[i]['title'] === arr1[j]){
-                console.log(alldata[i]['title']);
-                 alldata[i]['liked'] = 'cards-heart';
-                 alldata[i]['color'] = 'red';
                  setlikedsong(current => [...current,alldata[i]['title']]);
                }
               }
             }
+            
         })
         useEffect(likeddata,[]);
 
         if(likedsong.length > 0){
-            console.log("inside the likedsong length");
             AsyncStorage.setItem('liked',JSON.stringify(likedsong));
         }
 
-    function search(name){
+    async function search(name){
+        console.log(name);
         let arr = [];
-        for(var i=0;i<alldata.length;i++){
-            if(alldata[i]['title'].includes(name)){
-                arr.push(alldata[i]);
+
+        value1= await AsyncStorage.getItem("liked");
+            arr1 = JSON.parse(value1);
+            console.log(arr1);
+        //     for(var i=0;i<alldata.length;i++){
+        //       for(var j=0;j<arr1.length;j++){
+        //        if(alldata[i]['title'] === arr1[j]){
+        //         console.log(alldata[i]['title']);
+        //          alldata[i]['liked'] = 'cards-heart';
+        //          alldata[i]['color'] = 'red';
+        //          setlikedsong(current => [...current,alldata[i]['title']]);
+        //        }
+        //       }
+        //     }
+
+            for(var i=0;i<alldata.length;i++){
+                if(alldata[i]['title'].includes(name)){
+                    arr.push(alldata[i]);
+
+                }
             }
-        }
-        setsongname(arr);
+
+            for(var i=0;i<arr.length;i++){
+                arr[i]['liked'] = 'cards-heart-outline';
+                arr[i]['color'] = 'white';
+            }
+
+            console.log(arr.length);
+
+            for(var i=0;i<arr.length;i++){
+                for(var j=0;j<arr1.length;j++){
+                    if(arr[i]['title'] === arr1[j]){
+                        arr[i]['liked'] = 'cards-heart';
+                        arr[i]['color'] = 'red';
+                        // setlikedsong(current => [...current,arr[i]['title']]);
+                        
+                    }
+                }
+            }
+
+            
+
+            setsongname(arr);            
     }
 
     async function play(id){
@@ -129,14 +166,11 @@ export default function SearchPage({navigation}) {
 
                         TrackPlayer.addEventListener("remote-play", ()=>{
                             AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-                            
-                            // seticon("motion-pause");
                             TrackPlayer.play();
                         })
                         
                         TrackPlayer.addEventListener("remote-pause", () => {
                             AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
-                            // seticon("motion-play");
                             TrackPlayer.pause();
                         })
                         
@@ -171,41 +205,28 @@ export default function SearchPage({navigation}) {
     }
 
     async function liked(title){
-        // console.log("i am pressed")
-        // let liked = []; 
+        
 
-
-        // console.log(likedsong);
         for(var i=0;i<alldata.length;i++){
             if(alldata[i]['title'] === title){
-                // console.log(data[i]['liked']);
-
-                // console.log("inside liked for if");
                 alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
                 if(alldata[i]['liked'] === 'cards-heart'){
-                    // liked.push(data[i]['id']);
-                    // console.log(likedsong.includes(data[i]['id']));
-                    // console.log("inside if liked song is ",likedsong);
                     setlikedsong(current => [...current,alldata[i]['title']]);
 
-                    // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
-
-                    // setbool(true);
-                    
                 }
                 else{
                     if(likedsong.length === 1){
                         setlikedsong([]);
                         AsyncStorage.setItem("liked",JSON.stringify(""));
                     }else{
+                        console.log("inside the else in the liked songs");
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
-                                    // console.log("inside else and if");
-                                    // console.log(likedsong[i],i);
-                                    
+                                    console.log("inside the else if");
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                    console.log(likedsong);
                                     break;
                             }
                            
@@ -241,6 +262,7 @@ export default function SearchPage({navigation}) {
             <View style={{width:'100%',flex:1}}>
             <View style={{flex:1}}>
             {songname.map((e)=>{
+                console.log("this is inside the rendering file");
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
                     <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>

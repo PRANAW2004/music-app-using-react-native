@@ -7,6 +7,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function Liked({navigation}){
 
     const [songname,setsongname] = useState([]);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const [likedsong,setlikedsong] = useState([]);
+
+
+    console.log(songname);
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -25,9 +30,13 @@ export default function Liked({navigation}){
         })
     },[])
 
-    const [songliked,setsongliked] = useState("");
+    if(likedsong.length > 0){
+        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    }
 
-    const liked = useCallback(async () => {
+
+    const liked1 = useCallback(async () => {
+        console.log("inside the use callback");
         let value = await AsyncStorage.getItem("liked");
         let arr = JSON.parse(value);
         let arr1 = [];
@@ -38,11 +47,49 @@ export default function Liked({navigation}){
                 }
             }
         }
+        for(var i=0;i<arr1.length;i++){
+            arr1[i]['liked'] = 'cards-heart';
+            arr1[i]['color'] = 'red';
+            setlikedsong(current => [...current,arr1[i]['title']]);
+        }
         setsongname(arr1);
-        
     })
 
-    useEffect(liked,[])
+    useEffect(liked1,[])
+
+    async function liked(title){
+        
+
+        for(var i=0;i<alldata.length;i++){
+            if(alldata[i]['title'] === title){
+                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
+                // console.log(data[i]['liked'])
+                if(alldata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,alldata[i]['title']]);
+
+                }
+                else{
+                    if(likedsong.length === 1){
+                        setlikedsong([]);
+                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                    }else{
+                        for(var i=0;i<likedsong.length;i++){
+                                if(title === likedsong[i]){
+                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                    break;
+                            }
+                           
+                }
+            }
+            }
+            liked1();
+                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                break;
+            }
+        }
+
+    }
 
     return(
         <View style={[styles.likedview]}>
