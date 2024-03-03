@@ -107,6 +107,9 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_left",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         <Stack.Screen 
@@ -118,6 +121,9 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         <Stack.Screen 
@@ -129,6 +135,9 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_left",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         <Stack.Screen 
@@ -140,6 +149,9 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
           }}
         />
         <Stack.Screen 
@@ -151,7 +163,7 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
-            animation:"slide_from_right",
+            animation:"slide_from_left",
             presentation: 'modal',
           animationTypeForReplace: 'push',
           }}
@@ -165,7 +177,7 @@ export default function FirstNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
-            animation:"slide_from_right",
+            animation:"slide_from_left",
             presentation: 'modal',
           animationTypeForReplace: 'push',
           }}
