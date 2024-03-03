@@ -6,29 +6,11 @@ import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,Repe
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
-
+import { StatusBar } from 'expo-status-bar';
 
 export default function Folk({navigation}){
-    
-    const events = [
-        Event.PlaybackState,
-        Event.PlaybackError,
-      ];
 
-    useTrackPlayerEvents(events, (event) => {
-            // console.log("inside use track player events");
-            if (event.type === Event.PlaybackState) {
-                  console.log("Iniside folk ",event.state);
-                  if(event.state === 'paused'){
-                      seticon('motion-play');
-                  }
-                  if(event.state === 'playing'){
-                      seticon('motion-pause');
-                  }
-            }
-      })
-
-    const [renderimage,setrenderimage] = useState(null);
+        const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
@@ -40,6 +22,35 @@ export default function Folk({navigation}){
     const [repeatMode,setRepeatMode] = useState('repeat');
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
+
+    console.log("inside folk ",icon);
+    
+    const events = [
+        Event.PlaybackState,
+        Event.PlaybackError,
+      ];
+
+    useTrackPlayerEvents(events, (event) => {
+            if (event.type === Event.PlaybackState) {
+                  if(event.state === 'paused'){
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+
+                      seticon('motion-play');
+                  }
+                  else if(event.state === 'playing'){
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+
+                      seticon('motion-pause');
+                  }
+                  else if(event.state === 'stopped'){
+                    console.log("inside the stopped");
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
+                    seticon('motion-play');
+                }
+            }
+      })
+
+
     
      
 
@@ -178,7 +189,7 @@ export default function Folk({navigation}){
 
 
         await TrackPlayer.reset(); 
-        seticon("motion-pause");
+        // seticon("motion-pause");
 
         await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
@@ -466,10 +477,10 @@ export default function Folk({navigation}){
             </ScrollView>
             </View>
 
-            <Modal visible={visible}>
+            <Modal visible={visible} animationType='slide'>
             <View style={styles.modalview}>
                 <View>
-                    <MaterialIcons name='close' size={30} color='white' onPress={() => modalvisible(false)}/>
+                    <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
                 </View>
                 <View style={styles.modelcontent}>
                     <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
@@ -534,8 +545,12 @@ export default function Folk({navigation}){
                     
                     
                 </View>
+
+                    
                 {/* <Image source={} /> */}
             </View>
+                <StatusBar backgroundColor='#00898a' />
+        
             </Modal>
 
             <View style={{width:"90%",marginBottom: 20,marginTop:10}}>

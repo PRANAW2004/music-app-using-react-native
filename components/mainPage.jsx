@@ -10,6 +10,13 @@ export default function MainPage({navigation}){
 
     // console.log("inside mainpage");
 
+    const [visible,modalvisible] = useState(false);
+    const [renderimage,setrenderimage] = useState(null);
+    const [rendername,setrendername] = useState('');
+    const [renderauthor,setrenderauthor] = useState('');
+    const [icon,seticon] = useState("motion-play");
+    const [bool,setbool] = useState(false);
+
     const events = [
         Event.PlaybackState,
         Event.PlaybackError,
@@ -19,22 +26,23 @@ export default function MainPage({navigation}){
           if (event.type === Event.PlaybackState) {
                 console.log(event.state);
                 if(event.state === 'paused'){
+                    console.log("inside the paused state");
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
                     seticon('motion-play');
                 }
-                if(event.state === 'playing'){
+                else if(event.state === 'playing'){
+                    console.log("inside the playing state");
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     seticon('motion-pause');
+                }
+                else if(event.state === 'stopped'){
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                    seticon('motion-play');
                 }
           }
     })
 
-    const [visible,modalvisible] = useState(false);
-    const [renderimage,setrenderimage] = useState(null);
-    const [rendername,setrendername] = useState('');
-    const [renderauthor,setrenderauthor] = useState('');
-    const [icon,seticon] = useState("motion-play");
-    const [bool,setbool] = useState(false);
+   
 
 
     let progress = useProgress();
@@ -46,6 +54,7 @@ export default function MainPage({navigation}){
             BackHandler.exitApp();
             return true;
         });
+
     },[]);
 
 
@@ -104,20 +113,12 @@ export default function MainPage({navigation}){
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         let a = await TrackPlayer.getActiveTrack();
-        seticon("motion-pause");
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
-
-    async function position(){
-        console.log("inside the position");
-        let a = await TrackPlayer.getProgress();
-        console.log(a['duration']/60);
-        console.log("progress is",progress);
-    }
 
     async function handlePlayback(){
         seticon(icon === 'motion-play'?'motion-pause':'motion-play');
@@ -158,7 +159,7 @@ export default function MainPage({navigation}){
             </View>
             
 
-            <Modal visible={visible}>
+            <Modal visible={visible} animationType="slide">
             <View style={styles.modalview}>
                 <MaterialIcons name='close' size={30} onPress={() => modalvisible(false)}/>
                 {/* <Image source={} /> */}

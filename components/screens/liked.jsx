@@ -3,13 +3,17 @@ import {useEffect,useState,useCallback} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import alldata from '../AllData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
+
 
 export default function Liked({navigation}){
 
+    const [currentplayingsong,setcurrentPlaying] = useState(0);
     const [songname,setsongname] = useState([]);
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(false);
+    const [bool1,setbool1] = useState(false);
 
     console.log(songname);
     console.log(likedsong);
@@ -30,20 +34,11 @@ export default function Liked({navigation}){
     }
 
     let arr1 = [];
+
+    const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
+
+    useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
     
-
-
-
-    // for(var i=0;i<songname.length;i++){
-    //     for(var j=0;j<likedsong.length;j++){
-    //         if(songname[i]['title'] === likedsong[j]){
-    //             console.log(likedsong[j]);
-    //             arr1.push(songname[i]);
-    //         }
-    //     }
-    // }
-
-
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -92,6 +87,115 @@ export default function Liked({navigation}){
     })
 
     useEffect(liked1,[])
+
+    async function play(id){
+
+        console.log(id);
+        console.log(songname.length);
+
+        await TrackPlayer.reset(); 
+        // seticon("motion-pause");
+
+        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+
+        
+            for(var i=0;i<songname.length;i++){
+                if(songname[i]['id'] === id){
+                    console.log("i value is ",i);
+                    
+                    if(i === songname.length-1){
+                        TrackPlayer.updateOptions({
+                            capabilities: [
+                                Capability.Play,
+                                Capability.Pause,
+                                Capability.SkipToPrevious
+                            ]
+                        })
+                    }else{
+                        // setskipnextbool(false);
+                        TrackPlayer.updateOptions({
+                            capabilities: [
+                                Capability.Play,
+                                Capability.Pause,
+                                Capability.SkipToPrevious,
+                                Capability.SkipToNext
+                            ]
+                        })
+                    }
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(songname[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(songname[i]['title']));
+                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    let arr = [songname[i]];
+                    try{
+                        console.log("inside the try");
+                        if(i === 0 && songname.length > 1){
+                            console.log("inside the first if in play in liked");
+                            for(j=i+1;j<alldata.length;j++){
+                                arr.push(songname[i+j]);
+                            }
+                        }
+                        else{
+                        for(j=i;j<songname.length-1;j++){
+                            console.log("insid the second if in play in liked");
+                            arr.push(songname[i+1]);
+                        }
+                        }
+
+                        TrackPlayer.addEventListener("remote-play", ()=>{
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                            TrackPlayer.play();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-pause", () => {
+                        
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                            TrackPlayer.pause();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-previous",async () => {
+                            // console.log("i value is ",i);
+                            try{
+                                console.log("inside the remote pause not equal to 0")
+                                setcurrentPlaying(currentplayingsong-1);
+                                let a = await TrackPlayer.getActiveTrack();
+                                play(a["id"]-1); 
+                            }catch(err){
+                                console.log(err);
+                            }
+                                
+                            
+                            
+                            
+                        })
+
+                        TrackPlayer.addEventListener("remote-next", async () => {
+                            setcurrentPlaying(currentplayingsong+1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]+1);
+                        })
+                        let arr1 = [];
+                        for(var i=0;i<arr.length;i++){
+                            if(arr[i]!==undefined){
+                            arr1.push(arr[i]);
+                            }
+                        }
+                    console.log(arr1);
+                    TrackPlayer.add(arr1);
+                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    TrackPlayer.play();
+                    // console.log(RepeatMode);
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                    }catch(err){
+                        // console.log(1,err);
+                    }
+                }
+            }
+    }
+
+
+
 
     async function liked(title){
 
