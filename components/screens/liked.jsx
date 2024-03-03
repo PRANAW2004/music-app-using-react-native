@@ -9,9 +9,41 @@ export default function Liked({navigation}){
     const [songname,setsongname] = useState([]);
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedsong,setlikedsong] = useState([]);
-
+    const [bool,setbool] = useState(false);
 
     console.log(songname);
+    console.log(likedsong);
+
+    if(bool){
+        if(likedsong.length < songname.length){
+            let arr1 = [];
+            setsongname(arr1);
+            for(var i=0;i<songname.length;i++){
+                for(var j=0;j<likedsong.length;j++){
+                    if(songname[i]['title'] === likedsong[j]){
+                        arr1.push(songname[i]);
+                    }
+                }
+            }
+            setsongname(arr1);
+        }
+    }
+
+    let arr1 = [];
+    
+
+
+
+    // for(var i=0;i<songname.length;i++){
+    //     for(var j=0;j<likedsong.length;j++){
+    //         if(songname[i]['title'] === likedsong[j]){
+    //             console.log(likedsong[j]);
+    //             arr1.push(songname[i]);
+    //         }
+    //     }
+    // }
+
+
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -34,12 +66,15 @@ export default function Liked({navigation}){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
 
+    
 
     const liked1 = useCallback(async () => {
+        // AsyncStorage.setItem("liked",JSON.stringify(""));
         console.log("inside the use callback");
         let value = await AsyncStorage.getItem("liked");
         let arr = JSON.parse(value);
         let arr1 = [];
+
         for(var i=0;i<alldata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(arr[j] === alldata[i]['title']){
@@ -53,12 +88,13 @@ export default function Liked({navigation}){
             setlikedsong(current => [...current,arr1[i]['title']]);
         }
         setsongname(arr1);
+        setbool(true);
     })
 
     useEffect(liked1,[])
 
     async function liked(title){
-        
+
 
         for(var i=0;i<alldata.length;i++){
             if(alldata[i]['title'] === title){
@@ -67,7 +103,6 @@ export default function Liked({navigation}){
                 // console.log(data[i]['liked'])
                 if(alldata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,alldata[i]['title']]);
-
                 }
                 else{
                     if(likedsong.length === 1){
@@ -78,17 +113,30 @@ export default function Liked({navigation}){
                                 if(title === likedsong[i]){
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
-                            }
-                           
+                            }         
+                        }
+                    }
                 }
-            }
-            }
-            liked1();
+
+            // let value = await AsyncStorage.getItem("liked");
+            // let arr = JSON.parse(value);
+            // let arr1 = [];
+            // for(var i=0;i<alldata.length;i++){
+            //     for(var j=0;j<arr.length;j++){
+            //         if(arr[j] === alldata[i]['title']){
+            //             arr1.push(alldata[i]);
+            //         }
+            //     }
+            // }
+            // for(var i=0;i<arr1.length;i++){
+            //     arr1[i]['liked'] = 'cards-heart';
+            //     arr1[i]['color'] = 'red';
+            //     setlikedsong(current => [...current,arr1[i]['title']]);
+            // }
                 setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
                 break;
             }
         }
-
     }
 
     return(
