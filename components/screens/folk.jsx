@@ -33,18 +33,20 @@ export default function Folk({navigation}){
     useTrackPlayerEvents(events, (event) => {
             if (event.type === Event.PlaybackState) {
                   if(event.state === 'paused'){
+                    console.log("inside the folk paused")
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
-
+                    console.log("song playing bool is set to false inside the folk")
                       seticon('motion-play');
                   }
                   else if(event.state === 'playing'){
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-
+                    console.log("song playing bool is set to true inside the folk");
                       seticon('motion-pause');
                   }
                   else if(event.state === 'stopped'){
                     console.log("inside the stopped");
                     AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
+                    console.log("song-playing-bool is set to false inside the folk");
                     seticon('motion-play');
                 }
             }
@@ -62,12 +64,8 @@ export default function Folk({navigation}){
     let value;
    
     const skipprevious = useCallback(async() => {
-        console.log("inside skip previous")
         let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-        console.log("iconnum1 is ",iconnum1);
         if(JSON.parse(iconnum1) === 1){
-            // console.log("value is 1 in skipprevious")
-            console.log("inside the skipprevious if");
             setskippreviousbool(true);
         }
       })    
@@ -84,11 +82,14 @@ export default function Folk({navigation}){
       
 
     const likeddata = useCallback(async() => {
-    //   console.log("in async function");
-
         let bool1 = await AsyncStorage.getItem('song-playing-bool');
+        console.log("bool1 is ",bool1);
         if(bool1 === 'true'){
+            console.log("inside the liked data true")
             seticon('motion-pause');
+        }else{
+            console.log("inside the liked data false");
+            seticon('motion-play');
         }
 
         for(var i=0;i<data.length;i++){
@@ -191,7 +192,7 @@ export default function Folk({navigation}){
         await TrackPlayer.reset(); 
         // seticon("motion-pause");
 
-        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        // await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
         if(id === 1){
@@ -240,9 +241,9 @@ export default function Folk({navigation}){
                 if(data[i]['id'] === id){
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(data[i]['title']));
 
-                    setrenderimage(data[i]['artwork']);
-                    setrendername(data[i]['title']);
-                    setrenderauthor(data[i]['artist']);
+                    // setrenderimage(data[i]['artwork']);
+                    // setrendername(data[i]['title']);
+                    // setrenderauthor(data[i]['artist']);
                     AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['title']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     // setrenderauthor(data[i]['author']);
@@ -296,7 +297,7 @@ export default function Folk({navigation}){
                         })
                     // console.log(arr);
                     TrackPlayer.add(arr);
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
                     // console.log(RepeatMode);
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);

@@ -14,9 +14,38 @@ export default function Liked({navigation}){
     const [likedsong,setlikedsong] = useState([]);
     const [bool,setbool] = useState(false);
     const [bool1,setbool1] = useState(false);
+    const [renderimage,setrenderimage] = useState(null);
+    const [rendername,setrendername] = useState('');
+    const [renderauthor,setrenderauthor] = useState('');
+    const [icon,seticon] = useState("motion-play");
+
 
     console.log(songname);
     console.log(likedsong);
+
+    const events = [
+        Event.PlaybackState,
+        Event.PlaybackError,
+      ];
+
+      
+    useTrackPlayerEvents(events, (event) => {
+        if (event.type === Event.PlaybackState) {
+              if(event.state === 'paused'){
+                AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                  seticon('motion-play');
+              }
+              else if(event.state === 'playing'){
+                AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                  seticon('motion-pause');
+              }
+              else if(event.state === 'stopped'){
+                AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
+                seticon('motion-play');
+            }
+        }
+  })
+
 
     if(bool){
         if(likedsong.length < songname.length){
@@ -65,6 +94,14 @@ export default function Liked({navigation}){
 
     const liked1 = useCallback(async () => {
         // AsyncStorage.setItem("liked",JSON.stringify(""));
+
+        let bool1 = await AsyncStorage.getItem('song-playing-bool');
+        if(bool1 === 'true'){
+            seticon('motion-pause');
+        }else{
+            seticon('motion-play');
+        }
+
         console.log("inside the use callback");
         let value = await AsyncStorage.getItem("liked");
         let arr = JSON.parse(value);
@@ -84,19 +121,27 @@ export default function Liked({navigation}){
         }
         setsongname(arr1);
         setbool(true);
+
+        for(var i=0;i<alldata.length;i++){
+            let value1 = await AsyncStorage.getItem("current-playing");
+            console.log(value1);
+            if(alldata[i]['title'] === JSON.parse(value1)){
+                setrenderimage(alldata[i]['artwork']);
+                setrendername(alldata[i]['title']);
+                setrenderauthor(alldata[i]['artist']);
+                break;
+            }
+        }
     })
 
     useEffect(liked1,[])
 
     async function play(id){
 
-        console.log(id);
-        console.log(songname.length);
-
         await TrackPlayer.reset(); 
         // seticon("motion-pause");
 
-        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        // await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
         
@@ -154,15 +199,9 @@ export default function Liked({navigation}){
                         })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
-                            // console.log("i value is ",i);
-                            try{
-                                console.log("inside the remote pause not equal to 0")
                                 setcurrentPlaying(currentplayingsong-1);
                                 let a = await TrackPlayer.getActiveTrack();
                                 play(a["id"]-1); 
-                            }catch(err){
-                                console.log(err);
-                            }
                                 
                             
                             
@@ -182,7 +221,7 @@ export default function Liked({navigation}){
                         }
                     console.log(arr1);
                     TrackPlayer.add(arr1);
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
                     // console.log(RepeatMode);
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
@@ -194,6 +233,14 @@ export default function Liked({navigation}){
             }
     }
 
+    TrackPlayer.addEventListener("playback-track-changed",async () => {
+        let a = await TrackPlayer.getActiveTrack();
+        setrenderimage(a['artwork']);
+        setrendername(a['title']);
+        setrenderauthor(a['artist'])
+        // seticon(icon === 'play-arrow'?'pause':'play-arrow');
+        AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
+    })
 
 
 
@@ -222,25 +269,33 @@ export default function Liked({navigation}){
                     }
                 }
 
-            // let value = await AsyncStorage.getItem("liked");
-            // let arr = JSON.parse(value);
-            // let arr1 = [];
-            // for(var i=0;i<alldata.length;i++){
-            //     for(var j=0;j<arr.length;j++){
-            //         if(arr[j] === alldata[i]['title']){
-            //             arr1.push(alldata[i]);
-            //         }
-            //     }
-            // }
-            // for(var i=0;i<arr1.length;i++){
-            //     arr1[i]['liked'] = 'cards-heart';
-            //     arr1[i]['color'] = 'red';
-            //     setlikedsong(current => [...current,arr1[i]['title']]);
-            // }
                 setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
                 break;
             }
         }
+    }
+
+    async function handlePlayback(){
+        seticon(icon === 'motion-play'?'motion-pause':'motion-play');
+        icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
+        // console.log(icon);
+        if(bool === false){
+            if(icon === 'motion-play'){
+                // console.log("inside motion play");
+                let currentplayingsong = await AsyncStorage.getItem("current-playing-num");
+                // setbool(true);
+                currentplayingsong = currentplayingsong*1;
+                play(currentplayingsong);
+                setcurrentPlaying(currentplayingsong);
+                setbool(true);
+
+            }
+        }
+        if(icon === 'motion-pause'){
+            // console.log("inside motion pause");
+            await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
+        }
+        
     }
 
     return(
@@ -284,6 +339,25 @@ export default function Liked({navigation}){
             </View>
             </ScrollView>
         </View>
+        <View style={{width:"90%",marginBottom: 20}}>
+            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
+            <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
+                {/* {console.log(<Image source={{uri: renderimage}} />)} */}
+                <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
+                <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
+                <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
+                    <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
+                <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
+                </View>
+                </View>
+                <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end",borderRadius: 36}}>
+                <Pressable onPress={() => handlePlayback()}>
+                    <MaterialCommunityIcons name={icon} color="white" size={40} style={{marginRight: 10}}/>
+                </Pressable>
+                </View>
+            </View>
+            </Pressable>
+            </View>
         </View>
     )
 }

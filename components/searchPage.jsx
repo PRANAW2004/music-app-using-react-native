@@ -118,7 +118,7 @@ export default function SearchPage({navigation}) {
         await TrackPlayer.reset(); 
         // seticon("motion-pause");
 
-        await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+        // await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
         if(id >= alldata.length){
@@ -192,7 +192,7 @@ export default function SearchPage({navigation}) {
                         })
                     // console.log(arr);
                     TrackPlayer.add(arr);
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
                     // console.log(RepeatMode);
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);

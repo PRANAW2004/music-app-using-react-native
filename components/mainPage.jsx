@@ -3,8 +3,11 @@ import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Ima
 import { MaterialCommunityIcons,MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './song_data';
+import alldata from './AllData';
 import Souldata from './soul_data';
-import TrackPlayer,{useProgress,useTrackPlayerEvents,Event} from 'react-native-track-player';
+import TrackPlayer,{useProgress,useTrackPlayerEvents,Event,RepeatMode} from 'react-native-track-player';
+import Slider from 'react-native-slider';
+import {StatusBar} from 'expo-status-bar';
 
 export default function MainPage({navigation}){
 
@@ -16,27 +19,35 @@ export default function MainPage({navigation}){
     const [renderauthor,setrenderauthor] = useState('');
     const [icon,seticon] = useState("motion-play");
     const [bool,setbool] = useState(false);
+    const [repeatMode,setRepeatMode] = useState('repeat');
+    const [skipnextbool,setskipnextbool] = useState(false);
+    const [skippreviousbool,setskippreviousbool] = useState(false);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const [currentplayingsong,setcurrentPlaying] = useState(0);
+
 
     const events = [
         Event.PlaybackState,
         Event.PlaybackError,
       ];
 
-    useTrackPlayerEvents(events, (event) => {
+    useTrackPlayerEvents(events, async (event) => {
           if (event.type === Event.PlaybackState) {
-                console.log(event.state);
                 if(event.state === 'paused'){
-                    console.log("inside the paused state");
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
+                    await AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
+                    console.log("The song-playing-bool is set to false inside the main page");
                     seticon('motion-play');
                 }
                 else if(event.state === 'playing'){
-                    console.log("inside the playing state");
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    console.log("song is playing");
+                    await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    console.log("The song-playing-bool is set to true inside the main page");
+
                     seticon('motion-pause');
                 }
                 else if(event.state === 'stopped'){
-                    AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                    await AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                    console.log("The song-playing-bool is set to false inside the main page");
                     seticon('motion-play');
                 }
           }
@@ -50,7 +61,6 @@ export default function MainPage({navigation}){
 
     useEffect(()=>{
         BackHandler.addEventListener("hardwareBackPress",()=>{
-            console.log("back button is pressed in home page");
             BackHandler.exitApp();
             return true;
         });
@@ -62,13 +72,16 @@ export default function MainPage({navigation}){
     const currentGenre = useCallback(async () => {
 
         let playBool = await AsyncStorage.getItem("song-playing-bool");
+        console.log("playbool is ",playBool);
         if(playBool === "true"){
+            console.log("inside the playbool true");
             seticon("motion-pause");
+        }else{
+            console.log("inside the playbool false");
+            seticon("motion-play");
         }
 
         let value = await AsyncStorage.getItem("current-genre");
-        console.log("Value is ",value);
-        console.log(JSON.parse(value) === 'folk');
         let valuegenre = JSON.parse(value);
         let arr = []
         arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
@@ -83,22 +96,34 @@ export default function MainPage({navigation}){
                 break;
             }
         }
+
+        let value1 = await AsyncStorage.getItem("liked");
+        let arr1 = JSON.parse(value1);
+        for(var i=0;i<alldata.length;i++){
+          for(var j=0;j<arr1.length;j++){
+              // console.log("123",data[i]['id'],arr[j]);
+           if(alldata[i]['title'] === arr1[j]){
+            console.log("inside the liked data");
+             alldata[i]['liked'] = 'cards-heart';
+             alldata[i]['color'] = 'red';
+            //  setlikedsong(current => [...current,data[i]['title']]);
+          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+           }
+  
+          }
+        }
+
+        let currentplaying = await AsyncStorage.getItem("current-playing");
+        for(var i = 0;i<alldata.length;i++){
+            if(JSON.parse(currentplaying) === alldata[i]['title']){
+                console.log("inside the current playing");
+                setcurrentPlaying(alldata[i]['id']);
+                // AsyncStorage.setItem("current-playing-num",JSON.stringify(alldata[i]['id']));
+            }
+        }
     })
 
     useEffect(currentGenre,[]);
-
-    // useEffect(async () => {
-    //     console.log("Main Page status state");
-
-    //     let playBool = await AsyncStorage.getItem("song-playing-bool");
-    //     if(JSON.parse(playBool) === "true"){
-    //         console.log("inside playbool");
-    //         seticon("motion-pause");
-    //     }else{
-    //         console.log("inside else playbool");
-    //         seticon("motion-play")
-    //     }
-    // },[])
 
     async function play(id){
         
@@ -159,15 +184,85 @@ export default function MainPage({navigation}){
             </View>
             
 
-            <Modal visible={visible} animationType="slide">
+            <Modal visible={visible} animationType='slide'>
             <View style={styles.modalview}>
-                <MaterialIcons name='close' size={30} onPress={() => modalvisible(false)}/>
+                <View>
+                    <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
+                </View>
+                <View style={styles.modelcontent}>
+                    <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
+                    <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
+                    <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
+                    <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
+                    </View>
+
+                    <Slider 
+                        style={styles.progressBar}
+                        value = {progress.position}
+                        minimumValue = {0}
+                        maximumValue = {progress.duration}
+                        thumbTintColor = "grey"
+                        minimumTrackTintColor="#006550"
+                        maximumTrackTintColor="white"
+                        onSlidingComplete = {async value => {
+                            await TrackPlayer.seekTo(value);
+                        }}
+                    />
+                </View>
+                <View style={{display: "flex",alignItems: "center"}}>
+                <View style={{width: '90%',flexDirection: "row"}}>
+                <View style={{width: '50%'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.position*1000).toLocaleTimeString().substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                <View style={{width: '50%',alignItems: 'flex-end'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.duration* 1000)
+                .toLocaleTimeString()
+                .substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                </View>
+                </View>
+                <View style={{display:"flex",flexDirection: "row",justifyContent: "center",alignItems: "center",gap:20,marginTop:30}}>
+                <View style={{marginRight: 30}}>
+                <Pressable onPress={() => repeatmode()}>
+                        <MaterialCommunityIcons name={repeatMode} size={25} color={'white'}/>
+                    </Pressable>
+                </View>
+                      
+                    <Pressable style={{opacity: skippreviousbool?0.5:1}} onPress={() => {play(currentplayingsong-1);setcurrentPlaying(currentplayingsong-1)}} disabled={skippreviousbool}>
+                        <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
+                    </Pressable>
+                    <Pressable onPress={() => handlePlayback()}>
+                    <MaterialCommunityIcons name={icon} size={70} color={"white"} />
+                    </Pressable>
+                    <Pressable style={{opacity: skipnextbool?0.5:1}} onPress={async () => {play(currentplayingsong+1);setcurrentPlaying(currentplayingsong+1)}} disabled={skipnextbool}>
+                        <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
+                    </Pressable>
+                    <View style={{marginLeft: 30}}>
+                    {alldata.map((e) => {
+                        
+                        if(e['id'] === currentplayingsong){
+                            return(
+                            <Pressable >
+                                <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
+                            </Pressable>
+                        )
+                        }
+                        
+                    })}
+                    </View>
+                    
+                    
+                </View>
+
+                    
                 {/* <Image source={} /> */}
             </View>
+                <StatusBar backgroundColor='#00898a' />
+        
             </Modal>
 
             <View style={{width:"90%",marginBottom: 20}}>
-            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {position();modalvisible(true)}}>
+            <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
@@ -209,10 +304,26 @@ const styles = StyleSheet.create({
         gap:20 
     },
     modalview: {
-        backgroundColor: "#83C0C1",
+        backgroundColor: "#00898a",
         flex: 1,
         display: "flex",
+        // justifyContent: "center",
+        // alignItems: "center",
+    },
+    modelcontent: {
+        display:"flex",
         justifyContent: "center",
-        alignItems: "center",
-    }
+        alignItems:"center",
+        marginTop: 70,
+        marginBottom: 20
+        // marginBottom: 40,
+    },
+    progressBar: {
+        width: '90%',
+        height: 1,
+        // marginTop: 25,
+        // flexDirection: 'row',
+        color: 'white',
+        backgroundColor :"white"
+      },
 })
