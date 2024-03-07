@@ -19,6 +19,7 @@ import Rock from './screens/rock';
 import Soul from './screens/soul';
 import Liked from './screens/liked';
 import SearchPage from './searchPage';
+import History from './screens/history';
 
 const Stack = createNativeStackNavigator();
 
@@ -182,7 +183,20 @@ export default function FirstNavigation({navigation}){
           animationTypeForReplace: 'push',
           }}
         />
-
+        <Stack.Screen 
+          name="History"
+          component={History}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
 
         </Stack.Navigator>
         </RootSiblingParent>

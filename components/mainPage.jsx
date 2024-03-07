@@ -11,8 +11,6 @@ import {StatusBar} from 'expo-status-bar';
 
 export default function MainPage({navigation}){
 
-    // console.log("inside mainpage");
-
     const [visible,modalvisible] = useState(false);
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
@@ -23,7 +21,27 @@ export default function MainPage({navigation}){
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const [likedcolor,setlikedcolor] = useState("white");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [historydate,sethistorydate] = useState([]);
+
+    if(historydate.length > 0){
+        console.log(historydate);
+        AsyncStorage.setItem("historydate",JSON.stringify(historydate));
+    }
+
+    useEffect(async () => {
+        if(historydate.length > 50){
+            sethistorydate((data) => data.filter((_,index) => index !== 0));
+        }else{
+            console.log("inside the date in useeffect");
+            let Date1 = new Date();
+            console.log(typeof Date1.toLocaleDateString());
+            let currentdate = Date1.toLocaleDateString();
+            sethistorydate((current) => [...current,currentdate]);
+        }
+    },[])
+   
 
 
     const events = [
@@ -35,19 +53,15 @@ export default function MainPage({navigation}){
           if (event.type === Event.PlaybackState) {
                 if(event.state === 'paused'){
                     await AsyncStorage.setItem("song-playing-bool",JSON.stringify(false))
-                    console.log("The song-playing-bool is set to false inside the main page");
                     seticon('motion-play');
                 }
                 else if(event.state === 'playing'){
-                    console.log("song is playing");
                     await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-                    console.log("The song-playing-bool is set to true inside the main page");
 
                     seticon('motion-pause');
                 }
                 else if(event.state === 'stopped'){
                     await AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
-                    console.log("The song-playing-bool is set to false inside the main page");
                     seticon('motion-play');
                 }
           }
@@ -72,12 +86,9 @@ export default function MainPage({navigation}){
     const currentGenre = useCallback(async () => {
 
         let playBool = await AsyncStorage.getItem("song-playing-bool");
-        console.log("playbool is ",playBool);
         if(playBool === "true"){
-            console.log("inside the playbool true");
             seticon("motion-pause");
         }else{
-            console.log("inside the playbool false");
             seticon("motion-play");
         }
 
@@ -85,10 +96,8 @@ export default function MainPage({navigation}){
         let valuegenre = JSON.parse(value);
         let arr = []
         arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
-        console.log(arr);
         for(var i=0;i<arr.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
-            console.log(value1);
             if(arr[i]['title'] === JSON.parse(value1)){
                 setrenderimage(arr[i]['artwork']);
                 setrendername(arr[i]['title']);
@@ -97,26 +106,11 @@ export default function MainPage({navigation}){
             }
         }
 
-        let value1 = await AsyncStorage.getItem("liked");
-        let arr1 = JSON.parse(value1);
-        for(var i=0;i<alldata.length;i++){
-          for(var j=0;j<arr1.length;j++){
-              // console.log("123",data[i]['id'],arr[j]);
-           if(alldata[i]['title'] === arr1[j]){
-            console.log("inside the liked data");
-             alldata[i]['liked'] = 'cards-heart';
-             alldata[i]['color'] = 'red';
-            //  setlikedsong(current => [...current,data[i]['title']]);
-          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
-           }
-  
-          }
-        }
+
 
         let currentplaying = await AsyncStorage.getItem("current-playing");
         for(var i = 0;i<alldata.length;i++){
             if(JSON.parse(currentplaying) === alldata[i]['title']){
-                console.log("inside the current playing");
                 setcurrentPlaying(alldata[i]['id']);
                 // AsyncStorage.setItem("current-playing-num",JSON.stringify(alldata[i]['id']));
             }
@@ -129,10 +123,8 @@ export default function MainPage({navigation}){
         
         let genre1 = await AsyncStorage.getItem("current-genre");
         let value = JSON.parse(genre1);
-        console.log(JSON.parse(genre1));
         let arr = []
         arr = value === 'folk'?data:value==='soul'?Souldata:[];
-        console.log(arr.length);
         seticon(pause);
     }
 
@@ -143,6 +135,22 @@ export default function MainPage({navigation}){
         setrenderauthor(a['artist'])
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
+
+        let value1 = await AsyncStorage.getItem("liked");
+        let arr1 = JSON.parse(value1);
+        let bool11 = false;
+        for(var i=0;i<arr1.length;i++){
+            if(a['title'] === arr1[i]){
+                bool11 = true;
+            }
+        }
+        if(bool11){
+            setlikedicon('cards-heart');
+            setlikedcolor('red');
+        }else{
+            setlikedicon('cards-heart-outline');
+            setlikedcolor('white');
+        }
     })
 
     async function handlePlayback(){
@@ -169,7 +177,7 @@ export default function MainPage({navigation}){
                         </View>
                     </View>
                 </Pressable>
-                <Pressable onPress={()=>console.log("history button is pressed")} style={{height:60}}>
+                <Pressable onPress={()=>navigation.navigate("History")} style={{height:60}}>
                     <View style={{height: 60,width:150,borderRadius:36,borderColor: "grey",borderWidth:1,flexDirection: "row",alignItems: "center"}}>
                         <Image source={require("../images/main-page-icons/history.png")} style={[{height: 60,width:60,marginRight:10}]} />
                         <View>
@@ -243,7 +251,7 @@ export default function MainPage({navigation}){
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable >
-                                <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
+                                <MaterialCommunityIcons name={likedicon} size={25} color={likedcolor}/>
                             </Pressable>
                         )
                         }
