@@ -150,7 +150,6 @@ export default function Folk({navigation}){
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
-        // console.log(navigation.getState());
 
             if(navigation.isFocused()){
                 if(navigation.canGoBack()){
@@ -247,9 +246,8 @@ export default function Folk({navigation}){
                         let date = new Date().toLocaleDateString();
                         let date1 = date;
                         // console.log(date1);
-                        let arr1 = date1 +":"+ data[i]['title'];
-                        console.log(arr1);
-                        sethistory((current) => [...current,arr1]);
+                        let data11 = date1 + ":"+data[i]['title']
+                        sethistory((current) => [...current,data11]);
                     }
                     // await AsyncStorage.setItem("history",JSON.stringify(history));
 
