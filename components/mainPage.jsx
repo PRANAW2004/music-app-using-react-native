@@ -23,24 +23,6 @@ export default function MainPage({navigation}){
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedcolor,setlikedcolor] = useState("white");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
-    const [historydate,sethistorydate] = useState([]);
-
-    if(historydate.length > 0){
-        console.log(historydate);
-        AsyncStorage.setItem("historydate",JSON.stringify(historydate));
-    }
-
-    useEffect(async () => {
-        if(historydate.length > 50){
-            sethistorydate((data) => data.filter((_,index) => index !== 0));
-        }else{
-            console.log("inside the date in useeffect");
-            let Date1 = new Date();
-            console.log(typeof Date1.toLocaleDateString());
-            let currentdate = Date1.toLocaleDateString();
-            sethistorydate((current) => [...current,currentdate]);
-        }
-    },[])
    
 
 
