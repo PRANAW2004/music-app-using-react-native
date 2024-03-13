@@ -98,11 +98,9 @@ export default function MainPage({navigation}){
             }
         }
     })
-
     useEffect(currentGenre,[]);
 
     async function play(id){
-        
         let genre1 = await AsyncStorage.getItem("current-genre");
         let value = JSON.parse(genre1);
         let arr = []

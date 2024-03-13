@@ -10,7 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 
 export default function Folk({navigation}){
 
-        const [renderimage,setrenderimage] = useState(null);
+    const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
@@ -46,15 +46,8 @@ export default function Folk({navigation}){
             }
       })
 
-
-    
-     
-
-
     const progress = useProgress();
-
     let arr = [];
-
     let value;
    
     const skipprevious = useCallback(async() => {
@@ -84,8 +77,6 @@ export default function Folk({navigation}){
       useEffect(historydata,[]);
 
     const likeddata = useCallback(async() => {
-
-        // await AsyncStorage.setItem("history",JSON.stringify([]));
 
         let bool1 = await AsyncStorage.getItem('song-playing-bool');
         if(bool1 === 'true'){
@@ -143,7 +134,6 @@ export default function Folk({navigation}){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
     if(history.length > 0){
-        console.log(history);
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
 
@@ -214,7 +204,6 @@ export default function Folk({navigation}){
         }
 
         if(id >= data.length){
-            console.log("inside 2 in folk")
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -242,7 +231,6 @@ export default function Folk({navigation}){
                     if(history.length > 50){
                         sethistory((data) => data.filter((_,index) => index !== 0));
                     }else{
-                        console.log("inside the set history");
                         let date = new Date().toLocaleDateString();
                         let date1 = date;
                         // console.log(date1);
@@ -318,29 +306,14 @@ export default function Folk({navigation}){
 
 
     async function liked(title){
-        // console.log("i am pressed")
-        // let liked = []; 
-
-
-        // console.log(likedsong);
         for(var i=0;i<data.length;i++){
             if(data[i]['title'] === title){
-                // console.log(data[i]['liked']);
 
-                // console.log("inside liked for if");
                 data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
                 if(data[i]['liked'] === 'cards-heart'){
-                    // liked.push(data[i]['id']);
-                    // console.log(likedsong.includes(data[i]['id']));
-                    // console.log("inside if liked song is ",likedsong);
                     setlikedsong(current => [...current,data[i]['title']]);
-
-                    // AsyncStorage.setItem('liked',JSON.stringify(likedsong));
-
-                    // setbool(true);
-                    
                 }
                 else{
                     if(likedsong.length === 1){
@@ -349,9 +322,6 @@ export default function Folk({navigation}){
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
-                                    // console.log("inside else and if");
-                                    // console.log(likedsong[i],i);
-                                    
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }
