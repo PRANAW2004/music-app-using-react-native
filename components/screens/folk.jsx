@@ -7,6 +7,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
 import { StatusBar } from 'expo-status-bar';
+import alldata from '../AllData';
 
 export default function Folk({navigation}){
 

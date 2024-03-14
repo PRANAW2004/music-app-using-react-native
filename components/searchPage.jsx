@@ -66,22 +66,14 @@ export default function SearchPage({navigation}) {
         console.log(name);
         let arr = [];
 
+        name = name.toLowerCase();
+
         value1= await AsyncStorage.getItem("liked");
             arr1 = JSON.parse(value1);
             console.log(arr1);
-        //     for(var i=0;i<alldata.length;i++){
-        //       for(var j=0;j<arr1.length;j++){
-        //        if(alldata[i]['title'] === arr1[j]){
-        //         console.log(alldata[i]['title']);
-        //          alldata[i]['liked'] = 'cards-heart';
-        //          alldata[i]['color'] = 'red';
-        //          setlikedsong(current => [...current,alldata[i]['title']]);
-        //        }
-        //       }
-        //     }
 
             for(var i=0;i<alldata.length;i++){
-                if(alldata[i]['title'].includes(name)){
+                if(alldata[i]['title'].toLowerCase().includes(name)){
                     arr.push(alldata[i]);
 
                 }

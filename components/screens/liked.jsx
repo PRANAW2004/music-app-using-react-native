@@ -20,8 +20,8 @@ export default function Liked({navigation}){
     const [icon,seticon] = useState("motion-play");
 
 
-    console.log(songname);
-    console.log(likedsong);
+    // console.log(songname);
+    // console.log(likedsong);
 
     const events = [
         Event.PlaybackState,
@@ -139,16 +139,9 @@ export default function Liked({navigation}){
     async function play(id){
 
         await TrackPlayer.reset(); 
-        // seticon("motion-pause");
-
-        // await AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
-
-        
             for(var i=0;i<songname.length;i++){
                 if(songname[i]['id'] === id){
-                    console.log("i value is ",i);
-                    
                     if(i === songname.length-1){
                         TrackPlayer.updateOptions({
                             capabilities: [
@@ -202,8 +195,6 @@ export default function Liked({navigation}){
                                 setcurrentPlaying(currentplayingsong-1);
                                 let a = await TrackPlayer.getActiveTrack();
                                 play(a["id"]-1); 
-                                
-                            
                             
                             
                         })

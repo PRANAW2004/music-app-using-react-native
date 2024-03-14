@@ -3,15 +3,23 @@ import { useEffect,useCallback,useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import alldata from "../AllData";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
+
 
 export default function History({navigation}){
 
     const [historydate,sethistorydate] = useState([]);
     const [history,sethistory] = useState([]);
     const [likedsong,setlikedsong] = useState([]);
+    const [currentplayingsong,setcurrentPlaying] = useState(0);
+
 
 
     console.log("inside the history");
+
+    const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
+
+    useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -100,8 +108,96 @@ export default function History({navigation}){
         sethistorydate(arr5.reverse());
         sethistory(arr7.reverse());
     });
-
     useEffect(historydata,[]);
+
+    async function play(id){
+
+        await TrackPlayer.reset(); 
+        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+            for(var i=0;i<alldata.length;i++){
+                if(alldata[i]['id'] === id){
+                    if(i === alldata.length-1){
+                        TrackPlayer.updateOptions({
+                            capabilities: [
+                                Capability.Play,
+                                Capability.Pause,
+                                Capability.SkipToPrevious
+                            ]
+                        })
+                    }else{
+                        // setskipnextbool(false);
+                        TrackPlayer.updateOptions({
+                            capabilities: [
+                                Capability.Play,
+                                Capability.Pause,
+                                Capability.SkipToPrevious,
+                                Capability.SkipToNext
+                            ]
+                        })
+                    }
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(alldata[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(alldata[i]['title']));
+                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    let arr = [alldata[i]];
+                    try{
+                        console.log("inside the try");
+                        if(i === 0 && alldata.length > 1){
+                            console.log("inside the first if in play in liked");
+                            for(j=i+1;j<alldata.length;j++){
+                                arr.push(alldata[i+j]);
+                            }
+                        }
+                        else{
+                        for(j=i;j<alldata.length-1;j++){
+                            console.log("insid the second if in play in liked");
+                            arr.push(alldata[i+1]);
+                        }
+                        }
+
+                        TrackPlayer.addEventListener("remote-play", ()=>{
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                            TrackPlayer.play();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-pause", () => {
+                        
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                            TrackPlayer.pause();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-previous",async () => {
+                                setcurrentPlaying(currentplayingsong-1);
+                                let a = await TrackPlayer.getActiveTrack();
+                                play(a["id"]-1); 
+                            
+                            
+                        })
+
+                        TrackPlayer.addEventListener("remote-next", async () => {
+                            setcurrentPlaying(currentplayingsong+1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]+1);
+                        })
+                        let arr1 = [];
+                        for(var i=0;i<arr.length;i++){
+                            if(arr[i]!==undefined){
+                            arr1.push(arr[i]);
+                            }
+                        }
+                    console.log(arr1);
+                    TrackPlayer.add(arr1);
+                    // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    TrackPlayer.play();
+                    // console.log(RepeatMode);
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                    }catch(err){
+                        // console.log(1,err);
+                    }
+                }
+            }
+    }
+
 
     async function liked(title){
         for(var i=0;i<alldata.length;i++){
