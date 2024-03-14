@@ -3,5 +3,5 @@ module.exports = {
       ios: {},
       android: {}, // grouped into "project"
     },
-    assets: ["./assets/fonts/"], // stays the same
+    assets: ["./node_modules/react-native-get-music-files","./node_modules/react-native-permissions"], // stays the same
   };

@@ -2,10 +2,28 @@ import { View,Text,StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
-// import MusicFiles from 'react-native-get-music-files';
-// import Permissions from 'react-native-permissions';
+import MusicFiles from 'react-native-get-music-files';
+import Permissions from 'react-native-permissions';
+// import RNFS from 'react-native-fs';
 
 export default function YourLibrary({navigation}){
+
+
+    // useEffect(() => {
+    //     const getMP3Files = async () => {
+    //         RNFS.readdir(RNFS.DocumentDirectoryPath)
+    //         .then((res) => {
+    //             console.log(res);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         })
+    //         // const mp3Files = files.filter(file => file.endsWith('.mp3'));
+    //         // setlocalsongs(mp3Files);
+    //       };
+      
+    //       getMP3Files();
+    // },[])
 
     console.log("inside local");
 
@@ -68,6 +86,7 @@ export default function YourLibrary({navigation}){
     return(
         <View style={styles.localcontainer}>
             <Text style={styles.localtext}>This is Your Library screen</Text>
+            {/* <Text style={{color:"white"}}>{localsongs}</Text> */}
         </View>
     )
 }

@@ -1,0 +1,669 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "node_modules/react-native-get-music-files/android/build.gradle",
+      "sha1": "03bc70bbeb1e5fc5f560a860c7ffbaae85817893"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/gradle.properties",
+      "sha1": "021bec789178f5b8872e4ef6841e06173f62f728"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/main/AndroidManifest.xml",
+      "sha1": "3c9fe377f2ff022f0902e948dfb3c35ee4ae022a"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/main/AndroidManifestNew.xml",
+      "sha1": "85df09002dc8f7442a893b62920d17d4eccef1c7"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/main/java/com/turbosongs/BundlePair.kt",
+      "sha1": "81935053086b30a00f75f9f1fd646e1ffc2f754c"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/main/java/com/turbosongs/TurboSongsModule.kt",
+      "sha1": "94708ca89e76be4b2aadfafb8561f5caa644226a"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/main/java/com/turbosongs/TurboSongsPackage.kt",
+      "sha1": "fd8f6de7a2481a0c1ff7764bb0393f24a3f20f15"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/android/src/newarch/TurboSongsSpec.kt",
+      "sha1": "7e83b9a633616658d5bde6b1dda550193ab67922"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/ios/TurboSongs.h",
+      "sha1": "7a2df4335c938e401686f30bd0a5fc25ada1e917"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/ios/TurboSongs.mm",
+      "sha1": "5765e8e5bd3ac53066853e5ac6b904248436b1c3"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/commonjs/index.js",
+      "sha1": "bdd3067c00dca53ba3b8b6a7813cc654d90ff302"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/commonjs/index.js.map",
+      "sha1": "684c4266f7bc55e5e90d980fa7bc62c4eeed5dd9"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/commonjs/NativeTurboSongs.js",
+      "sha1": "3480f126eb82cd41d518722146a24398f678e137"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/commonjs/NativeTurboSongs.js.map",
+      "sha1": "9bafe9b7140de15b86fef6df8ad1ddfe5455f527"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/typescript/src/index.d.ts",
+      "sha1": "1a50f1a134687ab398a4bb396647d67877774f40"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/typescript/src/index.d.ts.map",
+      "sha1": "4393027272d8974a158dd00989fbdaae86a6b157"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/typescript/src/NativeTurboSongs.d.ts",
+      "sha1": "2152068d8dc77f8ed37c69e963382dbba47c083f"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/lib/typescript/src/NativeTurboSongs.d.ts.map",
+      "sha1": "10f9ce8a7924a7c686abae9fb12d6e339ad7aa5f"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/LICENSE",
+      "sha1": "14737f37c6511d989943fdcf8029ade2877ffd13"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/package.json",
+      "sha1": "619de564021f8ed78c582ff5d79a7550f0689e2d"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/react-native-turbo-songs.podspec",
+      "sha1": "a40b016804497dd0153e95ba41faa67590cbc30b"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/README.md",
+      "sha1": "0f33928f5c5f275cedb5776b93a4c4b81f7cb700"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/src/index.tsx",
+      "sha1": "95c1c87a2954aa2e1673d7cb6b829ea992cf9098"
+    },
+    {
+      "path": "node_modules/react-native-get-music-files/src/NativeTurboSongs.ts",
+      "sha1": "14583b873bed1bd859fc106a25aaec6d86051c09"
+    },
+    {
+      "path": "node_modules/react-native-permissions/android/local.properties",
+      "sha1": "cb7324ae5eabbda4f0ec51bd1e78fd41eaa98365"
+    },
+    {
+      "path": "node_modules/react-native-permissions/android/src/main/java/com/zoontek/rnpermissions/RNPermissionsModuleImpl.java",
+      "sha1": "10b03dfd472e1d46f520ffe97d46967ae9335ada"
+    },
+    {
+      "path": "node_modules/react-native-permissions/android/src/main/java/com/zoontek/rnpermissions/RNPermissionsPackage.java",
+      "sha1": "927c7ca348ce6c7bb97caf6bf914f8ea5e1f398b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/android/src/newarch/com/zoontek/rnpermissions/RNPermissionsModule.java",
+      "sha1": "00d9f50457ba5418f328bf0abc79ab1534a4b634"
+    },
+    {
+      "path": "node_modules/react-native-permissions/app.plugin.js",
+      "sha1": "67a939ab57871e9c67076fc682b693f2a63e91d1"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/contract.js",
+      "sha1": "fa7aba91d7a279b637017b6c67031fcb180ce396"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/contract.js.map",
+      "sha1": "acdb7b2d35a9e8128949f4ca6c67960ee4f6423d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/expo.js",
+      "sha1": "ed3f1444a73c2bbf0d1f2909ef22d93ef8affb83"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/expo.js.map",
+      "sha1": "0c71d326d6ab7c3715ebf78b35499e4690d13db2"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.android.js",
+      "sha1": "b92a8d4ecb5dfafc3172f9aec890e5ad25d899c9"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.android.js.map",
+      "sha1": "e990e508e50eea57afc073964299b0e03b223b4a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.ios.js",
+      "sha1": "56cb3033a85609464b163c29683ce3616a11864e"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.ios.js.map",
+      "sha1": "9ae82871cb918cb7ce748be666a7aa5dba5f9f75"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.js",
+      "sha1": "fbafb26a758a6229d9a8cdbca515d58e6fcd241b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.js.map",
+      "sha1": "fe034b0d5b992a8b6d8e92434fa7871d99a4ef5c"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.windows.js",
+      "sha1": "183e05daced5971d7846a1c7c8b225adc3d6a8c3"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/methods.windows.js.map",
+      "sha1": "8a77e53065f34917b9a3c20c06786c05fdaff926"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/NativeRNPermissions.js",
+      "sha1": "9d5e84db0a8c03207c36cb417784e63f9abe2a60"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/NativeRNPermissions.js.map",
+      "sha1": "c12a91943bc9dac1dab4f0748f9c744322158e12"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.android.js",
+      "sha1": "5937fd6c4d36d7ce474a5dbaa2aed103d393877f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.android.js.map",
+      "sha1": "8f8026028403c5d05a4a5308dbe4f83613186ce2"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.ios.js",
+      "sha1": "7034c164834d36eb7e4ec63b07ac173a76c04fc5"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.ios.js.map",
+      "sha1": "50ee7188cedc109f1b34c610dc8235d52dd38424"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.js",
+      "sha1": "32d50e46332b45f6dde333e1117feea8deca264f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.js.map",
+      "sha1": "396e2284ef43d910ec1f05514ff985b36018ffb9"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.windows.js",
+      "sha1": "74232636c1af5fc54bb4c83e9a731652a4d72354"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/permissions.windows.js.map",
+      "sha1": "8e5790fe25e4cd6cc20f50965b606be9745448a6"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/results.js",
+      "sha1": "e7014ef65327bcf90c471e6907e28e9d2ce5717e"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/results.js.map",
+      "sha1": "77f98ea34c2cc75d272bf63180be75260b763423"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/types.js",
+      "sha1": "a8e5efdae5239de61474aef9a1970bb09ac9a900"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/types.js.map",
+      "sha1": "2eb09bc8f95b58d886ceb2f2be28fb271f53a333"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/unsupportedPlatformMethods.js",
+      "sha1": "249545e77eb4e8cfa747e5bb7fde49818d118c2d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/unsupportedPlatformMethods.js.map",
+      "sha1": "201811b0019f9efb8ae00967c60de86dc286eb4a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/utils.js",
+      "sha1": "aa920d160bba7e8657640aa6cf2ae1c9dd4b6b51"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/commonjs/utils.js.map",
+      "sha1": "ebf1064003ec8d80eaf792f024a01e9f6de6c8e2"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/contract.d.ts",
+      "sha1": "331bee8f0dc1b2835103487a128caa98b5e08b80"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/contract.d.ts.map",
+      "sha1": "a5ed5a8df3dda7e1b187032854a607d68db9ab7b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/expo.d.ts",
+      "sha1": "1cc3abda7868ff24cc2c70f0f6494514e1abf47f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/expo.d.ts.map",
+      "sha1": "647b39933180bcfee8482a62cc5203064e522450"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.android.d.ts",
+      "sha1": "d4cb1c4bd3f453e247f040b05e9a1dc4377b80d4"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.android.d.ts.map",
+      "sha1": "cba32e9f930d6750d0b2e060f23a8ae55b966b5d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.d.ts",
+      "sha1": "1395171bfa0a8a2a76207ea325bdf880f4cb6612"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.d.ts.map",
+      "sha1": "0dd03b0eae00ef1a6696db9bd53d1be34e733d0a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.ios.d.ts",
+      "sha1": "b4a2731a2d847ffa32860bd45d05021b79ff27f9"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.ios.d.ts.map",
+      "sha1": "417944924fa5dd9298c783709478f2baa675bef4"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.windows.d.ts",
+      "sha1": "81dc107399ac3e55a07a772fe4db0d461392f18a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/methods.windows.d.ts.map",
+      "sha1": "412c428d1d6cbb419236c44d33a4dae3ed1c06fc"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/NativeRNPermissions.d.ts",
+      "sha1": "31547c6720ca3926c8d8e05d43d3b1beefc70d19"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/NativeRNPermissions.d.ts.map",
+      "sha1": "a4bd797b3225f140c6a54961b9be2e4edaa7cca2"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.android.d.ts",
+      "sha1": "6189681b8815c1c7cfd499d9e2d393a99f37ebf8"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.android.d.ts.map",
+      "sha1": "a7177c19ed142083a74ff01158cc00bd28e76601"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.d.ts",
+      "sha1": "f677e62d2c74907337e528874b23442701004dc9"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.d.ts.map",
+      "sha1": "ea647f6369fed86a6e9a0565071a21715df2cd06"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.ios.d.ts",
+      "sha1": "9dad7a01b5f0c01ae179b062f63ef323080c7a61"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.ios.d.ts.map",
+      "sha1": "3aa49d879fcb207dd93fe80d1aac9fabcb5aa657"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.windows.d.ts",
+      "sha1": "11f76027c7bc5febb904a7708def0bf5d8666d39"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/permissions.windows.d.ts.map",
+      "sha1": "948a23b31f9ea0a26586e4c4a7a85e64361a5b6d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/results.d.ts",
+      "sha1": "48f670b8c5acd101eccddd2321fb151d5f45d094"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/results.d.ts.map",
+      "sha1": "92c1bdbd442b44ab0625850debfee3dbe27601f0"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/types.d.ts",
+      "sha1": "20750af1440c4a0ff2dbf4b67e189f57673aa100"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/types.d.ts.map",
+      "sha1": "3231e4941d622b6a8e5e5f4dcebf86afd21fd27f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/unsupportedPlatformMethods.d.ts",
+      "sha1": "a2164155c0232f827174b47727557e35663d5d6a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/unsupportedPlatformMethods.d.ts.map",
+      "sha1": "94d13d4758b2eea694c34406924475fcd9ff48df"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/utils.d.ts",
+      "sha1": "183d3529d6b89a07bbf77784ecd18d843921bb23"
+    },
+    {
+      "path": "node_modules/react-native-permissions/dist/typescript/utils.d.ts.map",
+      "sha1": "b54b012e48e6a9f17783e484efbdb1c585cdbeb6"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/AppTrackingTransparency/RNPermissionHandlerAppTrackingTransparency.h",
+      "sha1": "d2badf8ebcb8c3a6903ce26d4627044fd4a95be8"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/AppTrackingTransparency/RNPermissionHandlerAppTrackingTransparency.mm",
+      "sha1": "9b40f4d8c7df750c696807259249e029ae1dbf6b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Bluetooth/RNPermissionHandlerBluetooth.h",
+      "sha1": "54d337579c49a5741ae9875726c86d30f1da7c06"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Bluetooth/RNPermissionHandlerBluetooth.mm",
+      "sha1": "e41d62cc1ce90e0d98b79ec82d5b1f5565850518"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Calendars/RNPermissionHandlerCalendars.h",
+      "sha1": "2134a06a74e4fa30225c3dd2de34c2314df1879a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Calendars/RNPermissionHandlerCalendars.mm",
+      "sha1": "5c8dd1a28834bc37395f406d91c785f145131925"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/CalendarsWriteOnly/RNPermissionHandlerCalendarsWriteOnly.h",
+      "sha1": "2b3bc0d33afe7a08f224b3ad69d62591662eca35"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/CalendarsWriteOnly/RNPermissionHandlerCalendarsWriteOnly.mm",
+      "sha1": "4b72e5e7231eeb3d03edc467e96cf06acfa5b7ab"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Camera/RNPermissionHandlerCamera.h",
+      "sha1": "7ff07b24f072d0d2c3b6ecf6d33985921dd418fb"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Camera/RNPermissionHandlerCamera.mm",
+      "sha1": "679ab326f7d5959e4b051a8b59786f735a60888f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.h",
+      "sha1": "a45a903f1c0ae072c3d0ff40470a8ed47acc20ef"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.mm",
+      "sha1": "572860ad432201dc546317b1cfd86dbabb23838c"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/FaceID/RNPermissionHandlerFaceID.h",
+      "sha1": "c4aa18046bb3ed9cde392361e9746f1fceb29035"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/FaceID/RNPermissionHandlerFaceID.mm",
+      "sha1": "b58eaa3b2aff410aeabebf2ff1af9ea17a3425ce"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationAccuracy/RNPermissionHandlerLocationAccuracy.h",
+      "sha1": "3ecbec04781644f4bc048e40cc88b1bf94bf7521"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationAccuracy/RNPermissionHandlerLocationAccuracy.mm",
+      "sha1": "f6ca0aa4d7f9c44102a0d3edd03f9684690e558c"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationAlways/RNPermissionHandlerLocationAlways.h",
+      "sha1": "2192f3f84f3cf0940fab6a391c5c56e356f252a3"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationAlways/RNPermissionHandlerLocationAlways.mm",
+      "sha1": "fa065a8bbc500b1e61afef9911f603825ae8cacb"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationWhenInUse/RNPermissionHandlerLocationWhenInUse.h",
+      "sha1": "8808131a6c5748c96fbebbbae0fe11165c88fe73"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/LocationWhenInUse/RNPermissionHandlerLocationWhenInUse.mm",
+      "sha1": "f59e16571134fe9e54869eb0816d34da5e8a1dbc"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/MediaLibrary/RNPermissionHandlerMediaLibrary.h",
+      "sha1": "051b8862f6cf75751f4c28986fda464de7be5ad0"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/MediaLibrary/RNPermissionHandlerMediaLibrary.mm",
+      "sha1": "6b07fe46cfffbbace8638f3c094b94a9e84b06bd"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Microphone/RNPermissionHandlerMicrophone.h",
+      "sha1": "c4854830fc8d6d6e32b53c4e60f22765c850914b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Microphone/RNPermissionHandlerMicrophone.mm",
+      "sha1": "69744ec46fdae55ec5607c7c6b8b3d63d19e1971"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Motion/RNPermissionHandlerMotion.h",
+      "sha1": "f0e202b0731c5b924fbfd54404a9efb43dd5426a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Motion/RNPermissionHandlerMotion.mm",
+      "sha1": "8fdc678fcf9b2086033649f8ab6529d7bf09442f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Notifications/RNPermissionHandlerNotifications.h",
+      "sha1": "5bc3d021dac46fbd838be1f73220bbd8ca4321c5"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Notifications/RNPermissionHandlerNotifications.mm",
+      "sha1": "ab21ef1d649cffa5af64df828ee81f724d195dac"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/PhotoLibrary/RNPermissionHandlerPhotoLibrary.h",
+      "sha1": "82f73fb812919cefe582ef577623ddb961cf8100"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/PhotoLibrary/RNPermissionHandlerPhotoLibrary.mm",
+      "sha1": "f6d55b8b63c40914ba7af8002d0ba8723f39c9fc"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/PhotoLibraryAddOnly/RNPermissionHandlerPhotoLibraryAddOnly.h",
+      "sha1": "72d3583db17eed2cd869f4b98e0d5d19b83c7666"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/PhotoLibraryAddOnly/RNPermissionHandlerPhotoLibraryAddOnly.mm",
+      "sha1": "3ebbfff15ba4256cc2296a7f37ea949f0b68a542"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Reminders/RNPermissionHandlerReminders.h",
+      "sha1": "95782b4be158b4d1f9eb89a7e8bf7377340d2241"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Reminders/RNPermissionHandlerReminders.mm",
+      "sha1": "6ba15604ab4d481fe964af6c196ffe59824d073a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/RNPermissions.h",
+      "sha1": "8e823d4a5b2d2cb9341fb8c69306ac785649bdce"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/RNPermissions.mm",
+      "sha1": "1cc20b3cff9c530b97679e5c0690d9aa519a850a"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/RNPermissions.xcodeproj/project.pbxproj",
+      "sha1": "e23857a6840f2d403a33f2f0ad28cc1eeaa0541f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/RNPermissions.xcodeproj/project.xcworkspace/xcuserdata/zoontek.xcuserdatad/UserInterfaceState.xcuserstate",
+      "sha1": "866b0b97042d386fa092059f0978957c927b40fd"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/RNPermissions.xcodeproj/xcuserdata/zoontek.xcuserdatad/xcschemes/xcschememanagement.plist",
+      "sha1": "a52796b1dad3bdcafc3b300484b8e9f4f0bc3837"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Siri/RNPermissionHandlerSiri.h",
+      "sha1": "2948b7310aa773c3d9a702827a4f4b26165c6855"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/Siri/RNPermissionHandlerSiri.mm",
+      "sha1": "9ee87bfa941ba1284066a378f859861aaadc148c"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/SpeechRecognition/RNPermissionHandlerSpeechRecognition.h",
+      "sha1": "1535406e564a99d22088665149f1d7b082d1a01f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/SpeechRecognition/RNPermissionHandlerSpeechRecognition.mm",
+      "sha1": "1bdeed04f24f6805684c90eba1470fa213f4493d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/StoreKit/RNPermissionHandlerStoreKit.h",
+      "sha1": "9c1d3f87be747a081141c88a304dbc7aa235ac64"
+    },
+    {
+      "path": "node_modules/react-native-permissions/ios/StoreKit/RNPermissionHandlerStoreKit.mm",
+      "sha1": "85cafd169f0c848a38b5e6136feedc829deac34d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/mock.js",
+      "sha1": "887d7a30019cc905bfd67d09442bb7cd64fffc17"
+    },
+    {
+      "path": "node_modules/react-native-permissions/RNPermissions.podspec",
+      "sha1": "368e3065762e20480a9eb4905fa0a41d0754f33e"
+    },
+    {
+      "path": "node_modules/react-native-permissions/scripts/setup.rb",
+      "sha1": "447328389e77a89885f0b6e30ab773bb625ebad1"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/contract.ts",
+      "sha1": "6e6a699fff6639588d639a2784f5fc76260520e7"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/expo.ts",
+      "sha1": "46bb368650fc9931486867f949572ad653bf3000"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/index.ts",
+      "sha1": "53207f65ffcb25dd463053214d991dfdf214efe7"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/methods.android.ts",
+      "sha1": "9cf2a4476611fef651a458d3f745ed152a39ce94"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/methods.ios.ts",
+      "sha1": "234f2b22b2e98fcfdae5f085d6b4a4fbd9c05553"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/methods.ts",
+      "sha1": "9cc1f50774926ffaf19dd110207ed930f9730b13"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/methods.windows.ts",
+      "sha1": "149c0c9c4475ab205e03147ca0a470d1d6f5bddf"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/NativeRNPermissions.ts",
+      "sha1": "629efff0ba9cf3c54053006ffe3f07a0676adaba"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/permissions.android.ts",
+      "sha1": "4337ab74942ec0952de19807c174fd48a0b30eb8"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/permissions.ios.ts",
+      "sha1": "05c22d7f04a2a5a3d5b97a07c645a997bfe6cc70"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/permissions.ts",
+      "sha1": "2a49a7b8e284bc26f45ddd14693074bef07e285b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/permissions.windows.ts",
+      "sha1": "1463afb305e8e6baa24f25585623d17e9b6cfc13"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/results.ts",
+      "sha1": "b57ec39c986e4af51b626a9dfa8e991b28f7e09d"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/types.ts",
+      "sha1": "387b8393f25906982fc8df5e6fe8c352a7732f64"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/unsupportedPlatformMethods.ts",
+      "sha1": "b964f6d90a322b96c7e95bd868a82374fa0b97a0"
+    },
+    {
+      "path": "node_modules/react-native-permissions/src/utils.ts",
+      "sha1": "8a6cc3f38fd28571032853c225c82bad656a580b"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/packages.config",
+      "sha1": "f772fe04f5c094b90eed339acf317ee8cabf3e71"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/pch.cpp",
+      "sha1": "7e25a29ef977104140e7ce056e9a8ee2025a4390"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/pch.h",
+      "sha1": "ac9db5fcc77dbfddcbc9b38bb75aeaf5460ad833"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/PropertySheet.props",
+      "sha1": "f6c3af0a39f3312296b6facbb5559313a99a265e"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/ReactPackageProvider.cpp",
+      "sha1": "d7a2ec34a416a92c7c049cb53dd284ec4ddc9182"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/ReactPackageProvider.h",
+      "sha1": "db7d57ed387836629701c20be3ee08e4ea11eae0"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/ReactPackageProvider.idl",
+      "sha1": "ac7c70f0d506832d1dcd30908fdb549281944d16"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/RNPermissions.cpp",
+      "sha1": "c5e8680b246487ce4d3e456ed1c7cd9fa8e6f799"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/RNPermissions.def",
+      "sha1": "b9da87590b9e9c3d819bd5743c8581d44d281f63"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/RNPermissions.vcxproj",
+      "sha1": "5553d2bfb8ad37c8b5a34dcf90eb25472bec6c9f"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions/RNPermissions.vcxproj.filters",
+      "sha1": "30bd3d3e283c61f23dacaf48fa1999d4acd5cb8c"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions62.sln",
+      "sha1": "9d66e12f4ad0c9fd664adc5533e4d82f7c277285"
+    },
+    {
+      "path": "node_modules/react-native-permissions/windows/RNPermissions63.sln",
+      "sha1": "667f539906aa69765a6eb6f720d6079d7064eef9"
+    }
+  ]
+}
