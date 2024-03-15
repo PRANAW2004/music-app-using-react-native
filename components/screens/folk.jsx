@@ -285,6 +285,7 @@ export default function Folk({navigation}){
                 }
             }
     }
+    
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("Playback track changed")
         // seticon("pause");
@@ -363,26 +364,18 @@ export default function Folk({navigation}){
         // console.log(icon);
         if(bool === false){
             if(icon === 'motion-play'){
-                // console.log("inside motion play");
                 let currentplayingsong = await AsyncStorage.getItem("current-playing-num");
-                // setbool(true);
                 currentplayingsong = currentplayingsong*1;
                 play(currentplayingsong);
                 setcurrentPlaying(currentplayingsong);
                 setbool(true);
-
             }
         }
         if(icon === 'motion-pause'){
-            // console.log("inside motion pause");
             await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
-        }
-        
+        } 
     }
     
-    // let value = AsyncStorage.getItem('liked');
-    // console.log("inside async",value);
-   
     return(
         <View style={styles.folkview}>
             {/* {data.map((e)=>{
