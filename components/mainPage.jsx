@@ -23,7 +23,8 @@ export default function MainPage({navigation}){
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
     const [likedcolor,setlikedcolor] = useState("white");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
-   
+   const [artworkbool,setartworkbool] = useState(true);
+   const [coverbool,setcoverbool] = useState(true);
 
 
     const events = [
@@ -74,19 +75,20 @@ export default function MainPage({navigation}){
             seticon("motion-play");
         }
 
-        let value = await AsyncStorage.getItem("current-genre");
-        let valuegenre = JSON.parse(value);
-        let arr = []
-        arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
-        for(var i=0;i<arr.length;i++){
+        // let value = await AsyncStorage.getItem("current-genre");
+        // let valuegenre = JSON.parse(value);
+        // let arr = []
+        // arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
+        for(var i=0;i<alldata.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
-            if(arr[i]['title'] === JSON.parse(value1)){
-                setrenderimage(arr[i]['artwork']);
-                setrendername(arr[i]['title']);
-                setrenderauthor(arr[i]['artist']);
+            if(alldata[i]['title'] === JSON.parse(value1)){
+                setrenderimage(alldata[i]['artwork']);
+                setrendername(alldata[i]['title']);
+                setrenderauthor(alldata[i]['artist']);
                 break;
             }
         }
+        // let value1 = await AsyncStorage.getItem()
 
 
 
@@ -110,7 +112,20 @@ export default function MainPage({navigation}){
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         let a = await TrackPlayer.getActiveTrack();
-        setrenderimage(a['artwork']);
+        // console.log("artwork and cover is ",a['artwork']);
+        // console.log(a["cover"].length);
+        // console.log(a['title']);
+        if(a["artwork"] === undefined){
+            if(a["cover"].length === 0){
+                setcoverbool(false)
+            }else{
+                setcoverbool(true);
+            }
+            setartworkbool(false);
+        }else{
+            setartworkbool(true);
+        }
+        setrenderimage(a['artwork']===undefined?coverbool?a["cover"]:null:a["artwork"]);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
@@ -215,7 +230,7 @@ export default function MainPage({navigation}){
                     <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
                 </View>
                 <View style={styles.modelcontent}>
-                    <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
+                    {/* <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/> */}
                     <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
                     <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
@@ -291,9 +306,9 @@ export default function MainPage({navigation}){
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
-                <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
+                <Image source={artworkbool?{uri:renderimage}:coverbool?{uri: renderimage}:require("../images/song-cover.jpg")} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
                 <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
-                    <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
+                    <Text style={{color: "white",fontSize: 15}}>{rendername === ''?'Press any song to play':rendername}</Text>
                 <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
                 </View>
                 </View>

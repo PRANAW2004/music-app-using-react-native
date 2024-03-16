@@ -249,7 +249,7 @@ export default function Folk({navigation}){
                         }
                         else{
                         for(j=i;j<data.length-1;j++){
-                            arr.push(data[i+1]);
+                            arr.push(data[j+1]);
                         }
                         }
 
@@ -290,6 +290,7 @@ export default function Folk({navigation}){
         // console.log("Playback track changed")
         // seticon("pause");
         let a = await TrackPlayer.getActiveTrack();
+        console.log("inside the folk a['title'] is ", a['title']);
         if(a['id'] === 1){
             setskippreviousbool(true);
         }

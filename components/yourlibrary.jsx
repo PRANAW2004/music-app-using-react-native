@@ -12,10 +12,6 @@ export default function YourLibrary({navigation}){
 
     const [song,setsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
-
-
-    console.log(song.length);
-
  
 
     const hasPermissions = async () => {
@@ -55,14 +51,7 @@ export default function YourLibrary({navigation}){
 
     useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
 
-    if(song.length !== 0){
-        for(var i=0;i<song.length;i++){
-            let iddata = 'id'+ ':' + i+1;
-            song[i]['id'] = i+1;
-            // console.log(song[i]);
-        }
-
-    }  
+    
 
 
     useEffect(async () => {
@@ -84,6 +73,16 @@ export default function YourLibrary({navigation}){
         }
         
     },[])
+
+    if(song.length !== 0){
+        AsyncStorage.setItem("local", JSON.stringify(song));
+            for(var i=0;i<song.length;i++){
+                song[i]['id'] = i+1;
+            }
+        
+        
+
+    } 
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -125,9 +124,6 @@ export default function YourLibrary({navigation}){
     async function play(id){
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
-
-        
-
         if(id === 1){
             // setskippreviousbool(true);
             TrackPlayer.updateOptions({     
@@ -174,27 +170,19 @@ export default function YourLibrary({navigation}){
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(song[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(song[i]['title']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('local'));
-                    // if(history.length > 50){
-                    //     sethistory((data) => data.filter((_,index) => index !== 0));
-                    // }else{
-                    //     let date = new Date().toLocaleDateString();
-                    //     let date1 = date;
-                    //     // console.log(date1);
-                    //     let data11 = date1 + ":"+data[i]['title']
-                    //     sethistory((current) => [...current,data11]);
-                    // }
-                    // await AsyncStorage.setItem("history",JSON.stringify(history));
 
                     let arr = [song[i]];
                     try{
                         if(i === 0){
                             for(j=i+1;j<song.length;j++){
+                                
                                 arr.push(song[i+j]);
                             }
                         }
                         else{
                         for(j=i;j<song.length-1;j++){
-                            arr.push(song[i+1]);
+                            arr.push(song[j+1]);
+                            // console.log("array is ",arr);
                         }
                         }
 
@@ -221,6 +209,9 @@ export default function YourLibrary({navigation}){
                             let a = await TrackPlayer.getActiveTrack();
                             play(a["id"]+1);
                         })
+                        // for(var i=0;i<arr.length;i++){
+                        //     console.log(arr[i]);
+                        // }
                     TrackPlayer.add(arr);
                     TrackPlayer.play();
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
