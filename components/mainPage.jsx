@@ -122,8 +122,10 @@ export default function MainPage({navigation}){
                 setcoverbool(true);
             }
             setartworkbool(false);
+            AsyncStorage.setItem("local-songs-bool",JSON.stringify(true));
         }else{
             setartworkbool(true);
+            AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
         }
         setrenderimage(a['artwork']===undefined?coverbool?a["cover"]:null:a["artwork"]);
         setrendername(a['title']);
@@ -131,10 +133,10 @@ export default function MainPage({navigation}){
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
         if(!artworkbool){
-            AsyncStorage.setItem("local-data-artwork",JSON.stringify(coverbool?a["cover"]:"null"));
-            AsyncStorage.setItem("local-data-author",JSON.stringify(a["artist"]));
+            // console.log("cover bool is set to true");
+            AsyncStorage.setItem("data-artwork",JSON.stringify(coverbool?a["cover"]:"null"));
+            AsyncStorage.setItem("data-author",JSON.stringify(a["artist"]));
         }
-
         let value1 = await AsyncStorage.getItem("liked");
         let arr1 = JSON.parse(value1);
         let bool11 = false;

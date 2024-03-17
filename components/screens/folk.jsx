@@ -24,10 +24,12 @@ export default function Folk({navigation}){
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
     const [history,sethistory] = useState([]);
-    const [localbool,setlocalbool] = useState(false);
-    const [localimagebool,setlocalimagebool] = useState(false);
+    const [localbool,setlocalbool] = useState(null);
+    const [localimagebool,setlocalimagebool] = useState(true);
 
-    console.log("inside folk");
+    // console.log(renderauthor);
+
+    // console.log("inside folk");
 
     const events = [
         Event.PlaybackState,
@@ -118,45 +120,35 @@ export default function Folk({navigation}){
     let currentplaying;
 
     const currentPlaying = useCallback(async () => {
+
+        let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
+        console.log("local songs bool is ",localsongsbool);
+        if(JSON.parse(localsongsbool) === 'true'){
+            console.log("inside the local songs bool is true");
+        }else{
         currentplaying = await AsyncStorage.getItem("current-playing");
+        let flag = false;
         for(var i = 0;i<data.length;i++){
             if(JSON.parse(currentplaying) === data[i]['title']){
+                console.log("inside the if in the current playing");
                 setcurrentPlaying(data[i]['id']);
                 AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
                 setrenderimage(data[i]['artwork']);
                 setrendername(data[i]['title']);
                 setrenderauthor(data[i]['artist'])
-                setlocalbool(true);
+                break;
             }
         }
+    }
     });
-
     useEffect(currentPlaying,[]);
-    // if(likedsong.length === 0){
-    //     AsyncStorage.setItem('liked',JSON.stringify(""));
-    // }
+
     if(likedsong.length > 0){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
     if(history.length > 0){
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
-
-    if(!localbool){
-        const localdatasongs = useCallback(async () => {
-            let localdata = await AsyncStorage.getItem("current-playing");
-            setrendername(JSON.parse(localdata));
-            let localimage = await AsyncStorage.getItem("local-data-artwork");
-            console.log(JSON.parse(localimage).length);
-            setlocalimagebool(JSON.parse(localimage).length === 4?true:false);
-            setrenderimage(localimagebool?null:JSON.parse(localimage));
-            console.log(localdata);
-        })
-        useEffect(localdatasongs,[]);
-
-    
-    }
-
     
 
     useEffect(() => {
@@ -181,8 +173,6 @@ export default function Folk({navigation}){
     const setUpTrackPlayer = async () => {
         try{
         await TrackPlayer.setupPlayer()
-
-
         }
         catch(err){
             // console.log(err);
@@ -307,8 +297,8 @@ export default function Folk({navigation}){
     }
     
     TrackPlayer.addEventListener("playback-track-changed",async () => {
+        // console.log("inside the add event listener in the folk");
         let a = await TrackPlayer.getActiveTrack();
-        console.log("inside the folk a['title'] is ", a['title']);
         if(a['id'] === 1){
             setskippreviousbool(true);
         }
@@ -319,12 +309,9 @@ export default function Folk({navigation}){
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
+        setlocalbool(true);
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
-
-  
-
-
 
     async function liked(title){
         for(var i=0;i<data.length;i++){
@@ -530,7 +517,7 @@ export default function Folk({navigation}){
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
                     {/* <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/> */}
-                    <Image source={localbool?{uri: renderimage}:localimagebool?require("../../images/song-cover.jpg"):{uri:renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
+                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
                     <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
                         <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
                         <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
