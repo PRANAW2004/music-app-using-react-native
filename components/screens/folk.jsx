@@ -24,6 +24,10 @@ export default function Folk({navigation}){
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
     const [history,sethistory] = useState([]);
+    const [localbool,setlocalbool] = useState(false);
+    const [localimagebool,setlocalimagebool] = useState(false);
+
+    console.log("inside folk");
 
     const events = [
         Event.PlaybackState,
@@ -118,11 +122,11 @@ export default function Folk({navigation}){
         for(var i = 0;i<data.length;i++){
             if(JSON.parse(currentplaying) === data[i]['title']){
                 setcurrentPlaying(data[i]['id']);
-                
                 AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
                 setrenderimage(data[i]['artwork']);
                 setrendername(data[i]['title']);
                 setrenderauthor(data[i]['artist'])
+                setlocalbool(true);
             }
         }
     });
@@ -138,6 +142,22 @@ export default function Folk({navigation}){
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
 
+    if(!localbool){
+        const localdatasongs = useCallback(async () => {
+            let localdata = await AsyncStorage.getItem("current-playing");
+            setrendername(JSON.parse(localdata));
+            let localimage = await AsyncStorage.getItem("local-data-artwork");
+            console.log(JSON.parse(localimage).length);
+            setlocalimagebool(JSON.parse(localimage).length === 4?true:false);
+            setrenderimage(localimagebool?null:JSON.parse(localimage));
+            console.log(localdata);
+        })
+        useEffect(localdatasongs,[]);
+
+    
+    }
+
+    
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -287,8 +307,6 @@ export default function Folk({navigation}){
     }
     
     TrackPlayer.addEventListener("playback-track-changed",async () => {
-        // console.log("Playback track changed")
-        // seticon("pause");
         let a = await TrackPlayer.getActiveTrack();
         console.log("inside the folk a['title'] is ", a['title']);
         if(a['id'] === 1){
@@ -511,7 +529,8 @@ export default function Folk({navigation}){
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
-                    <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
+                    {/* <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/> */}
+                    <Image source={localbool?{uri: renderimage}:localimagebool?require("../../images/song-cover.jpg"):{uri:renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
                     <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
                         <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
                         <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>

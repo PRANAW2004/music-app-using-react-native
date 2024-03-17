@@ -75,7 +75,7 @@ export default function YourLibrary({navigation}){
     },[])
 
     if(song.length !== 0){
-        AsyncStorage.setItem("local", JSON.stringify(song));
+        AsyncStorage.setItem("local", JSON.stringify("local data"));
             for(var i=0;i<song.length;i++){
                 song[i]['id'] = i+1;
             }

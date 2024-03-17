@@ -65,7 +65,6 @@ export default function MainPage({navigation}){
     },[]);
 
 
-
     const currentGenre = useCallback(async () => {
 
         let playBool = await AsyncStorage.getItem("song-playing-bool");
@@ -75,10 +74,6 @@ export default function MainPage({navigation}){
             seticon("motion-play");
         }
 
-        // let value = await AsyncStorage.getItem("current-genre");
-        // let valuegenre = JSON.parse(value);
-        // let arr = []
-        // arr = valuegenre === 'folk'?data:valuegenre === 'soul'?Souldata:[];
         for(var i=0;i<alldata.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
             if(alldata[i]['title'] === JSON.parse(value1)){
@@ -89,6 +84,11 @@ export default function MainPage({navigation}){
             }
         }
         // let value1 = await AsyncStorage.getItem()
+
+        let localdata = await AsyncStorage.getItem("local");
+        for(var i=0;i<localdata.length;i++){
+            console.log(localdata[i]["title"]);
+        }
 
 
 
@@ -130,6 +130,10 @@ export default function MainPage({navigation}){
         setrenderauthor(a['artist'])
         // seticon(icon === 'play-arrow'?'pause':'play-arrow');
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
+        if(!artworkbool){
+            AsyncStorage.setItem("local-data-artwork",JSON.stringify(coverbool?a["cover"]:"null"));
+            AsyncStorage.setItem("local-data-author",JSON.stringify(a["artist"]));
+        }
 
         let value1 = await AsyncStorage.getItem("liked");
         let arr1 = JSON.parse(value1);
@@ -231,6 +235,7 @@ export default function MainPage({navigation}){
                 </View>
                 <View style={styles.modelcontent}>
                     {/* <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/> */}
+                <Image source={artworkbool?{uri:renderimage}:coverbool?{uri: renderimage}:require("../images/song-cover.jpg")} style={{height:300,width:300,marginBottom:20}}/>
                     <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
                     <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
