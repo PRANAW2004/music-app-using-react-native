@@ -29,6 +29,8 @@ export default function Folk({navigation}){
 
     // console.log(renderauthor);
 
+    // console.log(renderimage.length);
+
     // console.log("inside folk");
 
     const events = [
@@ -123,8 +125,22 @@ export default function Folk({navigation}){
 
         let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
         console.log("local songs bool is ",localsongsbool);
-        if(JSON.parse(localsongsbool) === 'true'){
+    
+        if(localsongsbool === "true"){
             console.log("inside the local songs bool is true");
+            let currentplaying1 = await AsyncStorage.getItem("current-playing");
+            setrendername(JSON.parse(currentplaying1));
+            let localartwork = await AsyncStorage.getItem("data-artwork");
+            console.log(JSON.parse(localartwork).length);
+            if(JSON.parse(localartwork).length === 4){
+                setrenderimage("null")
+                setlocalimagebool(false);
+
+            }else{
+                setrenderimage(JSON.parse(localartwork));
+                setlocalimagebool(true);
+
+            }
         }else{
         currentplaying = await AsyncStorage.getItem("current-playing");
         let flag = false;
@@ -136,6 +152,7 @@ export default function Folk({navigation}){
                 setrenderimage(data[i]['artwork']);
                 setrendername(data[i]['title']);
                 setrenderauthor(data[i]['artist'])
+                setlocalbool(true);
                 break;
             }
         }
@@ -299,6 +316,11 @@ export default function Folk({navigation}){
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("inside the add event listener in the folk");
         let a = await TrackPlayer.getActiveTrack();
+        if(a["artwork"] === undefined){
+            // console.log("artwork is undefined");
+        }else{
+            setlocalbool(true);
+        }
         if(a['id'] === 1){
             setskippreviousbool(true);
         }
@@ -309,7 +331,7 @@ export default function Folk({navigation}){
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
-        setlocalbool(true);
+        // setlocalbool(true);
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
@@ -441,7 +463,7 @@ export default function Folk({navigation}){
                     <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
                 </View>
                 <View style={styles.modelcontent}>
-                    <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/>
+                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height: 300,width:300,marginBottom: 20}}/>
                     <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
                     <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
