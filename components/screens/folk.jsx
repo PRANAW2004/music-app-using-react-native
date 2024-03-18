@@ -130,6 +130,8 @@ export default function Folk({navigation}){
             console.log("inside the local songs bool is true");
             let currentplaying1 = await AsyncStorage.getItem("current-playing");
             setrendername(JSON.parse(currentplaying1));
+            let localauthor = await AsyncStorage.getItem("data-author");
+            setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
             console.log(JSON.parse(localartwork).length);
             if(JSON.parse(localartwork).length === 4){

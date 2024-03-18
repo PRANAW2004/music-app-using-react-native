@@ -87,6 +87,8 @@ export default function MainPage({navigation}){
         if(localsongsbool === "true"){
             let currentplaying1 = await AsyncStorage.getItem("current-playing");
             setrendername(JSON.parse(currentplaying1));
+            let localauthor = await AsyncStorage.getItem("data-author");
+            setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
             if(JSON.parse(localartwork).length === 4){
                 setcoverbool(false)
@@ -94,7 +96,9 @@ export default function MainPage({navigation}){
                 setrenderimage(JSON.parse(localartwork));
                 // setlocalimagebool(true);
                 setcoverbool(true);
-                setrenderimage(JSON.parse(localartwork));            }
+                setrenderimage(JSON.parse(localartwork));            
+            
+            }
 
         }else{
 
