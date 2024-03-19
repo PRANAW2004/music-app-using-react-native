@@ -214,43 +214,35 @@ export default function MainPage({navigation}){
                     </View>
                 </Pressable>
                 </View>
-                <View style={{display:"flex",justifyContent:"center",alignItems: "center",marginTop: 20}}>
-                    <View style={{display:"flex",flexWrap:"wrap",flexDirection:"row",justifyContent:"center",alignItems:"center",gap: 20}}>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:100,width:100}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/telugu_wallpaper.jpg?alt=media&token=c79829f1-cd49-4552-8d70-8df3a5de5001"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:20}}>Telugu Songs</Text>
-                            </View>
+                <View style={{display:"flex",flexWrap:"wrap",justifyContent:"center",alignItems:"center",flexDirection: "row",marginTop:30}}>
+                    <View style={{gap:10,display:"flex",flexDirection:"row"}}>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,marginRight:30,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/english_image.jpeg?alt=media&token=b1f49d25-e650-4a8e-8c3b-30fcfdf7198b"}} style={{height: 50,width:50,marginRight:10}}/>
+                            <Text style={{color:"white",fontSize: 17}}>English</Text>
                         </Pressable>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:120,width:120}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/tamil_wallpaper.jpeg?alt=media&token=1d741501-7607-449c-ac8a-7f83a2517d0e"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:20}}>Tamil Songs</Text>
-                            </View>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/hindi-song-wallpaper.jpg?alt=media&token=ecb4aed9-5bcf-4f78-9a2b-3d40f81db590"}} style={{height: 50,width:50,marginRight:10}}/>
+                            <Text style={{color:"white",fontSize:17}}>Hindi</Text>
                         </Pressable>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:120,width:120}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/english_image.jpeg?alt=media&token=b1f49d25-e650-4a8e-8c3b-30fcfdf7198b"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:20}}>English Songs</Text>
-                            </View>
+                    </View>
+                    <View style={{display:"flex",flexDirection:"row",gap:10,marginBottom:70}}>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,marginRight:30,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                        <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/telugu_wallpaper.jpg?alt=media&token=c79829f1-cd49-4552-8d70-8df3a5de5001"}} style={{height: 50,width:50,marginRight:10}}/>
+                            <Text style={{color:"white",fontSize: 17}}>Telugu</Text>
                         </Pressable>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:120,width:120}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/telugu_wallpaper.jpg?alt=media&token=c79829f1-cd49-4552-8d70-8df3a5de5001"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:20}}>Hindi Songs</Text>
-                            </View>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/tamil_wallpaper.jpeg?alt=media&token=1d741501-7607-449c-ac8a-7f83a2517d0e"}} style={{height: 50,width:50,marginRight:10}}/>
+                            <Text style={{color:"white",fontSize: 17}}>Tamil</Text>
                         </Pressable>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:120,width:120}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/telugu_wallpaper.jpg?alt=media&token=c79829f1-cd49-4552-8d70-8df3a5de5001"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:15}}>Other language</Text>
-                            </View>
+                    </View>
+                    <View style={{display:"flex",flexDirection:"row",gap:10}}>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,marginRight:30,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/best-songs-cover.jpg?alt=media&token=68d63d2a-7d79-430f-b688-77b316bf1357"}} style={{height: 50,width:50,marginRight:7}}/>
+                            <Text style={{color:"white",width:100}}>Best songs of all time</Text>
                         </Pressable>
-                        <Pressable style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <Image style={{height:120,width:120}} source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/telugu_wallpaper.jpg?alt=media&token=c79829f1-cd49-4552-8d70-8df3a5de5001"}} />
-                            <View>
-                                <Text style={{color:"white",fontSize:15}}>Best Songs of all time</Text>
-                            </View>
+                        <Pressable style={{backgroundColor: "#222831",height:50,width:150,display:"flex",flexDirection:"row",alignItems:"center"}}>
+                            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/other-langauge-songs.jpeg?alt=media&token=2e44c0b7-456c-4ae8-b8e9-9d801b4ef8c7"}} style={{height: 50,width:50,marginRight:7}}/>
+                            <Text style={{color:"white",width:90,fontSize: 13}}>Other langauge songs</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -375,7 +367,9 @@ const styles = StyleSheet.create({
         // backgroundColor: "green",
         margin: 20,
         flexDirection: "row",       
-        gap:20 
+        gap:20, 
+        justifyContent: "center",
+        alignItems: "center"
     },
     modalview: {
         backgroundColor: "#00898a",
