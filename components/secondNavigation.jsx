@@ -19,6 +19,12 @@ import Soul from './screens/soul';
 import Liked from './screens/liked';
 import SearchPage from './searchPage';
 import History from './screens/history';
+import English from './language/english';
+import Hindi from './language/hindi';
+import Tamil from './language/tamil';
+import Telugu from './language/telugu';
+import Other from './language/other';
+import Best from './language/best';
 
 const Stack = createNativeStackNavigator();
 
@@ -171,7 +177,7 @@ export default function SecondNavigation({navigation}){
               backgroundColor: "#212529",
             },
             headerTintColor: "white",
-            animation:"slide_from_left",
+            animation:"slide_from_right",
             presentation: 'modal',
           animationTypeForReplace: 'push',
           }}
@@ -186,6 +192,90 @@ export default function SecondNavigation({navigation}){
             },
             headerTintColor: "white",
             animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="English"
+          component={English}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_left",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="Hindi"
+          component={Hindi}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="Tamil"
+          component={Tamil}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="Telugu"
+          component={Telugu}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_left",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="Other Language"
+          component={Other}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_right",
+            presentation: 'modal',
+          animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="Best Songs of all time"
+          component={Best}
+          options={{
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#212529",
+            },
+            headerTintColor: "white",
+            animation:"slide_from_left",
             presentation: 'modal',
           animationTypeForReplace: 'push',
           }}
