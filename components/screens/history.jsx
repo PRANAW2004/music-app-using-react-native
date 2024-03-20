@@ -104,7 +104,6 @@ export default function History({navigation}){
                 }
             }
         }
-        console.log(arr7);
         sethistorydate(arr5.reverse());
         sethistory(arr7.reverse());
     });
@@ -184,7 +183,6 @@ export default function History({navigation}){
                             arr1.push(arr[i]);
                             }
                         }
-                    console.log(arr1);
                     TrackPlayer.add(arr1);
                     // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();

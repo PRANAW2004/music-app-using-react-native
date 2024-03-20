@@ -1,5 +1,5 @@
 import { useEffect, useState,useCallback } from "react";
-import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Image, Modal } from "react-native";
+import { View,Text,StyleSheet,Button,BackHandler,TouchableOpacity, Pressable,Image, Modal,PanResponder } from "react-native";
 import { MaterialCommunityIcons,MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './song_data';
@@ -27,6 +27,23 @@ export default function MainPage({navigation}){
    const [coverbool,setcoverbool] = useState(true);
    const [cover,setcover] = useState("");
    const [artist,setartist] = useState("");
+
+   const PanResponder1 =  PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    // onPanResponderMove: (evt, gestureState) => {
+    //     console.log("on Pan Responder move");
+    //   // Handle the swipe gesture
+    //   console.log(evt,gestureState);
+    // },
+    onPanResponderRelease: (evt, gestureState) => {
+        console.log("on pan responder release");
+      // Handle the swipe gesture
+    //   console.log(evt,gestureState);
+      if(gestureState.dx < 0){
+        navigation.navigate("Search");
+      }
+    },
+  });
 
 
    if(!artworkbool){
@@ -57,8 +74,6 @@ export default function MainPage({navigation}){
                 }
           }
     })
-
-   
 
 
     let progress = useProgress();
@@ -91,6 +106,7 @@ export default function MainPage({navigation}){
             setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
             if(JSON.parse(localartwork).length === 4){
+                setrenderimage("null")
                 setcoverbool(false)
             }else{
                 setrenderimage(JSON.parse(localartwork));
@@ -193,9 +209,9 @@ export default function MainPage({navigation}){
     }
 
     return(
-        <View style={styles.maincontainer}>
+        <View style={styles.maincontainer} {...PanResponder1.panHandlers}>
             <View style={{display:"flex",flexDirection: "column",flex:1}}>
-            <View style={styles.firstsection}>
+            <View style={styles.firstsection} {...PanResponder1.panHandlers}>
                  <Pressable onPress={()=>{navigation.navigate("Liked Songs")}} style={{height: 60}}>
                     <View style={{height:60,width:150,borderColor: "grey",borderWidth: 1,flexDirection:'row',alignItems: "center",borderRadius: 36}}>
                         <Image source={require("../images/main-page-icons/liked.png")} style={[{height: 60,width:60,marginRight:10}]}/>

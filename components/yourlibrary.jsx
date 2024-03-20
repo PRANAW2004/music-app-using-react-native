@@ -1,4 +1,4 @@
-import { View,Text,StyleSheet,Platform,Image, ScrollView,Pressable } from "react-native";
+import { View,Text,StyleSheet,Platform,Image, ScrollView,Pressable,PanResponder } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
@@ -12,6 +12,17 @@ export default function YourLibrary({navigation}){
 
     const [song,setsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
+
+    const PanResponder1 =  PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderRelease: (evt, gestureState) => {
+          if(gestureState.dx < 0){
+          }else{
+            navigation.navigate("Search");
+          }
+        },
+      });
+    
  
 
     const hasPermissions = async () => {
@@ -224,11 +235,11 @@ export default function YourLibrary({navigation}){
     }
 
     return(
-        <View style={styles.localcontainer}>
+        <View style={styles.localcontainer} {...PanResponder1.panHandlers}>
             <ScrollView>
             {song.map((e) => {
                 return(
-                    <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
+                    <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}} {...PanResponder1.panHandlers}>
                     <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>
                     <View style={styles.songblock}>
                     <View style={{display: "flex",flexDirection: "row",alignItems: "center",width:'100%'}}>

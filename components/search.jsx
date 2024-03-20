@@ -1,4 +1,4 @@
-import { View,Text,StyleSheet,TextInput, TouchableOpacity,Pressable } from "react-native";
+import { View,Text,StyleSheet,TextInput, TouchableOpacity,Pressable,PanResponder } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
@@ -7,6 +7,18 @@ import {MaterialIcons} from '@expo/vector-icons';
 export default function Search({navigation}){
 
     console.log("search");
+
+    const PanResponder1 =  PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderRelease: (evt, gestureState) => {
+          if(gestureState.dx < 0){
+            navigation.navigate("Local");
+          }else{
+            navigation.navigate("Home");
+          }
+        },
+      });
+    
 
     useEffect(() => {
         
@@ -44,9 +56,9 @@ export default function Search({navigation}){
 
 
     return(
-        <View style={styles.searchcontainer}>
+        <View style={styles.searchcontainer} {...PanResponder1.panHandlers}>
         <View style={styles.searchbox}>
-        <Pressable style={[{width: '70%',backgroundColor: "grey",height: '70%',marginTop:20,marginBottom: 20,display:"flex",flexDirection: "row"}]} onPress={() => navigation.navigate("search")}>
+        <Pressable style={[{width: '90%',backgroundColor: "grey",height: '70%',marginTop:20,marginBottom: 20,display:"flex",flexDirection: "row"}]} onPress={() => navigation.navigate("search")}>
         <View style={{backgroundColor: "grey",width:'10%',height: '100%',display:'flex',justifyContent: 'center'}}>
         <MaterialIcons name="search" size={30} color="black" />
         </View>

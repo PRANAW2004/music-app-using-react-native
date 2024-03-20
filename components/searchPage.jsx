@@ -1,6 +1,6 @@
 import {View,Text, TextInput,StyleSheet,KeyboardAvoidingView,ScrollView,Pressable,Image,BackHandler} from 'react-native';
 import { MaterialIcons,MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState,useEffect,useCallback } from 'react';
+import { useState,useEffect,useCallback,useRef } from 'react';
 import alldata from './AllData';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,11 @@ export default function SearchPage({navigation}) {
     const [currentplayingsong,setcurrentPlaying] = useState(0);
     const [likedsong,setlikedsong] = useState([]);
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const textinputref = useRef(null);
+
+    useEffect(() => {
+        textinputref.current.focus();
+    },[])
 
 
     useEffect(() => {
@@ -238,13 +243,15 @@ export default function SearchPage({navigation}) {
 
     return(
         <View style={styles.searchmain}>
-        <KeyboardAvoidingView style={styles.textinput} behavior='padding'>
+        <KeyboardAvoidingView style={styles.textinput} behavior='height'>
         {/* <View  style={styles.textinput}> */}
             <View style={{display:"flex",justifyContent:"center"}}>
-                <MaterialIcons name='search' size={30} color="black"/>
+            <Pressable onPress={() => navigation.navigate("Search")}>
+                <MaterialIcons name='arrow-back' size={30} color="black"/>
+            </Pressable>
             </View>
-            <View style={{justifyContent:"center",width:'100%'}}>
-                <TextInput placeholder='what do you want to hear?' onChangeText={(e) => {search(e)}}></TextInput>
+            <View style={{justifyContent:"center",width:'100%',height: 50}}>
+                <TextInput style={{height:50}} ref={textinputref} placeholder='what do you want to hear?' onChangeText={(e) => {search(e)}} ></TextInput>
             </View>
             {/* </View> */}
         </KeyboardAvoidingView>
@@ -302,9 +309,9 @@ const styles = StyleSheet.create({
     },
     textinput:{
         backgroundColor: "grey",
-        width: '90%',
-        marginTop:20,
-        height: '7%',
+        width: '100%',
+        marginTop:50,
+        height: 50,
         flexDirection:"row"
     },
     songblock: {
