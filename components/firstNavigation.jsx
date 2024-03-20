@@ -178,16 +178,20 @@ export default function FirstNavigation({navigation}){
         <Stack.Screen 
           name="search"
           component={SearchPage}
-          options={{
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: "#212529",
-            },
-            headerTintColor: "white",
+          // options={{
+          //   headerTitleAlign: "center",
+          //   headerStyle: {
+          //     backgroundColor: "#212529",
+          //   },
+          //   headerTintColor: "white",
+          //   animation:"slide_from_right",
+          //   presentation: 'modal',
+          // animationTypeForReplace: 'push',
+          // }}
+          options={{headerShown: false,
             animation:"slide_from_right",
             presentation: 'modal',
-          animationTypeForReplace: 'push',
-          }}
+          animationTypeForReplace: 'push',}}
         />
         <Stack.Screen 
           name="History"
