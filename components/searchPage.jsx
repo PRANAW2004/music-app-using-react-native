@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SearchPage({navigation}) {
 
+
+    const [songname,setsongname] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
     const [likedsong,setlikedsong] = useState([]);
     const [likedicon,setlikedicon] = useState("cards-heart-outline");
@@ -15,6 +17,7 @@ export default function SearchPage({navigation}) {
     useEffect(() => {
         textinputref.current.focus();
     },[])
+
 
 
     useEffect(() => {
@@ -35,8 +38,7 @@ export default function SearchPage({navigation}) {
         })
     },[])
 
-    const [songname,setsongname] = useState([]);
-    console.log(songname.length);
+    console.log(songname);
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
@@ -79,6 +81,7 @@ export default function SearchPage({navigation}) {
 
             for(var i=0;i<alldata.length;i++){
                 if(alldata[i]['title'].toLowerCase().includes(name)){
+                    console.log(alldata[i]['title']);
                     arr.push(alldata[i]);
 
                 }
@@ -89,8 +92,9 @@ export default function SearchPage({navigation}) {
                 arr[i]['color'] = 'white';
             }
 
-            console.log(arr.length);
+            // console.log(arr.length);
 
+            if(arr1 != null){
             for(var i=0;i<arr.length;i++){
                 for(var j=0;j<arr1.length;j++){
                     if(arr[i]['title'] === arr1[j]){
@@ -101,15 +105,14 @@ export default function SearchPage({navigation}) {
                     }
                 }
             }
+        }
+            console.log("setting the songname");
 
-            
+            setsongname(arr);     
 
-            setsongname(arr);            
     }
 
     async function play(id){
-
-        console.log(id);
 
 
         await TrackPlayer.reset(); 
@@ -243,7 +246,7 @@ export default function SearchPage({navigation}) {
 
     return(
         <View style={styles.searchmain}>
-        <KeyboardAvoidingView style={styles.textinput} behavior='height'>
+        <KeyboardAvoidingView style={styles.textinput} behavior='padding'>
         {/* <View  style={styles.textinput}> */}
             <View style={{display:"flex",justifyContent:"center"}}>
             <Pressable onPress={() => navigation.navigate("Search")}>
