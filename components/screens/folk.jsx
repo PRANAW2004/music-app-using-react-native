@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
 import { StatusBar } from 'expo-status-bar';
 import alldata from '../AllData';
+import bestdata from '../language/bestdata';
 
 export default function Folk({navigation}){
 
@@ -26,6 +27,11 @@ export default function Folk({navigation}){
     const [history,sethistory] = useState([]);
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
+    const [data1,setdata1] = useState([]);
+    const [genrebool,setgenrebool] = useState(false);
+
+
+    // console.log(data1);
 
     // console.log(renderauthor);
 
@@ -58,22 +64,30 @@ export default function Folk({navigation}){
     const progress = useProgress();
     let arr = [];
     let value;
-   
-    const skipprevious = useCallback(async() => {
-        let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-        if(JSON.parse(iconnum1) === 1){
-            setskippreviousbool(true);
-        }
-      })    
-      useEffect(skipprevious,[]);
 
-      const skipnext = useCallback(async() => {
-        let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-        if(iconnum1 >= data.length){
-            setskipnextbool(true);
+    useEffect(async () => {
+        let value11 = await AsyncStorage.getItem("current-genre");
+        if(value11 === "folk"){
+            console.log("inside the folk genre");
+            const skipprevious = useCallback(async() => {
+                let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+                if(JSON.parse(iconnum1) === 1){
+                    setskippreviousbool(true);
+                }
+              })    
+              useEffect(skipprevious,[]);
+        
+              const skipnext = useCallback(async() => {
+                let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+                if(iconnum1 >= data.length){
+                    setskipnextbool(true);
+                }
+              })    
+              useEffect(skipnext,[]);
+        }else{
+            console.log("inside the other genre");
         }
-      })    
-      useEffect(skipnext,[]);
+    },[]);
 
       
     const historydata = useCallback(async() => {
@@ -112,10 +126,7 @@ export default function Folk({navigation}){
            }
   
           }
-        }
-        //     setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
-  
-        
+        }  
     })
     useEffect(likeddata,[]);
 
@@ -146,16 +157,22 @@ export default function Folk({navigation}){
         }else{
         currentplaying = await AsyncStorage.getItem("current-playing");
         let flag = false;
-        for(var i = 0;i<data.length;i++){
-            if(JSON.parse(currentplaying) === data[i]['title']){
+        for(var i = 0;i<alldata.length;i++){
+            if(JSON.parse(currentplaying) === alldata[i]['title']){
                 console.log("inside the if in the current playing");
-                setcurrentPlaying(data[i]['id']);
-                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
-                setrenderimage(data[i]['artwork']);
-                setrendername(data[i]['title']);
-                setrenderauthor(data[i]['artist'])
+                // setcurrentPlaying(data[i]['id']);
+                // AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
+                setrenderimage(alldata[i]['artwork']);
+                setrendername(alldata[i]['title']);
+                setrenderauthor(alldata[i]['artist'])
                 setlocalbool(true);
                 break;
+            }
+        }
+        for(var i=0;i<data.length;i++){
+            if(JSON.parse(currentplaying === data[i]['title'])){
+                setcurrentPlaying(data[i]['id']);
+                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
             }
         }
     }
@@ -168,6 +185,15 @@ export default function Folk({navigation}){
     if(history.length > 0){
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
+
+    // const currentgenre = useCallback(async () => {
+    //     console.log("inside the current genre in the folk");
+    //     let value = await AsyncStorage.getItem("current-genre");
+    //     console.log("current genre is ",value)
+    //     data1 = setdata1(value === "folk"?data:value==="liked"?)
+    // })
+
+    // useEffect(currentgenre,[]);
     
 
     useEffect(() => {
@@ -189,10 +215,7 @@ export default function Folk({navigation}){
     },[])
 
 
-    const setUpTrackPlayer = async () => {
-        try{
-        await TrackPlayer.setupPlayer()
-        }
+    const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}
         catch(err){
             // console.log(err);
         }
@@ -257,7 +280,7 @@ export default function Folk({navigation}){
                 if(data[i]['id'] === id){
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(data[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['title']));
-                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     if(history.length > 50){
                         sethistory((data) => data.filter((_,index) => index !== 0));
                     }else{
@@ -521,11 +544,8 @@ export default function Folk({navigation}){
                             </Pressable>
                         )
                         }
-                        
                     })}
                     </View>
-                    
-                    
                 </View>
 
                     

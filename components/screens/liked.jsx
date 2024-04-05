@@ -138,6 +138,8 @@ export default function Liked({navigation}){
 
     async function play(id){
 
+        await AsyncStorage.setItem("current-genre",JSON.stringify("liked"));
+        
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
             for(var i=0;i<songname.length;i++){
@@ -163,7 +165,7 @@ export default function Liked({navigation}){
                     }
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(songname[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(songname[i]['title']));
-                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     let arr = [songname[i]];
                     try{
                         console.log("inside the try");
