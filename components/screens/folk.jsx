@@ -80,6 +80,9 @@ export default function Folk({navigation}){
             console.log("inside the best");
             setsongdata(bestdata);
         }
+        else if(JSON.parse(value) === 'folk'){
+            setsongdata(data);
+        }
     },[])
 
 
