@@ -114,19 +114,30 @@ export default function Folk({navigation}){
         }
 
         value = await AsyncStorage.getItem("liked");
+        console.log(value);
         arr = JSON.parse(value);
-        for(var i=0;i<data.length;i++){
+        arr = [...new Set(arr)]
+        for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
-           if(data[i]['title'] === arr[j]){
-             data[i]['liked'] = 'cards-heart';
-             data[i]['color'] = 'red';
-             setlikedsong(current => [...current,data[i]['title']]);
+           if(alldata[i]['title'] === arr[j]){
+            //  alldata[i]['liked'] = 'cards-heart';
+            //  alldata[i]['color'] = 'red';
+            //  await AsyncStorage.setItem("liked",JSON.stringify(""));
+             setlikedsong(current => [...current,alldata[i]['title']]);
           //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
            }
-  
           }
         }  
+        for(var i=0;i<data.length;i++){
+            for(var j=0;j<arr.length;j++){
+                if(data[i]['title'] === arr[j]){
+                    data[i]['liked'] = 'cards-heart';
+                    data[i]['color'] = 'red';
+                }
+
+            }
+        }
     })
     useEffect(likeddata,[]);
 
@@ -170,7 +181,7 @@ export default function Folk({navigation}){
             }
         }
         for(var i=0;i<data.length;i++){
-            if(JSON.parse(currentplaying === data[i]['title'])){
+            if(JSON.parse(currentplaying) === data[i]['title']){
                 setcurrentPlaying(data[i]['id']);
                 AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
             }

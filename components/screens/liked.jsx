@@ -22,6 +22,7 @@ export default function Liked({navigation}){
 
     // console.log(songname);
     // console.log(likedsong);
+    
 
     const events = [
         Event.PlaybackState,
@@ -106,11 +107,14 @@ export default function Liked({navigation}){
         let value = await AsyncStorage.getItem("liked");
         let arr = JSON.parse(value);
         let arr1 = [];
-
+        arr = [...new Set(arr)];
+        console.log(arr);
+        let flag = false;
         for(var i=0;i<alldata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(arr[j] === alldata[i]['title']){
                     arr1.push(alldata[i]);
+                    
                 }
             }
         }

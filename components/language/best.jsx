@@ -22,6 +22,10 @@ export default function Best({navigation}){
     const [history,sethistory] = useState([]);
     const [visible,modalvisible] = useState(false);
     const [repeatMode,setRepeatMode] = useState('repeat');
+    const [likedsong,setlikedsong] = useState([]);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+
+    console.log("likedsong is ",likedsong);
     
 
     const events = [
@@ -51,6 +55,80 @@ export default function Best({navigation}){
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
     useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
+    useEffect(async () => {
+        let value11 = await AsyncStorage.getItem("current-genre");
+        if(value11 === "folk"){
+            console.log("inside the folk genre");
+            const skipprevious = useCallback(async() => {
+                let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+                if(JSON.parse(iconnum1) === 1){
+                    setskippreviousbool(true);
+                }
+              })    
+              useEffect(skipprevious,[]);
+        
+              const skipnext = useCallback(async() => {
+                let iconnum1 = await AsyncStorage.getItem("current-playing-num");
+                if(iconnum1 >= data.length){
+                    setskipnextbool(true);
+                }
+              })    
+              useEffect(skipnext,[]);
+        }else{
+            console.log("inside the other genre");
+        }
+    },[]);
+
+    const historydata = useCallback(async() => {
+        let historydata = await AsyncStorage.getItem("history");
+        let data = JSON.parse(historydata);
+        for(var i=0;i<data.length;i++){
+            sethistory(current => [...current,data[i]]);
+        }
+      })
+      useEffect(historydata,[]);
+
+    const likeddata = useCallback(async() => {
+
+        let bool1 = await AsyncStorage.getItem('song-playing-bool');
+        if(bool1 === 'true'){
+            seticon('motion-pause');
+        }else{
+            seticon('motion-play');
+        }
+
+        for(var i=0;i<bestdata.length;i++){
+            bestdata[i]['liked'] = 'cards-heart-outline';
+            bestdata[i]['color'] = 'white';
+        }
+
+        value = await AsyncStorage.getItem("liked");
+        console.log(value);
+        arr = JSON.parse(value);
+        arr = [...new Set(arr)];
+        console.log(arr);
+        for(var i=0;i<alldata.length;i++){
+          for(var j=0;j<arr.length;j++){
+              // console.log("123",data[i]['id'],arr[j]);
+           if(alldata[i]['title'] === arr[j]){
+            console.log("inside the best data in the for loop");
+             setlikedsong(current => [...current,alldata[i]['title']]);
+          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+           }
+          }
+        }
+        for(var i=0;i<bestdata.length;i++){
+            for(var j=0;j<arr.length;j++){
+                if(bestdata[i]['title'] === arr[j]){
+                    bestdata[i]['liked'] = 'cards-heart';
+                    bestdata[i]['color'] = 'red';
+                }
+              
+            }
+        }  
+    })
+    useEffect(likeddata,[]);
+
 
     let currentplaying;
 
@@ -91,15 +169,22 @@ export default function Best({navigation}){
                 break;
             }
         }
-        for(var i=0;i<data.length;i++){
-            if(JSON.parse(currentplaying === data[i]['title'])){
-                setcurrentPlaying(data[i]['id']);
-                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
+        for(var i=0;i<bestdata.length;i++){
+            if(JSON.parse(currentplaying) === bestdata[i]['title']){
+                setcurrentPlaying(bestdata[i]['id']);
+                AsyncStorage.setItem("current-playing-num",JSON.stringify(bestdata[i]['id']));
             }
         }
     }
     });
     useEffect(currentPlaying,[]);
+
+    if(likedsong.length > 0){
+        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    }
+    if(history.length > 0){
+        AsyncStorage.setItem('history',JSON.stringify(history));
+    }
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -254,14 +339,14 @@ export default function Best({navigation}){
     })
 
     async function liked(title){
-        for(var i=0;i<data.length;i++){
-            if(data[i]['title'] === title){
+        for(var i=0;i<bestdata.length;i++){
+            if(bestdata[i]['title'] === title){
 
-                data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
+                bestdata[i]['liked'] = bestdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                bestdata[i]['color'] = bestdata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
-                if(data[i]['liked'] === 'cards-heart'){
-                    setlikedsong(current => [...current,data[i]['title']]);
+                if(bestdata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,bestdata[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){
