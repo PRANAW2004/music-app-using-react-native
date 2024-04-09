@@ -29,13 +29,16 @@ export default function Folk({navigation}){
     const [localimagebool,setlocalimagebool] = useState(true);
     const [data1,setdata1] = useState([]);
     const [genrebool,setgenrebool] = useState(false);
-
+    const [songdata,setsongdata] = useState([]);
 
     // console.log(data1);
 
     // console.log(renderauthor);
 
     // console.log(renderimage.length);
+
+    console.log(skipnextbool);
+    console.log(songdata.length);
 
     // console.log("inside folk");
 
@@ -65,6 +68,21 @@ export default function Folk({navigation}){
     let arr = [];
     let value;
 
+    // console.log("song data is ",songdata);
+
+    useEffect(async () => {
+        let value = await AsyncStorage.getItem("genre");
+        console.log("current genre is ",value);
+        let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
+        console.log(currentplayingnumber*1);
+        setcurrentPlaying(currentplayingnumber*1);
+        if(JSON.parse(value) === "best"){
+            console.log("inside the best");
+            setsongdata(bestdata);
+        }
+    },[])
+
+
     useEffect(async () => {
         let value11 = await AsyncStorage.getItem("current-genre");
         if(value11 === "folk"){
@@ -79,7 +97,8 @@ export default function Folk({navigation}){
         
               const skipnext = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-                if(iconnum1 >= data.length){
+                if(iconnum1 >= songdata.length){
+                    console.log("inside the iconnum1 greater than 1");
                     setskipnextbool(true);
                 }
               })    
@@ -267,7 +286,8 @@ export default function Folk({navigation}){
             })
         }
 
-        if(id >= data.length){
+        if(id >= songdata.length){
+            console.log("inside the id in play function greater than the songdata.length");
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -277,6 +297,7 @@ export default function Folk({navigation}){
                 ]
             })
         }else{
+            console.log("inside else in the play function");
             setskipnextbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -287,32 +308,32 @@ export default function Folk({navigation}){
                 ]
             })
         }
-            for(var i=0;i<data.length;i++){
-                if(data[i]['id'] === id){
-                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(data[i]['title']));
-                    AsyncStorage.setItem("current-playing",JSON.stringify(data[i]['title']));
+            for(var i=0;i<songdata.length;i++){
+                if(songdata[i]['id'] === id){
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(songdata[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(songdata[i]['title']));
                     // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     if(history.length > 50){
-                        sethistory((data) => data.filter((_,index) => index !== 0));
+                        sethistory((songdata) => songdata.filter((_,index) => index !== 0));
                     }else{
                         let date = new Date().toLocaleDateString();
                         let date1 = date;
                         // console.log(date1);
-                        let data11 = date1 + ":"+data[i]['title']
+                        let data11 = date1 + ":"+songdata[i]['title']
                         sethistory((current) => [...current,data11]);
                     }
                     // await AsyncStorage.setItem("history",JSON.stringify(history));
 
-                    let arr = [data[i]];
+                    let arr = [songdata[i]];
                     try{
                         if(i === 0){
-                            for(j=i+1;j<data.length;j++){
-                                arr.push(data[i+j]);
+                            for(j=i+1;j<songdata.length;j++){
+                                arr.push(songdata[i+j]);
                             }
                         }
                         else{
-                        for(j=i;j<data.length-1;j++){
-                            arr.push(data[j+1]);
+                        for(j=i;j<songdata.length-1;j++){
+                            arr.push(songdata[j+1]);
                         }
                         }
 
@@ -329,9 +350,11 @@ export default function Folk({navigation}){
                         })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
+                            console.log("inside the add event listener remote-previous");
                             setcurrentPlaying(currentplayingsong-1);
                             let a = await TrackPlayer.getActiveTrack();
                             play(a["id"]-1); 
+                            // TrackPlayer.skipToPrevious();
                         })
 
                         TrackPlayer.addEventListener("remote-next", async () => {
@@ -348,10 +371,18 @@ export default function Folk({navigation}){
                 }
             }
     }
-    
+
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("inside the add event listener in the folk");
         let a = await TrackPlayer.getActiveTrack();
+
+        let value = await AsyncStorage.getItem("genre");
+        let songdata = [];
+        // if(JSON.parse(value) === 'best'){
+        //     songdata = bestdata;
+        // }
+        // console.log(a['id']);
+        songdata = JSON.parse(value) === 'data'?data:JSON.parse(value) === 'best'?bestdata:null;
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -360,7 +391,7 @@ export default function Folk({navigation}){
         if(a['id'] === 1){
             setskippreviousbool(true);
         }
-        if(a['id'] >= data.length){
+        if(a['id'] >= songdata.length){
             setskipnextbool(true);
         }
         // console.log("playback track changed");
@@ -461,7 +492,7 @@ export default function Folk({navigation}){
             {data.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("folk"));setsongdata(data);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
