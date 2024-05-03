@@ -1,4 +1,4 @@
-const bestdata = [
+const englishdata = [
     {
         id:1,
         title: "This Is Me/Scars to Your Beautiful",
@@ -517,4 +517,4 @@ const bestdata = [
     
 ]
 
-export default bestdata;
+export default englishdata;

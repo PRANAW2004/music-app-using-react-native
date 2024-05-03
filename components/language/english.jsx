@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
 import { StatusBar } from 'expo-status-bar';
 import alldata from '../AllData';
-import bestdata from '../language/bestdata';
+import bestdata from './bestdata';
 import englishdata from './englishdata';
 
 export default function Folk({navigation}){
@@ -493,10 +493,10 @@ export default function Folk({navigation}){
             {/* <Song_Render data={data} /> */}
             <View style={{width:'100%',flex:1}}>
             <View style={{flex:1}}>
-            {data.map((e)=>{
+            {englishdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("folk"));setsongdata(data);setcurrentPlaying(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("english"));setsongdata(englishdata);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
@@ -582,7 +582,7 @@ export default function Folk({navigation}){
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
-                    {data.map((e) => {
+                    {englishdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked(e['title'])}}>
