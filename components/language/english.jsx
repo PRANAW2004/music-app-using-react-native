@@ -407,14 +407,14 @@ export default function Folk({navigation}){
     })
 
     async function liked(title){
-        for(var i=0;i<data.length;i++){
-            if(data[i]['title'] === title){
+        for(var i=0;i<englishdata.length;i++){
+            if(englishdata[i]['title'] === title){
 
-                data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
+                englishdata[i]['liked'] = englishdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                englishdata[i]['color'] = englishdata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
-                if(data[i]['liked'] === 'cards-heart'){
-                    setlikedsong(current => [...current,data[i]['title']]);
+                if(englishdata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,englishdata[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){

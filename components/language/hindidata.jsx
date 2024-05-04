@@ -4,7 +4,7 @@ const hindidata = [
         title: "Aise Kyun",
         artist: "Anurag Saikia",
         url: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/songs%2Fhindi%2FAise%20Kyun.mp3?alt=media&token=8e5c82a7-7917-4c48-baa3-abaaf7ba3c0e",
-        artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/songs%2Fhindi%2FAise%20Kyun.mp3?alt=media&token=8e5c82a7-7917-4c48-baa3-abaaf7ba3c0e",
+        artwork: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/images%2Fhindi%2FAise%20Kyun%20downloaded%20from%20SpotiSongDownloader.com_.jpg?alt=media&token=151deb7d-6d4d-42ec-868f-b9c3ffe2d96c",
         liked: "cards-heart-outline",
         color: "white"
     },
