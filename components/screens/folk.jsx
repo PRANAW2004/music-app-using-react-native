@@ -40,17 +40,9 @@ export default function Folk({navigation}){
     const [data1,setdata1] = useState([]);
     const [genrebool,setgenrebool] = useState(false);
     const [songdata,setsongdata] = useState([]);
+    const [songgenre,setsonggenre] = useState("");
 
-    // console.log(data1);
-
-    // console.log(renderauthor);
-
-    // console.log(renderimage.length);
-
-    console.log(skipnextbool);
-    console.log(songdata.length);
-
-    // console.log("inside folk");
+    // console.log(data1)
 
     const events = [
         Event.PlaybackState,
@@ -266,6 +258,7 @@ export default function Folk({navigation}){
         return () => TrackPlayer.destroy();
     }, [])
 
+
     async function play(id){
 
 
@@ -392,6 +385,7 @@ export default function Folk({navigation}){
         // }
         // console.log(a['id']);
         songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        setsongdata(songdata)
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -501,7 +495,7 @@ export default function Folk({navigation}){
             {folkdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{setsongdata(folkdata);await AsyncStorage.setItem("genre",JSON.stringify("folk"));play(e['id']);setcurrentPlaying(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{await TrackPlayer.pause();await AsyncStorage.setItem("genre",JSON.stringify("folk"));play(e['id']);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
