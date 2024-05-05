@@ -1,7 +1,5 @@
-import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } from 'react-native';
+import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal,ActivityIndicator } from 'react-native';
 import { useEffect,useState,useCallback } from 'react';
-import data from '../song_data';
-import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -40,16 +38,7 @@ export default function Folk({navigation}){
     const [genrebool,setgenrebool] = useState(false);
     const [songdata,setsongdata] = useState([]);
 
-    // console.log(data1);
 
-    // console.log(renderauthor);
-
-    // console.log(renderimage.length);
-
-    console.log(skipnextbool);
-    console.log(songdata.length);
-
-    // console.log("inside folk");
 
     const events = [
         Event.PlaybackState,
@@ -135,7 +124,7 @@ export default function Folk({navigation}){
             seticon('motion-play');
         }
 
-        for(var i=0;i<data.length;i++){
+        for(var i=0;i<englishdata.length;i++){
             englishdata[i]['liked'] = 'cards-heart-outline';
             englishdata[i]['color'] = 'white';
         }
@@ -481,17 +470,6 @@ export default function Folk({navigation}){
     
     return(
         <View style={styles.folkview}>
-            {/* {data.map((e)=>{
-                console.log(e['id']);
-                return(            
-                    <ScrollView>
-                    <View style={styles.songblock}>
-                            <Text style={{color: "black"}}>{e['id']}</Text>
-                    </View>
-                    </ScrollView>  
-                )
-
-            })} */}
             <View style={{width:'100%',flex:1}}>
             <ScrollView style={{width:'100%',height:"100%"}}>
             {/* <Song_Render data={data} /> */}
@@ -627,7 +605,9 @@ export default function Folk({navigation}){
             </Pressable>
             </View>
             </View>
+            
     )
+
 }
 
 const styles = StyleSheet.create({

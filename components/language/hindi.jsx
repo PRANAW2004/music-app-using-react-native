@@ -1,7 +1,5 @@
 import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } from 'react-native';
 import { useEffect,useState,useCallback } from 'react';
-import data from '../song_data';
-import Song_Render from '../song-render';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -73,16 +71,16 @@ export default function Folk({navigation}){
 
     // console.log("song data is ",songdata);
 
-    useEffect(async () => {
-        let value = await AsyncStorage.getItem("genre");
-        console.log("current genre is ",value);
-        let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
-        console.log(currentplayingnumber*1);
-        setcurrentPlaying(currentplayingnumber*1);
-        let songdata1 = [];
-        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
-        setsongdata(songdata1)
-    },[])
+    // useEffect(async () => {
+    //     let value = await AsyncStorage.getItem("genre");
+    //     console.log("current genre is ",value);
+    //     let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
+    //     console.log(currentplayingnumber*1);
+    //     setcurrentPlaying(currentplayingnumber*1);
+    //     let songdata1 = [];
+    //     songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+    //     setsongdata(songdata1)
+    // },[])
 
 
     useEffect(async () => {
