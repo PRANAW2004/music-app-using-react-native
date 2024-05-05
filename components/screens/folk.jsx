@@ -501,7 +501,7 @@ export default function Folk({navigation}){
             {folkdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("folk"));setsongdata(data);setcurrentPlaying(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{setsongdata(folkdata);await AsyncStorage.setItem("genre",JSON.stringify("folk"));play(e['id']);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
