@@ -1,29 +1,42 @@
 import { View,Text,BackHandler,StyleSheet,Pressable,Image,ScrollView,Modal } from "react-native";
 import { useEffect,useState,useCallback } from "react";
-import bestdata from "./bestdata";
-import alldata from "../AllData";
 import { MaterialCommunityIcons,MaterialIcons } from "@expo/vector-icons";
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider from 'react-native-slider';
 import { StatusBar } from "expo-status-bar";
+import alldata from '../AllData';
+import bestdata from './bestdata';
+import englishdata from './englishdata';
+import hindidata from './hindidata';
+import otherdata from './otherdata';
+import tamildata from './tamildata';
+import telugudata from './telugudata';
+import folkdata from '../screens/folkdata';
+import popdata from '../screens/popdata';
+import souldata from '../screens/souldata';
+import rockdata from '../screens/rockdata';
 
 export default function Best({navigation}){
 
-    const [localbool,setlocalbool] = useState(null);
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
-    const [localimagebool,setlocalimagebool] = useState(true);
+    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const [likedsong,setlikedsong] = useState([]);
+    const [bool,setbool] = useState(false);
+    const [visible,modalvisible] = useState(false);
     const [icon,seticon] = useState("motion-play");
     const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [repeatMode,setRepeatMode] = useState('repeat');
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
     const [history,sethistory] = useState([]);
-    const [visible,modalvisible] = useState(false);
-    const [repeatMode,setRepeatMode] = useState('repeat');
-    const [likedsong,setlikedsong] = useState([]);
-    const [likedicon,setlikedicon] = useState("cards-heart-outline");
+    const [localbool,setlocalbool] = useState(null);
+    const [localimagebool,setlocalimagebool] = useState(true);
+    const [data1,setdata1] = useState([]);
+    const [genrebool,setgenrebool] = useState(false);
+    const [songdata,setsongdata] = useState([]);
 
     console.log("likedsong is ",likedsong);
     
@@ -52,12 +65,24 @@ export default function Best({navigation}){
 
     const progress = useProgress();
 
+    useEffect(async () => {
+        let value = await AsyncStorage.getItem("genre");
+        console.log("current genre is ",value);
+        let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
+        console.log(currentplayingnumber*1);
+        setcurrentPlaying(currentplayingnumber*1);
+        let songdata1 = [];
+        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        setsongdata(songdata1)
+    
+    },[])
+
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
     useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
     useEffect(async () => {
         let value11 = await AsyncStorage.getItem("current-genre");
-        if(value11 === "folk"){
+        if(value11 === "best"){
             console.log("inside the folk genre");
             const skipprevious = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
@@ -69,7 +94,7 @@ export default function Best({navigation}){
         
               const skipnext = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
-                if(iconnum1 >= data.length){
+                if(iconnum1 >= bestdata.length){
                     setskipnextbool(true);
                 }
               })    
@@ -233,7 +258,7 @@ export default function Best({navigation}){
             })
         }
 
-        if(id >= bestdata.length){
+        if(id >= songdata.length){
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -253,32 +278,32 @@ export default function Best({navigation}){
                 ]
             })
         }
-            for(var i=0;i<bestdata.length;i++){
-                if(bestdata[i]['id'] === id){
-                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(bestdata[i]['title']));
-                    AsyncStorage.setItem("current-playing",JSON.stringify(bestdata[i]['title']));
+            for(var i=0;i<songdata.length;i++){
+                if(songdata[i]['id'] === id){
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(songdata[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(songdata[i]['title']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     if(history.length > 50){
-                        sethistory((bestdata) => bestdata.filter((_,index) => index !== 0));
+                        sethistory((songdata) => songdata.filter((_,index) => index !== 0));
                     }else{
                         let date = new Date().toLocaleDateString();
                         let date1 = date;
                         // console.log(date1);
-                        let data11 = date1 + ":"+bestdata[i]['title']
+                        let data11 = date1 + ":"+songdata[i]['title']
                         sethistory((current) => [...current,data11]);
                     }
                     // await AsyncStorage.setItem("history",JSON.stringify(history));
 
-                    let arr = [bestdata[i]];
+                    let arr = [songdata[i]];
                     try{
                         if(i === 0){
-                            for(j=i+1;j<bestdata.length;j++){
+                            for(j=i+1;j<songdata.length;j++){
                                 arr.push(bestdata[i+j]);
                             }
                         }
                         else{
-                        for(j=i;j<bestdata.length-1;j++){
-                            arr.push(bestdata[j+1]);
+                        for(j=i;j<songdata.length-1;j++){
+                            arr.push(songdata[j+1]);
                         }
                         }
 
@@ -318,6 +343,14 @@ export default function Best({navigation}){
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("inside the add event listener in the best");
         let a = await TrackPlayer.getActiveTrack();
+
+        let value = await AsyncStorage.getItem("genre");
+        let songdata = [];
+        // if(JSON.parse(value) === 'best'){
+        //     songdata = bestdata;
+        // }
+        // console.log(a['id']);
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -419,7 +452,8 @@ export default function Best({navigation}){
             {bestdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id']);}}>
+                <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{setsongdata(bestdata);await AsyncStorage.setItem("genre",JSON.stringify("best"));play(e['id']);setcurrentPlaying(e['id']);}}>
+
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
@@ -505,7 +539,7 @@ export default function Best({navigation}){
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
-                    {bestdata.map((e) => {
+                    {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked(e['title'])}}>

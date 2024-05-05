@@ -9,6 +9,16 @@ import Slider from 'react-native-slider';
 import { StatusBar } from 'expo-status-bar';
 import alldata from '../AllData';
 import bestdata from '../language/bestdata';
+import englishdata from '../language/englishdata';
+import hindidata from '../language/hindidata';
+import otherdata from '../language/otherdata';
+import tamildata from '../language/tamildata';
+import telugudata from '../language/telugudata';
+import folkdata from './folkdata';
+import popdata from './popdata';
+import souldata from './souldata';
+import rockdata from './rockdata';
+
 
 export default function Folk({navigation}){
 
@@ -76,13 +86,9 @@ export default function Folk({navigation}){
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
         console.log(currentplayingnumber*1);
         setcurrentPlaying(currentplayingnumber*1);
-        if(JSON.parse(value) === "best"){
-            console.log("inside the best");
-            setsongdata(bestdata);
-        }
-        else if(JSON.parse(value) === 'folk'){
-            setsongdata(data);
-        }
+        let songdata1 = [];
+        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        setsongdata(songdata1)
     },[])
 
 
@@ -130,9 +136,9 @@ export default function Folk({navigation}){
             seticon('motion-play');
         }
 
-        for(var i=0;i<data.length;i++){
-            data[i]['liked'] = 'cards-heart-outline';
-            data[i]['color'] = 'white';
+        for(var i=0;i<folkdata.length;i++){
+            folkdata[i]['liked'] = 'cards-heart-outline';
+            folkdata[i]['color'] = 'white';
         }
 
         value = await AsyncStorage.getItem("liked");
@@ -151,11 +157,11 @@ export default function Folk({navigation}){
            }
           }
         }  
-        for(var i=0;i<data.length;i++){
+        for(var i=0;i<folkdata.length;i++){
             for(var j=0;j<arr.length;j++){
-                if(data[i]['title'] === arr[j]){
-                    data[i]['liked'] = 'cards-heart';
-                    data[i]['color'] = 'red';
+                if(folkdata[i]['title'] === arr[j]){
+                    folkdata[i]['liked'] = 'cards-heart';
+                    folkdata[i]['color'] = 'red';
                 }
 
             }
@@ -202,10 +208,10 @@ export default function Folk({navigation}){
                 break;
             }
         }
-        for(var i=0;i<data.length;i++){
-            if(JSON.parse(currentplaying) === data[i]['title']){
-                setcurrentPlaying(data[i]['id']);
-                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
+        for(var i=0;i<folkdata.length;i++){
+            if(JSON.parse(currentplaying) === folkdata[i]['title']){
+                setcurrentPlaying(folkdata[i]['id']);
+                AsyncStorage.setItem("current-playing-num",JSON.stringify(folkdata[i]['id']));
             }
         }
     }
@@ -385,7 +391,7 @@ export default function Folk({navigation}){
         //     songdata = bestdata;
         // }
         // console.log(a['id']);
-        songdata = JSON.parse(value) === 'data'?data:JSON.parse(value) === 'best'?bestdata:null;
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -406,14 +412,14 @@ export default function Folk({navigation}){
     })
 
     async function liked(title){
-        for(var i=0;i<data.length;i++){
-            if(data[i]['title'] === title){
+        for(var i=0;i<folkdata.length;i++){
+            if(folkdata[i]['title'] === title){
 
-                data[i]['liked'] = data[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                data[i]['color'] = data[i]['color'] === 'red'?'white':'red';
-                // console.log(data[i]['liked'])
-                if(data[i]['liked'] === 'cards-heart'){
-                    setlikedsong(current => [...current,data[i]['title']]);
+                folkdata[i]['liked'] = folkdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                folkdata[i]['color'] = folkdata[i]['color'] === 'red'?'white':'red';
+                // console.log(folkdata[i]['liked'])
+                if(folkdata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,folkdata[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){
@@ -492,7 +498,7 @@ export default function Folk({navigation}){
             {/* <Song_Render data={data} /> */}
             <View style={{width:'100%',flex:1}}>
             <View style={{flex:1}}>
-            {data.map((e)=>{
+            {folkdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
                     <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("folk"));setsongdata(data);setcurrentPlaying(e['id']);}}>
@@ -581,7 +587,7 @@ export default function Folk({navigation}){
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
-                    {data.map((e) => {
+                    {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked(e['title'])}}>

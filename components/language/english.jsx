@@ -10,6 +10,14 @@ import { StatusBar } from 'expo-status-bar';
 import alldata from '../AllData';
 import bestdata from './bestdata';
 import englishdata from './englishdata';
+import hindidata from './hindidata';
+import otherdata from './otherdata';
+import tamildata from './tamildata';
+import telugudata from './telugudata';
+import folkdata from '../screens/folkdata';
+import popdata from '../screens/popdata';
+import souldata from '../screens/souldata';
+import rockdata from '../screens/rockdata';
 
 export default function Folk({navigation}){
 
@@ -77,19 +85,15 @@ export default function Folk({navigation}){
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
         console.log(currentplayingnumber*1);
         setcurrentPlaying(currentplayingnumber*1);
-        if(JSON.parse(value) === "best"){
-            console.log("inside the best");
-            setsongdata(bestdata);
-        }
-        else if(JSON.parse(value) === 'folk'){
-            setsongdata(data);
-        }
+        let songdata1 = [];
+        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        setsongdata(songdata1)
     },[])
 
 
     useEffect(async () => {
         let value11 = await AsyncStorage.getItem("current-genre");
-        if(value11 === "folk"){
+        if(value11 === "english"){
             console.log("inside the folk genre");
             const skipprevious = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
@@ -132,8 +136,8 @@ export default function Folk({navigation}){
         }
 
         for(var i=0;i<data.length;i++){
-            data[i]['liked'] = 'cards-heart-outline';
-            data[i]['color'] = 'white';
+            englishdata[i]['liked'] = 'cards-heart-outline';
+            englishdata[i]['color'] = 'white';
         }
 
         value = await AsyncStorage.getItem("liked");
@@ -152,11 +156,11 @@ export default function Folk({navigation}){
            }
           }
         }  
-        for(var i=0;i<data.length;i++){
+        for(var i=0;i<englishdata.length;i++){
             for(var j=0;j<arr.length;j++){
-                if(data[i]['title'] === arr[j]){
-                    data[i]['liked'] = 'cards-heart';
-                    data[i]['color'] = 'red';
+                if(englishdata[i]['title'] === arr[j]){
+                    englishdata[i]['liked'] = 'cards-heart';
+                    englishdata[i]['color'] = 'red';
                 }
 
             }
@@ -203,10 +207,10 @@ export default function Folk({navigation}){
                 break;
             }
         }
-        for(var i=0;i<data.length;i++){
-            if(JSON.parse(currentplaying) === data[i]['title']){
-                setcurrentPlaying(data[i]['id']);
-                AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
+        for(var i=0;i<englishdata.length;i++){
+            if(JSON.parse(currentplaying) === englishdata[i]['title']){
+                setcurrentPlaying(englishdata[i]['id']);
+                AsyncStorage.setItem("current-playing-num",JSON.stringify(englishdata[i]['id']));
             }
         }
     }
@@ -386,7 +390,7 @@ export default function Folk({navigation}){
         //     songdata = bestdata;
         // }
         // console.log(a['id']);
-        songdata = JSON.parse(value) === 'data'?data:JSON.parse(value) === 'best'?bestdata:null;
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -496,7 +500,7 @@ export default function Folk({navigation}){
             {englishdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{play(e['id']);await AsyncStorage.setItem("genre",JSON.stringify("english"));setsongdata(englishdata);setcurrentPlaying(e['id']);}}>
+                    <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{setsongdata(englishdata);await AsyncStorage.setItem("genre",JSON.stringify("english"));play(e['id']);setcurrentPlaying(e['id']);}}>
 
                     {/* <Pressable> */}
                     {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
@@ -582,7 +586,7 @@ export default function Folk({navigation}){
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
-                    {englishdata.map((e) => {
+                    {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked(e['title'])}}>
