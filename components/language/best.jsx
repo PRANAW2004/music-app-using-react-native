@@ -35,6 +35,8 @@ export default function Best({navigation}){
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
     const [songdata,setsongdata] = useState([]);
+    const [coverbool, setcoverbool] = useState(true);
+    const [artworkbool, setartworkbool] = useState(true);
     
     const events = [
         Event.PlaybackState,
