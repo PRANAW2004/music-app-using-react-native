@@ -34,13 +34,8 @@ export default function Best({navigation}){
     const [history,sethistory] = useState([]);
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
-    const [data1,setdata1] = useState([]);
-    const [genrebool,setgenrebool] = useState(false);
     const [songdata,setsongdata] = useState([]);
-
-    console.log("likedsong is ",likedsong);
     
-
     const events = [
         Event.PlaybackState,
         Event.PlaybackError,
@@ -69,12 +64,10 @@ export default function Best({navigation}){
         let value = await AsyncStorage.getItem("genre");
         console.log("current genre is ",value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
-        console.log(currentplayingnumber*1);
         setcurrentPlaying(currentplayingnumber*1);
         let songdata1 = [];
         songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
         setsongdata(songdata1)
-    
     },[])
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
@@ -83,7 +76,6 @@ export default function Best({navigation}){
     useEffect(async () => {
         let value11 = await AsyncStorage.getItem("current-genre");
         if(value11 === "best"){
-            console.log("inside the folk genre");
             const skipprevious = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
                 if(JSON.parse(iconnum1) === 1){
@@ -100,7 +92,6 @@ export default function Best({navigation}){
               })    
               useEffect(skipnext,[]);
         }else{
-            console.log("inside the other genre");
         }
     },[]);
 
@@ -128,15 +119,12 @@ export default function Best({navigation}){
         }
 
         value = await AsyncStorage.getItem("liked");
-        console.log(value);
         arr = JSON.parse(value);
         arr = [...new Set(arr)];
-        console.log(arr);
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
            if(alldata[i]['title'] === arr[j]){
-            console.log("inside the best data in the for loop");
              setlikedsong(current => [...current,alldata[i]['title']]);
           //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
            }
@@ -160,16 +148,13 @@ export default function Best({navigation}){
     const currentPlaying = useCallback(async () => {
 
         let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
-        console.log("local songs bool is ",localsongsbool);
     
         if(localsongsbool === "true"){
-            console.log("inside the local songs bool is true");
             let currentplaying1 = await AsyncStorage.getItem("current-playing");
             setrendername(JSON.parse(currentplaying1));
             let localauthor = await AsyncStorage.getItem("data-author");
             setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
-            console.log(JSON.parse(localartwork).length);
             if(JSON.parse(localartwork).length === 4){
                 setrenderimage("null")
                 setlocalimagebool(false);
@@ -184,9 +169,6 @@ export default function Best({navigation}){
         let flag = false;
         for(var i = 0;i<alldata.length;i++){
             if(JSON.parse(currentplaying) === alldata[i]['title']){
-                console.log("inside the if in the current playing");
-                // setcurrentPlaying(data[i]['id']);
-                // AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
                 setrenderimage(alldata[i]['artwork']);
                 setrendername(alldata[i]['title']);
                 setrenderauthor(alldata[i]['artist'])
@@ -235,7 +217,6 @@ export default function Best({navigation}){
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
 
-        await AsyncStorage.setItem("genre", JSON.stringify("best"));
 
         if(id === 1){
             setskippreviousbool(true);
@@ -298,7 +279,7 @@ export default function Best({navigation}){
                     try{
                         if(i === 0){
                             for(j=i+1;j<songdata.length;j++){
-                                arr.push(bestdata[i+j]);
+                                arr.push(songdata[i+j]);
                             }
                         }
                         else{
@@ -340,17 +321,128 @@ export default function Best({navigation}){
             }
     }
 
+    async function play1(id){
+
+
+        await TrackPlayer.reset(); 
+        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+
+
+        if(id === 1){
+            setskippreviousbool(true);
+            TrackPlayer.updateOptions({     
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToNext
+                ]
+            })
+        }else{
+            setskippreviousbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    // Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+
+        if(id >= bestdata.length){
+            setskipnextbool(true)
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious
+                ]
+            })
+        }else{
+            setskipnextbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+            for(var i=0;i<bestdata.length;i++){
+                if(bestdata[i]['id'] === id){
+                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(bestdata[i]['title']));
+                    AsyncStorage.setItem("current-playing",JSON.stringify(bestdata[i]['title']));
+                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    if(history.length > 50){
+                        sethistory((bestdata) => bestdata.filter((_,index) => index !== 0));
+                    }else{
+                        let date = new Date().toLocaleDateString();
+                        let date1 = date;
+                        // console.log(date1);
+                        let data11 = date1 + ":"+bestdata[i]['title']
+                        sethistory((current) => [...current,data11]);
+                    }
+                    // await AsyncStorage.setItem("history",JSON.stringify(history));
+
+                    let arr = [bestdata[i]];
+                    try{
+                        if(i === 0){
+                            for(j=i+1;j<bestdata.length;j++){
+                                arr.push(bestdata[i+j]);
+                            }
+                        }
+                        else{
+                        for(j=i;j<bestdata.length-1;j++){
+                            arr.push(bestdata[j+1]);
+                        }
+                        }
+
+                        TrackPlayer.addEventListener("remote-play", ()=>{
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                            seticon("motion-pause");
+                            TrackPlayer.play();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-pause", () => {
+                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
+                            seticon("motion-play");
+                            TrackPlayer.pause();
+                        })
+                        
+                        TrackPlayer.addEventListener("remote-previous",async () => {
+                            setcurrentPlaying(currentplayingsong-1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]-1); 
+                        })
+
+                        TrackPlayer.addEventListener("remote-next", async () => {
+                            setcurrentPlaying(currentplayingsong+1);
+                            let a = await TrackPlayer.getActiveTrack();
+                            play(a["id"]+1);
+                        })
+                    TrackPlayer.add(arr);
+                    TrackPlayer.play();
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                    }catch(err){
+                    }
+                }
+            }
+    }
+
     TrackPlayer.addEventListener("playback-track-changed",async () => {
-        // console.log("inside the add event listener in the best");
+        console.log("inside the add event listener in the best");
         let a = await TrackPlayer.getActiveTrack();
 
         let value = await AsyncStorage.getItem("genre");
-        let songdata = [];
+        let songdata1 = [];
         // if(JSON.parse(value) === 'best'){
         //     songdata = bestdata;
         // }
         // console.log(a['id']);
-        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        setsongdata(songdata1)
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
         }else{
@@ -359,7 +451,7 @@ export default function Best({navigation}){
         if(a['id'] === 1){
             setskippreviousbool(true);
         }
-        if(a['id'] >= bestdata.length){
+        if(a['id'] >= songdata1.length){
             setskipnextbool(true);
         }
         // console.log("playback track changed");
@@ -480,13 +572,8 @@ export default function Best({navigation}){
             {bestdata.map((e)=>{
                 return(
                 <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}}>
-                <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{setsongdata(bestdata);await AsyncStorage.setItem("genre",JSON.stringify("best"));play(e['id']);setcurrentPlaying(e['id']);}}>
+                <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={async ()=>{await AsyncStorage.setItem("genre",JSON.stringify("best"));play1(e['id']);setcurrentPlaying(e['id']);}}>
 
-
-                    {/* <Pressable> */}
-                    {/* {console.log(TrackPlayer.getProgress().then((e) => console.log(e)))}
-                    {console.log(TrackPlayer.play())} */}
-                    {/* <View style={{width:'100%',display:"flex",alignItems: "center",flex:1}}> */}
                     <View style={styles.songblock}>
                     <View style={{display: "flex",flexDirection: "row",alignItems: "center",width:'50%'}}>
                     <View style={{marginRight: 10}}>
