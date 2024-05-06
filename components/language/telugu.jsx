@@ -34,8 +34,6 @@ export default function Folk({navigation}){
     const [history,sethistory] = useState([]);
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
-    const [data1,setdata1] = useState([]);
-    const [genrebool,setgenrebool] = useState(false);
     const [songdata,setsongdata] = useState([]);
 
     // console.log("inside folk");
@@ -392,13 +390,13 @@ export default function Folk({navigation}){
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
-    async function liked(title){
+    async function liked(genre,title){
+        if(genre === "telugu"){
         for(var i=0;i<telugudata.length;i++){
             if(telugudata[i]['title'] === title){
 
                 telugudata[i]['liked'] = telugudata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 telugudata[i]['color'] = telugudata[i]['color'] === 'red'?'white':'red';
-                // console.log(data[i]['liked'])
                 if(telugudata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,telugudata[i]['title']]);
                 }
@@ -411,16 +409,40 @@ export default function Folk({navigation}){
                                 if(title === likedsong[i]){
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
-                            }
-                           
+                            }         
                 }
-            }
-            }
+            }}
                 setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
-                // setbool(true);
                 break;
             }
         }
+        } else if(genre === "songdata"){
+            console.log("inside the songdata");
+            for(var i=0;i<songdata.length;i++){
+                if(songdata[i]['title'] === title){
+    
+                    songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                    songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
+                    if(songdata[i]['liked'] === 'cards-heart'){
+                        setlikedsong(current => [...current,songdata[i]['title']]);
+                    }
+                    else{
+                        if(likedsong.length === 1){
+                            setlikedsong([]);
+                            AsyncStorage.setItem("liked",JSON.stringify(""));
+                        }else{
+                            for(var i=0;i<likedsong.length;i++){
+                                    if(title === likedsong[i]){
+                                        setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                        break;
+                                }         
+                    }
+                }}
+                    setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                    break;
+                }
+        }
+    }
 
     }
 
@@ -498,7 +520,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked(e['title'])}}>
+                    <Pressable onPress={() => {liked("telugu",e['title'])}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -570,7 +592,7 @@ export default function Folk({navigation}){
                     {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked(e['title'])}}>
+                            <Pressable onPress={() => {liked("songdata",e['title'])}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )

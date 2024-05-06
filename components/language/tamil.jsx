@@ -392,7 +392,8 @@ export default function Folk({navigation}){
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
-    async function liked(title){
+    async function liked(genre,title){
+        if(genre === "tamil"){
         for(var i=0;i<tamildata.length;i++){
             if(tamildata[i]['title'] === title){
 
@@ -421,6 +422,33 @@ export default function Folk({navigation}){
                 break;
             }
         }
+    }else if(genre === "songdata"){
+        console.log("inside the songdata");
+        for(var i=0;i<songdata.length;i++){
+            if(songdata[i]['title'] === title){
+
+                songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
+                if(songdata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,songdata[i]['title']]);
+                }
+                else{
+                    if(likedsong.length === 1){
+                        setlikedsong([]);
+                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                    }else{
+                        for(var i=0;i<likedsong.length;i++){
+                                if(title === likedsong[i]){
+                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                    break;
+                            }         
+                }
+            }}
+                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                break;
+            }
+    }
+}
 
     }
 
@@ -498,7 +526,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked(e['title'])}}>
+                    <Pressable onPress={() => {liked("tamil",e['title'])}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -570,7 +598,7 @@ export default function Folk({navigation}){
                     {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked(e['title'])}}>
+                            <Pressable onPress={() => {liked("songdata",e['title'])}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )
