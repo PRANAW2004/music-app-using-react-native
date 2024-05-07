@@ -124,10 +124,11 @@ export default function Folk({navigation}){
             seticon('motion-play');
         }
 
-        for(var i=0;i<telugudata.length;i++){
+        /*for(var i=0;i<telugudata.length;i++){
             telugudata[i]['liked'] = 'cards-heart-outline';
             telugudata[i]['color'] = 'white';
-        }
+        }*/
+        
 
         value = await AsyncStorage.getItem("liked");
         console.log(value);
