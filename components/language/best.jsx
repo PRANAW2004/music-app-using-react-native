@@ -656,7 +656,7 @@ export default function Best({navigation}){
                         <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                     </Pressable>
                     <View style={{marginLeft: 30}}>
-                    {bestdata.map((e) => {
+                    {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked("songdata",e['title'])}}>
