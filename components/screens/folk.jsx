@@ -313,6 +313,13 @@ export default function Folk({navigation}){
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(songdata[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(songdata[i]['title']));
                     // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+
+                    for(var o=0;o<alldata.length;o++){
+                        if(songdata[i]['title'] === alldata[o]['title']){
+                            AsyncStorage.setItem("alldata-playing-num",JSON.stringify(alldata[o]['id']));
+                        }
+                    }
+
                     if(history.length > 50){
                         sethistory((songdata) => songdata.filter((_,index) => index !== 0));
                     }else{
@@ -424,7 +431,14 @@ export default function Folk({navigation}){
                 if(folkdata[i]['id'] === id){
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(folkdata[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(folkdata[i]['title']));
-                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                    //AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+
+                    for(var o=0;o<alldata.length;o++){
+                        if(folkdata[i]['title'] === alldata[o]['title']){
+                            AsyncStorage.setItem("alldata-playing-num",JSON.stringify(alldata[o]['id']));
+                        }
+                    }
+
                     if(history.length > 50){
                         sethistory((folkdata) => folkdata.filter((_,index) => index !== 0));
                     }else{

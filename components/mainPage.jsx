@@ -32,6 +32,7 @@ export default function MainPage({ navigation }) {
     const [likedicon, setlikedicon] = useState("cards-heart-outline");
     const [likedcolor, setlikedcolor] = useState("white");
     const [currentplayingsong, setcurrentPlaying] = useState(0);
+    const [currentplayingsongname,setcurrentplayingsongname] = useState("");
     const [artworkbool, setartworkbool] = useState(true);
     const [coverbool, setcoverbool] = useState(true);
     const [cover, setcover] = useState("");
@@ -41,6 +42,8 @@ export default function MainPage({ navigation }) {
     const [localbool,setlocalbool] = useState(null);
     const [history,sethistory] = useState([]);
     const [likedsong,setlikedsong] = useState([]);
+    const [allcurrentplayingnum,setallcurrentplayingnum] = useState(0);
+
 
 
     const PanResponder1 = PanResponder.create({
@@ -89,10 +92,15 @@ export default function MainPage({ navigation }) {
         let value = await AsyncStorage.getItem("genre");
         console.log("current genre is ", value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
-        setcurrentPlaying(currentplayingnumber * 1);
+        console.log("current playing number is ",currentplayingnumber);
+        setcurrentPlaying(currentplayingnumber*1);
         let songdata1 = [];
-        songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : null;
+        songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : [];
         setsongdata(songdata1)
+        let currentplayingsong = await AsyncStorage.getItem("current-playing");
+        setcurrentplayingsongname(currentplayingsong);
+        let allcurrentplayingnum = await AsyncStorage.getItem("alldata-playing-num");
+        setallcurrentplayingnum(allcurrentplayingnum*1);
     }, [])
 
     let progress = useProgress();
@@ -107,6 +115,8 @@ export default function MainPage({ navigation }) {
     }, []);
 
     if(likedsong.length > 0){
+        console.log(likedsong);
+        //console.log("inside likedsong if");
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
     if(history.length > 0){
@@ -156,13 +166,13 @@ export default function MainPage({ navigation }) {
 
 
 
-        let currentplaying = await AsyncStorage.getItem("current-playing");
-        for (var i = 0; i < alldata.length; i++) {
-            if (JSON.parse(currentplaying) === alldata[i]['title']) {
-                setcurrentPlaying(alldata[i]['id']);
-                // AsyncStorage.setItem("current-playing-num",JSON.stringify(alldata[i]['id']));
-            }
-        }
+        // let currentplaying = await AsyncStorage.getItem("current-playing");
+        // for (var i = 0; i < songdata.length; i++) {
+        //     if (JSON.parse(currentplaying) === songdata[i]['title']) {
+        //         setcurrentPlaying(songdata[i]['id']);
+        //         // AsyncStorage.setItem("current-playing-num",JSON.stringify(alldata[i]['id']));
+        //     }
+        // }
     })
     useEffect(currentGenre, []);
 
@@ -210,7 +220,6 @@ export default function MainPage({ navigation }) {
     useEffect(likeddata,[]);
 
     TrackPlayer.addEventListener("playback-track-changed", async () => {
-        console.log("inside the add event listener in the best");
         let a = await TrackPlayer.getActiveTrack();
 
         let value = await AsyncStorage.getItem("genre");
@@ -235,7 +244,7 @@ export default function MainPage({ navigation }) {
         setrenderimage(a['artwork'] === undefined ? coverbool ? a["cover"] : null : a["artwork"]);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
-        // seticon(icon === 'play-arrow'?'pause':'play-arrow');
+        setcurrentplayingsongname(a['title'])
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
 
         let value1 = await AsyncStorage.getItem("liked");
@@ -285,8 +294,7 @@ export default function MainPage({ navigation }) {
                                 if(title === likedsong[i]){
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
-                            }
-                           
+                            }      
                 }
             }
             }
@@ -302,6 +310,7 @@ export default function MainPage({ navigation }) {
 
     async function play(id){
 
+        console.log(id);
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
@@ -529,10 +538,9 @@ export default function MainPage({ navigation }) {
                         </Pressable>
                         <View style={{ marginLeft: 30 }}>
                             {alldata.map((e) => {
-
-                                if (e['id'] === currentplayingsong) {
+                                if (e['id'] === allcurrentplayingnum) {                                    
                                     return (
-                                        <Pressable onPress={() => {liked(e['title'])}}>
+                                        <Pressable onPress={() => {liked(rendername)}}>
                                             <MaterialCommunityIcons name={e["liked"]} size={25} color={e["color"]} />
                                         </Pressable>
                                     )
