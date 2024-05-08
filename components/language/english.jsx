@@ -159,6 +159,7 @@ export default function Folk({navigation}){
                 if(englishdata[i]['title'] === arr[j]){
                     englishdata[i]['liked'] = 'cards-heart';
                     englishdata[i]['color'] = 'red';
+                    break;
                 }else{
                     englishdata[i]['liked'] = 'cards-heart-outline';
                     englishdata[i]['color'] = 'white';
@@ -216,6 +217,8 @@ export default function Folk({navigation}){
     }
     });
     useEffect(currentPlaying,[]);
+
+    console.log(likedsong);
 
     if(likedsong.length > 0){
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));

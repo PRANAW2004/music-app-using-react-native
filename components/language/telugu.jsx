@@ -160,6 +160,7 @@ export default function Folk({navigation}){
                 if(telugudata[i]['title'] === arr[j]){
                     telugudata[i]['liked'] = 'cards-heart';
                     telugudata[i]['color'] = 'red';
+                    break;
                 }else{
                     telugudata[i]['liked'] = 'cards-heart-outline';
                     telugudata[i]['color'] = 'white';

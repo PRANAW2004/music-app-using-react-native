@@ -171,6 +171,7 @@ export default function Folk({navigation}){
                 if(rockdata[i]['title'] === arr[j]){
                     rockdata[i]['liked'] = 'cards-heart';
                     rockdata[i]['color'] = 'red';
+                    break;
                 }else{
                     rockdata[i]['liked'] = 'cards-heart-outline';
                     rockdata[i]['color'] = 'white';

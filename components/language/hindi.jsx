@@ -163,6 +163,7 @@ export default function Folk({navigation}){
                 if(hindidata[i]['title'] === arr[j]){
                     hindidata[i]['liked'] = 'cards-heart';
                     hindidata[i]['color'] = 'red';
+                    break;
                 }else{
                     hindidata[i]['liked'] = 'cards-heart-outline';
                     hindidata[i]['color'] = 'white';

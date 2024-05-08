@@ -142,13 +142,11 @@ export default function Folk({navigation}){
            }
           }
         }
-
-        console.log(arr.length);
         
         if(arr.length === 0){
             for(var i=0;i<tamildata.length;i++){
                 if(tamildata[i]['liked'] === 'cards-heart'){
-                    console.log(tamildata[i]['title']);
+                    console.log("1",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart-outline';
                     tamildata[i]['color'] = 'white';
                 }
@@ -156,16 +154,15 @@ export default function Folk({navigation}){
         }
 
         for(var i=0;i<tamildata.length;i++){
-            console.log(tamildata[i]['title'])
-            console.log(tamildata[i]['liked']);
-
             for(var j=0;j<arr.length;j++){
+                console.log(arr[j]);
                 if(tamildata[i]['title'] === arr[j]){
-                    console.log("1");
+                    console.log("2",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart';
                     tamildata[i]['color'] = 'red';
+                    break;
                 }else{
-                    console.log("2");
+                    console.log("3",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart-outline';
                     tamildata[i]['color'] = 'white';
                 }

@@ -148,6 +148,7 @@ export default function Best({navigation}){
                     console.log("1");
                     bestdata[i]['liked'] = 'cards-heart';
                     bestdata[i]['color'] = 'red';
+                    break;
                 }else{
                     console.log("2");
                     bestdata[i]['liked'] = 'cards-heart-outline';

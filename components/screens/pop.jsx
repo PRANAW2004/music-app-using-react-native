@@ -171,6 +171,7 @@ export default function Folk({navigation}){
                 if(popdata[i]['title'] === arr[j]){
                     popdata[i]['liked'] = 'cards-heart';
                     popdata[i]['color'] = 'red';
+                    break;
                 }else{
                     popdata[i]['liked'] = 'cards-heart-outline';
                     popdata[i]['color'] = 'white';
