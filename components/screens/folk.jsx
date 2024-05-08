@@ -126,10 +126,10 @@ export default function Folk({navigation}){
             seticon('motion-play');
         }
 
-        for(var i=0;i<folkdata.length;i++){
-            folkdata[i]['liked'] = 'cards-heart-outline';
-            folkdata[i]['color'] = 'white';
-        }
+        // for(var i=0;i<folkdata.length;i++){
+        //     folkdata[i]['liked'] = 'cards-heart-outline';
+        //     folkdata[i]['color'] = 'white';
+        // }
 
         value = await AsyncStorage.getItem("liked");
         console.log(value);
