@@ -115,10 +115,10 @@ export default function Best({navigation}){
             seticon('motion-play');
         }
 
-        for(var i=0;i<bestdata.length;i++){
-            bestdata[i]['liked'] = 'cards-heart-outline';
-            bestdata[i]['color'] = 'white';
-        }
+        // for(var i=0;i<bestdata.length;i++){
+        //     bestdata[i]['liked'] = 'cards-heart-outline';
+        //     bestdata[i]['color'] = 'white';
+        // }
 
         value = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value);
