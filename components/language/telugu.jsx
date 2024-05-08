@@ -146,13 +146,24 @@ export default function Folk({navigation}){
            }
           }
         }  
+        if(arr.length === 0){
+            for(var i=0;i<telugudata.length;i++){
+                if(telugudata[i]['liked'] === 'cards-heart'){
+                    telugudata[i]['liked'] = 'cards-heart-outline';
+                    telugudata[i]['color'] = 'white';
+                }
+            }
+        }
+
         for(var i=0;i<telugudata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(telugudata[i]['title'] === arr[j]){
                     telugudata[i]['liked'] = 'cards-heart';
                     telugudata[i]['color'] = 'red';
+                }else{
+                    telugudata[i]['liked'] = 'cards-heart-outline';
+                    telugudata[i]['color'] = 'white';
                 }
-
             }
         }
     })

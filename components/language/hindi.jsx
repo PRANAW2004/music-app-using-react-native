@@ -148,13 +148,25 @@ export default function Folk({navigation}){
            }
           }
         }  
+
+        if(arr.length === 0){
+            for(var i=0;i<hindidata.length;i++){
+                if(hindidata[i]['liked'] === 'cards-heart'){
+                    hindidata[i]['liked'] = 'cards-heart-outline';
+                    hindidata[i]['color'] = 'white';
+                }
+            }
+        }
+
         for(var i=0;i<hindidata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(hindidata[i]['title'] === arr[j]){
                     hindidata[i]['liked'] = 'cards-heart';
                     hindidata[i]['color'] = 'red';
+                }else{
+                    hindidata[i]['liked'] = 'cards-heart-outline';
+                    hindidata[i]['color'] = 'white';
                 }
-
             }
         }
     })

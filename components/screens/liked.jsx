@@ -88,6 +88,7 @@ export default function Liked({navigation}){
     },[])
 
     if(likedsong.length > 0){
+        console.log(likedsong)
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
 
@@ -103,12 +104,10 @@ export default function Liked({navigation}){
             seticon('motion-play');
         }
 
-        console.log("inside the use callback");
         let value = await AsyncStorage.getItem("liked");
         let arr = JSON.parse(value);
         let arr1 = [];
         arr = [...new Set(arr)];
-        console.log(arr);
         let flag = false;
         for(var i=0;i<alldata.length;i++){
             for(var j=0;j<arr.length;j++){
@@ -128,7 +127,6 @@ export default function Liked({navigation}){
 
         for(var i=0;i<alldata.length;i++){
             let value1 = await AsyncStorage.getItem("current-playing");
-            console.log(value1);
             if(alldata[i]['title'] === JSON.parse(value1)){
                 setrenderimage(alldata[i]['artwork']);
                 setrendername(alldata[i]['title']);
@@ -250,15 +248,18 @@ export default function Liked({navigation}){
                 alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
                 if(alldata[i]['liked'] === 'cards-heart'){
+                    console.log("inside the if in the liked in the liked.jsx")
                     setlikedsong(current => [...current,alldata[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){
+                        console.log("inside the likedsong.length === 1");
                         setlikedsong([]);
                         AsyncStorage.setItem("liked",JSON.stringify(""));
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
+                                    console.log("inside the likedsong remove")
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }         

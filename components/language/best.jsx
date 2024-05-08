@@ -132,13 +132,27 @@ export default function Best({navigation}){
            }
           }
         }
+        if(arr.length === 0){
+            for(var i=0;i<bestdata.length;i++){
+                if(bestdata[i]['liked'] === 'cards-heart'){
+                    bestdata[i]['liked'] = 'cards-heart-outline';
+                    bestdata[i]['color'] = 'white';
+                }
+            }
+        }
+
         for(var i=0;i<bestdata.length;i++){
+
             for(var j=0;j<arr.length;j++){
                 if(bestdata[i]['title'] === arr[j]){
+                    console.log("1");
                     bestdata[i]['liked'] = 'cards-heart';
                     bestdata[i]['color'] = 'red';
+                }else{
+                    console.log("2");
+                    bestdata[i]['liked'] = 'cards-heart-outline';
+                    bestdata[i]['color'] = 'white';
                 }
-              
             }
         }  
     })

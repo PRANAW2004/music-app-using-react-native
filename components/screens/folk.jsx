@@ -147,13 +147,24 @@ export default function Folk({navigation}){
            }
           }
         }  
+        if(arr.length === 0){
+            for(var i=0;i<folkdata.length;i++){
+                if(folkdata[i]['liked'] === 'cards-heart'){
+                    folkdata[i]['liked'] = 'cards-heart-outline';
+                    folkdata[i]['color'] = 'white';
+                }
+            }
+        }
+
         for(var i=0;i<folkdata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(folkdata[i]['title'] === arr[j]){
                     folkdata[i]['liked'] = 'cards-heart';
                     folkdata[i]['color'] = 'red';
+                }else{
+                    folkdata[i]['liked'] = 'cards-heart-outline';
+                    folkdata[i]['color'] = 'white';
                 }
-
             }
         }
     })
