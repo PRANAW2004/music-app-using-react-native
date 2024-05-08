@@ -115,7 +115,7 @@ export default function MainPage({ navigation }) {
     }, []);
 
     if(likedsong.length > 0){
-        console.log(likedsong);
+        // console.log(likedsong);
         //console.log("inside likedsong if");
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }

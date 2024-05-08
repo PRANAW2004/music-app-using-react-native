@@ -35,8 +35,9 @@ export default function Folk({navigation}){
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
     const [data1,setdata1] = useState([]);
-    const [genrebool,setgenrebool] = useState(false);
+    const [likedbool,setlikedbool] = useState(false);
     const [songdata,setsongdata] = useState([]);
+
 
     // console.log("inside folk");
 
@@ -132,7 +133,7 @@ export default function Folk({navigation}){
         // }
 
         value = await AsyncStorage.getItem("liked");
-        console.log(value);
+        console.log("1",value);
         arr = JSON.parse(value);
         arr = [...new Set(arr)]
         for(var i=0;i<alldata.length;i++){
@@ -217,9 +218,16 @@ export default function Folk({navigation}){
     });
     useEffect(currentPlaying,[]);
 
-    if(likedsong.length > 0){
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    if(likedbool){
+        
+        AsyncStorage.setItem("liked",JSON.stringify(likedsong));
+        setlikedbool(false);
     }
+
+    // if(likedsong.length > 0){
+    //     console.log(likedsong);
+    //     AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    // }
     if(history.length > 0){
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
@@ -505,7 +513,7 @@ export default function Folk({navigation}){
         //     songdata = bestdata;
         // }
         // console.log(a['id']);
-        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:[];
        setsongdata(songdata);
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
@@ -536,6 +544,8 @@ export default function Folk({navigation}){
                 // console.log(data[i]['liked'])
                 if(otherdata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,otherdata[i]['title']]);
+                    setlikedbool(true);
+
                 }
                 else{
                     if(likedsong.length === 1){
@@ -565,6 +575,7 @@ export default function Folk({navigation}){
                 songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
                 if(songdata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,songdata[i]['title']]);
+                    setlikedbool(true);
                 }
                 else{
                     if(likedsong.length === 1){
@@ -581,8 +592,9 @@ export default function Folk({navigation}){
                 setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
                 break;
             }
+        }
     }
-    }
+    console.log("likedsong data inside the liked function is ",likedsong);
 
     }
 

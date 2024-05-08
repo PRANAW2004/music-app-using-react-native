@@ -87,10 +87,7 @@ export default function Liked({navigation}){
         })
     },[])
 
-    if(likedsong.length > 0){
-        console.log(likedsong)
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
-    }
+   
 
     
 
@@ -137,6 +134,11 @@ export default function Liked({navigation}){
     })
 
     useEffect(liked1,[])
+
+    if(likedsong.length > 0){
+        console.log(likedsong)
+        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    }
 
     async function play(id){
 
@@ -255,7 +257,7 @@ export default function Liked({navigation}){
                     if(likedsong.length === 1){
                         console.log("inside the likedsong.length === 1");
                         setlikedsong([]);
-                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                        //AsyncStorage.setItem("liked",JSON.stringify(""));
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){

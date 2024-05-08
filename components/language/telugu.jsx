@@ -67,6 +67,11 @@ export default function Folk({navigation}){
     // console.log("song data is ",songdata);
 
       //setting the songdata
+      
+    //   useEffect(async () => {
+    //     let value1 = await AsyncStorage.getItem("liked");
+    //     console.log(value1);
+    //   },[])
 
       useEffect(async () => {
         let value = await AsyncStorage.getItem("genre");
@@ -136,7 +141,7 @@ export default function Folk({navigation}){
         arr = [...new Set(arr)]
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
-              // console.log("123",data[i]['id'],arr[j]);
+            //   console.log("123");
            if(alldata[i]['title'] === arr[j]){
             //  alldata[i]['liked'] = 'cards-heart';
             //  alldata[i]['color'] = 'red';
@@ -158,10 +163,12 @@ export default function Folk({navigation}){
         for(var i=0;i<telugudata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(telugudata[i]['title'] === arr[j]){
+                    console.log("2",telugudata[i]['title']);
                     telugudata[i]['liked'] = 'cards-heart';
                     telugudata[i]['color'] = 'red';
                     break;
                 }else{
+                    console.log("3",telugudata[i]['title']);
                     telugudata[i]['liked'] = 'cards-heart-outline';
                     telugudata[i]['color'] = 'white';
                 }
@@ -220,6 +227,7 @@ export default function Folk({navigation}){
     useEffect(currentPlaying,[]);
 
     if(likedsong.length > 0){
+        console.log(likedsong);
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
     if(history.length > 0){
@@ -507,7 +515,7 @@ export default function Folk({navigation}){
         //     songdata = bestdata;
         // }
         // console.log(a['id']);
-        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:[];
         setsongdata(songdata);
         if(a["artwork"] === undefined){
             // console.log("artwork is undefined");
@@ -558,10 +566,11 @@ export default function Folk({navigation}){
             console.log("inside the songdata");
             for(var i=0;i<songdata.length;i++){
                 if(songdata[i]['title'] === title){
-    
+                    console.log(songdata[i]['title']);
                     songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                     songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
                     if(songdata[i]['liked'] === 'cards-heart'){
+                        console.log("liked2");
                         setlikedsong(current => [...current,songdata[i]['title']]);
                     }
                     else{
