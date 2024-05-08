@@ -665,7 +665,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {"hindi",liked(e['title'])}}>
+                    <Pressable onPress={() => {liked("hindi",e['title'])}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
