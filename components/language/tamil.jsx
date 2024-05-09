@@ -35,10 +35,13 @@ export default function Folk({navigation}){
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
     const [data1,setdata1] = useState([]);
-    const [genrebool,setgenrebool] = useState(false);
+    const [songlikedbool,setsonglikedbool] = useState(false);
     const [songdata,setsongdata] = useState([]);
 
     // console.log("inside folk");
+
+    // console.log("in the best.jsx page likedsong ",likedsong)
+
 
     const events = [
         Event.PlaybackState,
@@ -126,19 +129,17 @@ export default function Folk({navigation}){
         //     otherdata[i]['color'] = 'white';
         // }
 
-        value = await AsyncStorage.getItem("liked");
-        console.log(value);
-        arr = JSON.parse(value);
+        let value1234 = await AsyncStorage.getItem("liked");
+        // console.log("liked value is ",value1234);
+        arr = JSON.parse(value1234);
         arr = [...new Set(arr)]
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
               // console.log("123",data[i]['id'],arr[j]);
            if(alldata[i]['title'] === arr[j]){
-            //  alldata[i]['liked'] = 'cards-heart';
-            //  alldata[i]['color'] = 'red';
-            //  await AsyncStorage.setItem("liked",JSON.stringify(""));
+            // console.log(alldata[i]['title'])
              setlikedsong(current => [...current,alldata[i]['title']]);
-          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+             setsonglikedbool(true);
            }
           }
         }
@@ -146,7 +147,6 @@ export default function Folk({navigation}){
         if(arr.length === 0){
             for(var i=0;i<tamildata.length;i++){
                 if(tamildata[i]['liked'] === 'cards-heart'){
-                    console.log("1",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart-outline';
                     tamildata[i]['color'] = 'white';
                 }
@@ -155,14 +155,14 @@ export default function Folk({navigation}){
 
         for(var i=0;i<tamildata.length;i++){
             for(var j=0;j<arr.length;j++){
-                console.log(arr[j]);
+                // console.log(arr[j]);
                 if(tamildata[i]['title'] === arr[j]){
-                    console.log("2",tamildata[i]['title']);
+                    // console.log("2",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart';
                     tamildata[i]['color'] = 'red';
                     break;
                 }else{
-                    console.log("3",tamildata[i]['title']);
+                    // console.log("3",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart-outline';
                     tamildata[i]['color'] = 'white';
                 }
@@ -216,11 +216,23 @@ export default function Folk({navigation}){
     });
     useEffect(currentPlaying,[]);
 
-    if(likedsong.length > 0){
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    if(songlikedbool){
+        // console.log("inside the songlikedbool")
+        if(likedsong.length > 0){
+            // console.log("likedsong length>0 is ",likedsong);
+            let arr = [];
+            for(var i=0;i<likedsong.length;i++){
+                arr.push(likedsong[i]);
+            }
+            // console.log(arr);
+            AsyncStorage.setItem("liked",JSON.stringify(arr));
+            setsonglikedbool(false);
+        }
     }
+    
     if(history.length > 0){
-        AsyncStorage.setItem('history',JSON.stringify(history));
+        // console.log(history);
+       AsyncStorage.setItem('history',JSON.stringify(history));
     }
     
 
@@ -493,8 +505,38 @@ export default function Folk({navigation}){
     }
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
-        // console.log("inside the add event listener in the folk");
+        // console.log("inside the add event listener in the tamil");
+
+        let likedvalue = await AsyncStorage.getItem("liked")
+        // console.log(JSON.parse(likedvalue).length);
+    
+        let arr1 = [];
+        arr1 = JSON.parse(likedvalue);
+        arr1 = [...new Set(arr1)]
+        console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
+
+        let likedbool = false;
+
+        for(var i=0;i<arr1.length;i++){
+            // console.log(arr[i]);
+            if(a['title'] === arr1[i]){
+                // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
+                console.log("inside the likedbool set to true");
+                likedbool = true;
+                break;
+            }
+        }
+
+        // console.log(a['title']);
+
+        if(likedbool){
+            // console.log("inside the likedbool true")
+            AsyncStorage.setItem("likedcolor",JSON.stringify("red"))
+        }else{
+            // console.log("inside the likedbool false");
+            AsyncStorage.setItem("likedcolor",JSON.stringify("white"));
+        }
 
         let value = await AsyncStorage.getItem("genre");
         let songdata = [];
@@ -541,6 +583,7 @@ export default function Folk({navigation}){
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
+                                    console.log("inside the remove the set liked song in the else of the liked")
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }
@@ -553,6 +596,8 @@ export default function Folk({navigation}){
                 break;
             }
         }
+    // likedsong1();
+
     }else if(genre === "songdata"){
         for(var i=0;i<songdata.length;i++){
             if(songdata[i]['title'] === title){
@@ -578,8 +623,8 @@ export default function Folk({navigation}){
                 break;
             }
     }
-}
 
+    }
     }
 
     function repeatmode(){
@@ -656,7 +701,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked("tamil",e['title'])}}>
+                    <Pressable onPress={() => {liked("tamil",e['title']),setsonglikedbool(true)}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -728,7 +773,7 @@ export default function Folk({navigation}){
                     {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked("songdata",e['title'])}}>
+                            <Pressable onPress={() => {liked("songdata",e['title']),setsonglikedbool(true)}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )

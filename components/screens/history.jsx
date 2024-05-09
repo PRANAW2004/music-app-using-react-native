@@ -65,6 +65,7 @@ export default function History({navigation}){
 
     const historydata = useCallback(async () => {
         let histdata = await AsyncStorage.getItem("history");
+        console.log(histdata);
         let arr1 = JSON.parse(histdata);
         let arr3 = [];
         let arr4 = [];

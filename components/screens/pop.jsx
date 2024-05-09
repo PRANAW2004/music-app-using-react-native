@@ -82,9 +82,9 @@ export default function Folk({navigation}){
 
     useEffect(async () => {
         let value = await AsyncStorage.getItem("genre");
-        console.log("current genre is ",value);
+        // console.log("current genre is ",value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
-        console.log(currentplayingnumber*1);
+        // console.log(currentplayingnumber*1);
         setcurrentPlaying(currentplayingnumber*1);
         let songdata1 = [];
         songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:[];
@@ -142,7 +142,7 @@ export default function Folk({navigation}){
         // }
 
         value = await AsyncStorage.getItem("liked");
-        console.log(value);
+        // console.log(value);
         arr = JSON.parse(value);
         arr = [...new Set(arr)]
         for(var i=0;i<alldata.length;i++){
@@ -186,7 +186,7 @@ export default function Folk({navigation}){
     const currentPlaying = useCallback(async () => {
 
         let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
-        console.log("local songs bool is ",localsongsbool);
+        // console.log("local songs bool is ",localsongsbool);
     
         if(localsongsbool === "true"){
             console.log("inside the local songs bool is true");
@@ -519,7 +519,35 @@ export default function Folk({navigation}){
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("inside the add event listener in the folk");
+        let likedvalue = await AsyncStorage.getItem("liked")
+        // console.log(JSON.parse(likedvalue).length);
+    
+        let arr1 = [];
+        arr1 = JSON.parse(likedvalue);
+        arr1 = [...new Set(arr1)]
+        // console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
+
+        let likedbool = false;
+
+        for(var i=0;i<arr1.length;i++){
+            // console.log(arr[i]);
+            if(a['title'] === arr1[i]){
+                // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
+                likedbool = true;
+                break;
+            }
+        }
+
+        // console.log(a['title']);
+
+        if(likedbool){
+            // console.log("inside the likedbool true")
+            AsyncStorage.setItem("likedcolor",JSON.stringify("red"))
+        }else{
+            // console.log("inside the likedbool false");
+            AsyncStorage.setItem("likedcolor",JSON.stringify("white"));
+        }
 
         let value = await AsyncStorage.getItem("genre");
         let songdata = [];

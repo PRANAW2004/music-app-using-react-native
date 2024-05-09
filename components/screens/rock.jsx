@@ -519,7 +519,36 @@ export default function Folk({navigation}){
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         // console.log("inside the add event listener in the folk");
+        let likedvalue = await AsyncStorage.getItem("liked")
+        // console.log(JSON.parse(likedvalue).length);
+    
+        let arr1 = [];
+        arr1 = JSON.parse(likedvalue);
+        arr1 = [...new Set(arr1)]
+        console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
+
+        let likedbool = false;
+
+        for(var i=0;i<arr1.length;i++){
+            // console.log(arr[i]);
+            if(a['title'] === arr1[i]){
+                // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
+                console.log("inside the likedbool set to true");
+                likedbool = true;
+                break;
+            }
+        }
+
+        // console.log(a['title']);
+
+        if(likedbool){
+            // console.log("inside the likedbool true")
+            AsyncStorage.setItem("likedcolor",JSON.stringify("red"))
+        }else{
+            // console.log("inside the likedbool false");
+            AsyncStorage.setItem("likedcolor",JSON.stringify("white"));
+        }
 
         let value = await AsyncStorage.getItem("genre");
         let songdata = [];

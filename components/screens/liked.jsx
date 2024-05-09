@@ -49,6 +49,7 @@ export default function Liked({navigation}){
 
 
     if(bool){
+        console.log("inside the bool music liked")
         if(likedsong.length < songname.length){
             let arr1 = [];
             setsongname(arr1);

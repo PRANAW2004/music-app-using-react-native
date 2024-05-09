@@ -37,6 +37,8 @@ export default function Best({navigation}){
     const [songdata,setsongdata] = useState([]);
     const [coverbool, setcoverbool] = useState(true);
     const [artworkbool, setartworkbool] = useState(true);
+
+    console.log("in the best.jsx page likedsong ",likedsong)
     
     const events = [
         Event.PlaybackState,
@@ -115,20 +117,13 @@ export default function Best({navigation}){
             seticon('motion-play');
         }
 
-        // for(var i=0;i<bestdata.length;i++){
-        //     bestdata[i]['liked'] = 'cards-heart-outline';
-        //     bestdata[i]['color'] = 'white';
-        // }
-
         value = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value);
         arr = [...new Set(arr)];
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
-              // console.log("123",data[i]['id'],arr[j]);
            if(alldata[i]['title'] === arr[j]){
              setlikedsong(current => [...current,alldata[i]['title']]);
-          //   rr setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
            }
           }
         }
@@ -142,7 +137,6 @@ export default function Best({navigation}){
         }
 
         for(var i=0;i<bestdata.length;i++){
-
             for(var j=0;j<arr.length;j++){
                 if(bestdata[i]['title'] === arr[j]){
                     console.log("1");
@@ -204,6 +198,7 @@ export default function Best({navigation}){
     useEffect(currentPlaying,[]);
 
     if(likedsong.length > 0){
+        // console.log("inside the likedsong.length>0 in best",likedsong);
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
     if(history.length > 0){
@@ -469,8 +464,36 @@ export default function Best({navigation}){
     }
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
+        let likedvalue = await AsyncStorage.getItem("liked")
+        // console.log(JSON.parse(likedvalue).length);
+    
+        let arr1 = [];
+        arr1 = JSON.parse(likedvalue);
+        arr1 = [...new Set(arr1)]
+        console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
 
+        let likedbool = false;
+
+        for(var i=0;i<arr1.length;i++){
+            // console.log(arr[i]);
+            if(a['title'] === arr1[i]){
+                // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
+                console.log("inside the likedbool set to true");
+                likedbool = true;
+                break;
+            }
+        }
+
+        // console.log(a['title']);
+
+        if(likedbool){
+            // console.log("inside the likedbool true")
+            AsyncStorage.setItem("likedcolor",JSON.stringify("red"))
+        }else{
+            // console.log("inside the likedbool false");
+            AsyncStorage.setItem("likedcolor",JSON.stringify("white"));
+        }
         let value = await AsyncStorage.getItem("genre");
         let songdata1 = [];
         // if(JSON.parse(value) === 'best'){
