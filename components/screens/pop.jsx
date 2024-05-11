@@ -41,16 +41,6 @@ export default function Folk({navigation}){
     const [genrebool,setgenrebool] = useState(false);
     const [songdata,setsongdata] = useState([]);
 
-    // console.log(data1);
-
-    // console.log(renderauthor);
-
-    // console.log(renderimage.length);
-
-    console.log(skipnextbool);
-    console.log(songdata.length);
-
-    // console.log("inside folk");
 
     const events = [
         Event.PlaybackState,
@@ -95,7 +85,6 @@ export default function Folk({navigation}){
     useEffect(async () => {
         let value11 = await AsyncStorage.getItem("current-genre");
         if(value11 === "pop"){
-            console.log("inside the folk genre");
             const skipprevious = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
                 if(JSON.parse(iconnum1) === 1){
@@ -107,13 +96,11 @@ export default function Folk({navigation}){
               const skipnext = useCallback(async() => {
                 let iconnum1 = await AsyncStorage.getItem("current-playing-num");
                 if(iconnum1 >= songdata.length){
-                    console.log("inside the iconnum1 greater than 1");
                     setskipnextbool(true);
                 }
               })    
               useEffect(skipnext,[]);
         }else{
-            console.log("inside the other genre");
         }
     },[]);
 
@@ -189,13 +176,11 @@ export default function Folk({navigation}){
         // console.log("local songs bool is ",localsongsbool);
     
         if(localsongsbool === "true"){
-            console.log("inside the local songs bool is true");
             let currentplaying1 = await AsyncStorage.getItem("current-playing");
             setrendername(JSON.parse(currentplaying1));
             let localauthor = await AsyncStorage.getItem("data-author");
             setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
-            console.log(JSON.parse(localartwork).length);
             if(JSON.parse(localartwork).length === 4){
                 setrenderimage("null")
                 setlocalimagebool(false);
@@ -210,7 +195,6 @@ export default function Folk({navigation}){
         let flag = false;
         for(var i = 0;i<alldata.length;i++){
             if(JSON.parse(currentplaying) === alldata[i]['title']){
-                console.log("inside the if in the current playing");
                 // setcurrentPlaying(data[i]['id']);
                 // AsyncStorage.setItem("current-playing-num",JSON.stringify(data[i]['id']));
                 setrenderimage(alldata[i]['artwork']);
@@ -237,14 +221,6 @@ export default function Folk({navigation}){
         AsyncStorage.setItem('history',JSON.stringify(history));
     }
 
-    // const currentgenre = useCallback(async () => {
-    //     console.log("inside the current genre in the folk");
-    //     let value = await AsyncStorage.getItem("current-genre");
-    //     console.log("current genre is ",value)
-    //     data1 = setdata1(value === "folk"?data:value==="liked"?)
-    // })
-
-    // useEffect(currentgenre,[]);
     
 
     useEffect(() => {
@@ -308,7 +284,6 @@ export default function Folk({navigation}){
         }
 
         if(id >= songdata.length){
-            console.log("inside the id in play function greater than the songdata.length");
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -318,7 +293,6 @@ export default function Folk({navigation}){
                 ]
             })
         }else{
-            console.log("inside else in the play function");
             setskipnextbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -378,7 +352,6 @@ export default function Folk({navigation}){
                         })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
-                            console.log("inside the add event listener remote-previous");
                             setcurrentPlaying(currentplayingsong-1);
                             let a = await TrackPlayer.getActiveTrack();
                             play(a["id"]-1); 
@@ -607,7 +580,6 @@ export default function Folk({navigation}){
             }
         }
     }else if(genre === "songdata"){
-        console.log("inside the songdata");
         for(var i=0;i<songdata.length;i++){
             if(songdata[i]['title'] === title){
 

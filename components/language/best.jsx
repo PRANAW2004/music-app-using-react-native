@@ -38,7 +38,6 @@ export default function Best({navigation}){
     const [coverbool, setcoverbool] = useState(true);
     const [artworkbool, setartworkbool] = useState(true);
 
-    console.log("in the best.jsx page likedsong ",likedsong)
     
     const events = [
         Event.PlaybackState,
@@ -66,7 +65,6 @@ export default function Best({navigation}){
 
     useEffect(async () => {
         let value = await AsyncStorage.getItem("genre");
-        console.log("current genre is ",value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
         setcurrentPlaying(currentplayingnumber*1);
         let songdata1 = [];
@@ -139,12 +137,10 @@ export default function Best({navigation}){
         for(var i=0;i<bestdata.length;i++){
             for(var j=0;j<arr.length;j++){
                 if(bestdata[i]['title'] === arr[j]){
-                    console.log("1");
                     bestdata[i]['liked'] = 'cards-heart';
                     bestdata[i]['color'] = 'red';
                     break;
                 }else{
-                    console.log("2");
                     bestdata[i]['liked'] = 'cards-heart-outline';
                     bestdata[i]['color'] = 'white';
                 }
@@ -207,7 +203,6 @@ export default function Best({navigation}){
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
-            console.log("back button is pressed");
             if(navigation.isFocused()){
                 if(navigation.canGoBack()){
                     navigation.goBack();
@@ -470,7 +465,6 @@ export default function Best({navigation}){
         let arr1 = [];
         arr1 = JSON.parse(likedvalue);
         arr1 = [...new Set(arr1)]
-        console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
 
         let likedbool = false;
@@ -479,7 +473,6 @@ export default function Best({navigation}){
             // console.log(arr[i]);
             if(a['title'] === arr1[i]){
                 // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
-                console.log("inside the likedbool set to true");
                 likedbool = true;
                 break;
             }
@@ -553,7 +546,6 @@ export default function Best({navigation}){
             }
         }
         }else if(genre === "songdata"){
-            console.log("inside the songdata");
             for(var i=0;i<songdata.length;i++){
                 if(songdata[i]['title'] === title){
     

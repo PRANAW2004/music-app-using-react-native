@@ -35,7 +35,7 @@ export default function MainPage({ navigation }) {
     const [artworkbool, setartworkbool] = useState(true);
     const [coverbool, setcoverbool] = useState(true);
     const [cover, setcover] = useState("");
-    const [artist, setartist] = useState("");
+    const [likedbool1, setlikedbool1] = useState(true);
     const [songdata,setsongdata] = useState([]);
     const [localimagebool,setlocalimagebool] = useState(true);
     const [localbool,setlocalbool] = useState(null);
@@ -57,33 +57,51 @@ export default function MainPage({ navigation }) {
         },
     });
 
-    // useEffect(async () => {
-    //     let value = AsyncStorage.getItem("likedcolor");
-    //     if(value === "red"){
-    //         console.log("The color is red");
-    //     }else{
-    //         console.log("The color is white");
-    //     }
-    // },[])
-
     async function likedvalueselect(){
 
+        console.log("inside the liked value select")
+
         let likedvalue = await AsyncStorage.getItem("liked");
+        // console.log("liked value is ",likedvalue);
         let arr = [];
         arr = JSON.parse(likedvalue);
+        console.log(arr.length);
+        console.log([...new Set(likedsong)].length);
         arr = [...new Set(arr)]
+        console.log("entering the useeffect");
+        console.log("inside the useeffct in the likedvalueselect");
+
+        if(arr.length > ([...new Set(likedsong)].length)){
+            setlikedbool1(true);
+        }
+
+        if(likedbool1){
+            for(var i=0;i<alldata.length;i++){
+                for(var j=0;j<arr.length;j++){
+                    // console.log("123",data[i]['id'],arr[j]);
+                 if(alldata[i]['title'] === arr[j]){
+                //   console.log(alldata[i]['title'])
+                   setlikedsong(current => [...current,alldata[i]['title']]);
+                 }
+                }
+              }
+              setlikedbool1(false);
+        }
+        
+        
 
         let a = await TrackPlayer.getActiveTrack();
-
+        // console.log("arr is ",arr);
         let likedbool = false;
-
+        
+        // console.log("entering the for loop")
         for(var i=0;i<arr.length;i++){
             if(a['title'] === arr[i]){
+                // console.log("inside the likedbool set to true");
                 likedbool = true;
 
             }
         }
-
         if(likedbool){
             setlikedcolor('red');
             setlikedicon('cards-heart');
@@ -91,22 +109,11 @@ export default function MainPage({ navigation }) {
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
         }
-
-        // console.log("inside the liked value select");
-        // let value = await AsyncStorage.getItem("likedcolor");
-        // // console.log(value);
-        // if(JSON.parse(value) === "red"){
-        //     // console.log("The color is red 1");
-        //     setlikedcolor('red');
-        //     setlikedicon('cards-heart');
-        // }
-        // if(JSON.parse(value) === "white"){
-        //     // console.log("The color is white 1");
-        //     setlikedcolor('white');
-        //     setlikedicon('cards-heart-outline');
-        // }
+            // console.log(arr);     
     }
     likedvalueselect();
+
+    console.log("inside the homepage of liked is ", [...new Set(likedsong)]);
 
 
     if (!artworkbool) {
@@ -140,9 +147,9 @@ export default function MainPage({ navigation }) {
 
     useEffect(async () => {
         let value = await AsyncStorage.getItem("genre");
-        console.log("current genre is ", value);
+        // console.log("current genre is ", value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
-        console.log("current playing number is ",currentplayingnumber);
+        // console.log("current playing number is ",currentplayingnumber);
         setcurrentPlaying(currentplayingnumber*1);
         let songdata1 = [];
         songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : [];
@@ -285,37 +292,68 @@ export default function MainPage({ navigation }) {
         }
     }
 
-    // async function liked(title){
+    // const likeddata = useCallback(async() => {
+
+    //     let value1234 = await AsyncStorage.getItem("liked");
+    //     // console.log("liked value inside homepage is ",value1234);
+
+    //     arr = JSON.parse(value1234);
+    //     arr = [...new Set(arr)]
     //     for(var i=0;i<alldata.length;i++){
-    //         if(alldata[i]['title'] === title){
-
-    //             alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-    //             alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
-    //             // console.log(data[i]['liked'])
-    //             if(alldata[i]['liked'] === 'cards-heart'){
-    //                 setlikedsong(current => [...current,alldata[i]['title']]);
-    //             }
-    //             else{
-    //                 if(likedsong.length === 1){
-    //                     setlikedsong([]);
-    //                     AsyncStorage.setItem("liked",JSON.stringify(""));
-    //                 }else{
-    //                     for(var i=0;i<likedsong.length;i++){
-    //                             if(title === likedsong[i]){
-    //                                 setlikedsong((products) => products.filter(a => a !== likedsong[i]));
-    //                                 break;
-    //                         }      
-    //             }
-    //         }
-    //         }
-    //             setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
-    //             // setbool(true);
-    //             break;
-    //         }
+    //       for(var j=0;j<arr.length;j++){
+    //           // console.log("123",data[i]['id'],arr[j]);
+    //        if(alldata[i]['title'] === arr[j]){
+    //         console.log(alldata[i]['title'])
+    //          setlikedsong(current => [...current,alldata[i]['title']]);
+    //        }
+    //       }
     //     }
-        
+    // })
+    // useEffect(likeddata,[]);
 
+    // if(likedsong.length > 0){
+    //     console.log("likedsong length is greater than 0")
     // }
+
+    // console.log("likedsong in the home page is ",likedsong);
+
+    async function likedfunc(){
+        console.log("likedsong inside the likedfunc is ",likedtitle);
+        // AsyncStorage.setItem("liked",JSON.stringify())
+    }
+
+    async function liked(title){
+        console.log(title);
+        for(var i=0;i<songdata.length;i++){
+            if(songdata[i]['title'] === title){
+
+                songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
+                // console.log(data[i]['liked'])
+                if(songdata[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current =>[...current,songdata[i]['title']]);  
+                    // likedfunc();
+                }
+                else{
+                    if(likedsong.length === 1){
+                        setlikedsong([]);
+                        AsyncStorage.setItem("liked",JSON.stringify(""));
+                    }else{
+                        for(var i=0;i<likedsong.length;i++){
+                                if(title === likedsong[i]){
+                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                                    likedfunc();
+                                    break;
+                            }      
+                }
+            }
+            }
+                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                // setbool(true);
+                break;
+            }
+        }
+    }
 
 
     async function play(id){
@@ -550,7 +588,7 @@ export default function MainPage({ navigation }) {
                             {alldata.map((e) => {
                                 if (e['id'] === allcurrentplayingnum) {                                    
                                     return (
-                                        <Pressable onPress={() => {}}>
+                                        <Pressable onPress={() => {liked(rendername)}}>
                                             <MaterialCommunityIcons name={likedicon} size={25} color={likedcolor} />
                                         </Pressable>
                                     )

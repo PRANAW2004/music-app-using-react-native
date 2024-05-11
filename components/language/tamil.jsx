@@ -38,9 +38,6 @@ export default function Folk({navigation}){
     const [songlikedbool,setsonglikedbool] = useState(false);
     const [songdata,setsongdata] = useState([]);
 
-    // console.log("inside folk");
-
-    // console.log("in the best.jsx page likedsong ",likedsong)
 
 
     const events = [
@@ -69,7 +66,6 @@ export default function Folk({navigation}){
     let arr = [];
     let value;
 
-    // console.log("song data is ",songdata);
 
       //setting the songdata
 
@@ -130,14 +126,11 @@ export default function Folk({navigation}){
         // }
 
         let value1234 = await AsyncStorage.getItem("liked");
-        // console.log("liked value is ",value1234);
         arr = JSON.parse(value1234);
         arr = [...new Set(arr)]
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
-              // console.log("123",data[i]['id'],arr[j]);
            if(alldata[i]['title'] === arr[j]){
-            // console.log(alldata[i]['title'])
              setlikedsong(current => [...current,alldata[i]['title']]);
              setsonglikedbool(true);
            }
@@ -155,14 +148,11 @@ export default function Folk({navigation}){
 
         for(var i=0;i<tamildata.length;i++){
             for(var j=0;j<arr.length;j++){
-                // console.log(arr[j]);
                 if(tamildata[i]['title'] === arr[j]){
-                    // console.log("2",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart';
                     tamildata[i]['color'] = 'red';
                     break;
                 }else{
-                    // console.log("3",tamildata[i]['title']);
                     tamildata[i]['liked'] = 'cards-heart-outline';
                     tamildata[i]['color'] = 'white';
                 }
@@ -217,21 +207,17 @@ export default function Folk({navigation}){
     useEffect(currentPlaying,[]);
 
     if(songlikedbool){
-        // console.log("inside the songlikedbool")
         if(likedsong.length > 0){
-            // console.log("likedsong length>0 is ",likedsong);
             let arr = [];
             for(var i=0;i<likedsong.length;i++){
                 arr.push(likedsong[i]);
             }
-            // console.log(arr);
             AsyncStorage.setItem("liked",JSON.stringify(arr));
             setsonglikedbool(false);
         }
     }
     
     if(history.length > 0){
-        // console.log(history);
        AsyncStorage.setItem('history',JSON.stringify(history));
     }
     
@@ -257,7 +243,6 @@ export default function Folk({navigation}){
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}
         catch(err){
-            // console.log(err);
         }
     }    
 
@@ -365,7 +350,6 @@ export default function Folk({navigation}){
                         })
                         
                         TrackPlayer.addEventListener("remote-previous",async () => {
-                            console.log("inside the add event listener remote-previous");
                             setcurrentPlaying(currentplayingsong-1);
                             let a = await TrackPlayer.getActiveTrack();
                             play(a["id"]-1); 
@@ -513,7 +497,6 @@ export default function Folk({navigation}){
         let arr1 = [];
         arr1 = JSON.parse(likedvalue);
         arr1 = [...new Set(arr1)]
-        console.log("array is ",arr1)
         let a = await TrackPlayer.getActiveTrack();
 
         let likedbool = false;
@@ -522,7 +505,6 @@ export default function Folk({navigation}){
             // console.log(arr[i]);
             if(a['title'] === arr1[i]){
                 // AsyncStorage.setItem("likedcolor", JSON.stringify("red"));
-                console.log("inside the likedbool set to true");
                 likedbool = true;
                 break;
             }
@@ -583,7 +565,6 @@ export default function Folk({navigation}){
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
-                                    console.log("inside the remove the set liked song in the else of the liked")
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }

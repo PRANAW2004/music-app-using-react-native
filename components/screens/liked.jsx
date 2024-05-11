@@ -49,7 +49,6 @@ export default function Liked({navigation}){
 
 
     if(bool){
-        console.log("inside the bool music liked")
         if(likedsong.length < songname.length){
             let arr1 = [];
             setsongname(arr1);
@@ -137,7 +136,6 @@ export default function Liked({navigation}){
     useEffect(liked1,[])
 
     if(likedsong.length > 0){
-        console.log(likedsong)
         AsyncStorage.setItem('liked',JSON.stringify(likedsong));
     }
 
@@ -173,16 +171,13 @@ export default function Liked({navigation}){
                     // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
                     let arr = [songname[i]];
                     try{
-                        console.log("inside the try");
                         if(i === 0 && songname.length > 1){
-                            console.log("inside the first if in play in liked");
                             for(j=i+1;j<alldata.length;j++){
                                 arr.push(songname[i+j]);
                             }
                         }
                         else{
                         for(j=i;j<songname.length-1;j++){
-                            console.log("insid the second if in play in liked");
                             arr.push(songname[i+1]);
                         }
                         }
@@ -217,7 +212,6 @@ export default function Liked({navigation}){
                             arr1.push(arr[i]);
                             }
                         }
-                    console.log(arr1);
                     TrackPlayer.add(arr1);
                     // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
                     TrackPlayer.play();
@@ -251,18 +245,15 @@ export default function Liked({navigation}){
                 alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
                 if(alldata[i]['liked'] === 'cards-heart'){
-                    console.log("inside the if in the liked in the liked.jsx")
                     setlikedsong(current => [...current,alldata[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){
-                        console.log("inside the likedsong.length === 1");
                         setlikedsong([]);
                         //AsyncStorage.setItem("liked",JSON.stringify(""));
                     }else{
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
-                                    console.log("inside the likedsong remove")
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
                                     break;
                             }         
