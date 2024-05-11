@@ -80,19 +80,19 @@ export default function MainPage({ navigation }) {
 
         if(likedbool1){
             // console.log("inside the likedbool1 for loop")
-            // for(var i=0;i<alldata.length;i++){
-            //     for(var j=0;j<arr.length;j++){
-            //         // console.log("123",data[i]['id'],arr[j]);
-            //      if(alldata[i]['title'] === arr[j]){
-            //     //   console.log(alldata[i]['title'])
-            //        setlikedsong(current => [...current,alldata[i]['title']]);
+            for(var i=0;i<alldata.length;i++){
+                for(var j=0;j<arr.length;j++){
+                    // console.log("123",data[i]['id'],arr[j]);
+                 if(alldata[i]['title'] === arr[j]){
+                //   console.log(alldata[i]['title'])
+                   setlikedsong(current => [...current,alldata[i]['title']]);
 
-            //      }
-            //     }
-            //   }
-            for(var i=0;i<arr.length;i++){
-                setlikedsong(current => [...current, arr[i]]);
-            }
+                 }
+                }
+              }
+            // for(var i=0;i<arr.length;i++){
+            //     setlikedsong(current => [...current, arr[i]]);
+            // }
               setarraylength(arr.length);
         }
         
@@ -104,14 +104,14 @@ export default function MainPage({ navigation }) {
         setlikedbool1(false);
         }
 
-        if(arr.length > ([...new Set(likedsong)].length)){
+        if(arr.length > ([...new Set(likedsong)].length) || arr.length < ([...new Set(likedsong)].length)){
             // console.log("inside the arr.length < likedsong.length")
             AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
         }
-        if(arr.length < ([...new Set(likedsong)].length)){
-            // console.log("inside the arr.length < likedsong.length")
-            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
-        }
+        // if(arr.length < ([...new Set(likedsong)].length)){
+        //     // console.log("inside the arr.length < likedsong.length")
+        //     AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
+        // }
 
         
 
