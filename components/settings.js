@@ -31,7 +31,7 @@ export default function Settings({navigation}){
     return(
         <View style={styles.settingcontainer}>
             <Text style={styles.settingText}>This is a settings page</Text>
-            <Button title="Logout" onPress={()=>{AsyncStorage.setItem("check",JSON.stringify(true));navigation.navigate("Login")}}></Button>
+            <Button title="Logout" onPress={()=>{AsyncStorage.setItem("check",JSON.stringify(true));AsyncStorage.removeItem("Login");navigation.navigate("Login")}}></Button>
         </View>
     )
 }
