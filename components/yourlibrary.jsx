@@ -1,12 +1,13 @@
-import { View,Text,StyleSheet,Platform,Image, ScrollView,Pressable,PanResponder } from "react-native";
+import { View,Text,StyleSheet,Platform,Image, ScrollView,Pressable,PanResponder,ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
 import { getAll,SortSongFields,SortSongOrder,searchSongs } from "react-native-get-music-files";
-
+import Toast from 'react-native-root-toast';
 import { check, PERMISSIONS, request, RESULTS, requestMultiple } from 'react-native-permissions';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { useState } from "react";
+import Slider from 'react-native-slider';
 
 export default function YourLibrary({navigation}){
 
@@ -22,7 +23,6 @@ export default function YourLibrary({navigation}){
           }
         },
       });
-    
  
 
     const hasPermissions = async () => {
@@ -56,12 +56,11 @@ export default function YourLibrary({navigation}){
         return false;
       };
 
-    console.log("inside local");
+    // console.log("inside local");
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
     useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
-
     
 
 
@@ -76,8 +75,10 @@ export default function YourLibrary({navigation}){
                 minSongDuration: 1000,
                 sortOrder: SortSongOrder.DESC,
                 sortBy: SortSongFields.TITLE,
-              }).then((res) => {
+              }).then((res,time) => {
+                // console.log(res);
                 setsong(res);
+
             }).catch((err) => {
                 console.log(err);
             })
@@ -234,6 +235,17 @@ export default function YourLibrary({navigation}){
             }}
     }
 
+
+
+    if(song.length === 0){
+        return(
+            <View style={styles.localcontainer}>
+                <Text style={{color: "white",marginBottom: 10}}>Scanning for Local MP3 files, please wait...</Text>
+                <ActivityIndicator size="large" color="white"/>
+            </View>
+        )
+    }else{
+
     return(
         <View style={styles.localcontainer} {...PanResponder1.panHandlers}>
             <ScrollView>
@@ -260,6 +272,7 @@ export default function YourLibrary({navigation}){
         </View>
     )
 }
+}
 
 const styles = StyleSheet.create({
     localcontainer:{ 
@@ -285,4 +298,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
+    progressBar: {
+        width: '90%',
+        height: 1,
+        // marginTop: 25,
+        // flexDirection: 'row',
+        color: 'white',
+        backgroundColor :"white"
+      },
 })

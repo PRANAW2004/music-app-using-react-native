@@ -42,6 +42,7 @@ export default function MainPage({ navigation }) {
     const [history,sethistory] = useState([]);
     const [likedsong,setlikedsong] = useState([]);
     const [allcurrentplayingnum,setallcurrentplayingnum] = useState(0);
+    const [arraylength,setarraylength] = useState(0);
 
     console.log("inside the main page");
 
@@ -56,43 +57,59 @@ export default function MainPage({ navigation }) {
 
     async function likedvalueselect(){
 
-        console.log("inside the liked value select")
+        // console.log("inside the liked value select")
+
+        console.log("likedsongs is ",[...new Set(likedsong)],likedbool1);
 
         //AsyncStorage.setItem("liked",JSON.stringify([]));
 
         let likedvalue = await AsyncStorage.getItem("liked");
-        console.log("liked value is ",likedvalue);
+        // console.log("liked value is ",likedvalue);
         let arr = [];
         arr = JSON.parse(likedvalue);
-        console.log(arr.length);
-        console.log([...new Set(likedsong)].length);
+        // console.log(arr.length);
+        // console.log([...new Set(likedsong)].length);
         arr = [...new Set(arr)]
+        console.log(arr);
 
-        if(arr.length > ([...new Set(likedsong)].length)){
+        if(arr.length > arraylength){
+            // console.log("inside the arr.length > likedsong.length");
             setlikedbool1(true);
 
         }
 
         if(likedbool1){
-            for(var i=0;i<alldata.length;i++){
-                for(var j=0;j<arr.length;j++){
-                    // console.log("123",data[i]['id'],arr[j]);
-                 if(alldata[i]['title'] === arr[j]){
-                //   console.log(alldata[i]['title'])
-                   setlikedsong(current => [...current,alldata[i]['title']]);
-                 }
-                }
-              }
+            // console.log("inside the likedbool1 for loop")
+            // for(var i=0;i<alldata.length;i++){
+            //     for(var j=0;j<arr.length;j++){
+            //         // console.log("123",data[i]['id'],arr[j]);
+            //      if(alldata[i]['title'] === arr[j]){
+            //     //   console.log(alldata[i]['title'])
+            //        setlikedsong(current => [...current,alldata[i]['title']]);
+
+            //      }
+            //     }
+            //   }
+            for(var i=0;i<arr.length;i++){
+                setlikedsong(current => [...current, arr[i]]);
+            }
+              setarraylength(arr.length);
         }
         
         
         if(likedbool1){
-        console.log("inside the likedvalue select function ",[...new Set(likedsong)]);
+            // console.log("inside the likedbool1 is set to true");
+        // console.log("inside the likedvalue select function ",[...new Set(likedsong)]);
         AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
         setlikedbool1(false);
         }
 
+        if(arr.length > ([...new Set(likedsong)].length)){
+            // console.log("inside the arr.length < likedsong.length")
+            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
+        }
         if(arr.length < ([...new Set(likedsong)].length)){
+            // console.log("inside the arr.length < likedsong.length")
             AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
         }
 
@@ -335,18 +352,20 @@ export default function MainPage({ navigation }) {
     // }
 
     async function liked(title){
-        console.log(title);
+        console.log(likedicon);
         for(var i=0;i<songdata.length;i++){
             if(songdata[i]['title'] === title){
 
                 songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
                 songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
-                if(songdata[i]['liked'] === 'cards-heart'){
+                if(likedicon === 'cards-heart-outline'){
+                    console.log("inside the if in the liked function");
                     setlikedsong(current =>[...current,songdata[i]['title']]);  
                     // likedfunc();
                 }
                 else{
+                console.log("inside the else in the liked function");
                     if(likedsong.length === 1){
                         setlikedsong([]);
                         AsyncStorage.setItem("liked",JSON.stringify(""));

@@ -44,7 +44,7 @@ export default function BottomNavigator(){
                         }else{
                             iconName = focused?"folder":"folder-outline";
                         }
-                        iconColor = focused?"green":"grey";
+                        iconColor = focused?"white":"grey";
                         return <Ionicons name={iconName} size={23} color={iconColor} />
                     },
                     tabBarStyle: {
@@ -53,7 +53,7 @@ export default function BottomNavigator(){
                         paddingTop: 10,
                         height: 63,     
                     },
-                    tabBarActiveTintColor: "green",
+                    tabBarActiveTintColor: "white",
                     tabBarLabelStyle: {
                         fontSize: 15
                     },
