@@ -48,9 +48,6 @@ export default function MainPage({ navigation }) {
     const PanResponder1 = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderRelease: (evt, gestureState) => {
-            console.log("on pan responder release");
-            // Handle the swipe gesture
-            //   console.log(evt,gestureState);
             if (gestureState.dx < 0) {
                 navigation.navigate("Search");
             }
@@ -61,18 +58,19 @@ export default function MainPage({ navigation }) {
 
         console.log("inside the liked value select")
 
+        //AsyncStorage.setItem("liked",JSON.stringify([]));
+
         let likedvalue = await AsyncStorage.getItem("liked");
-        // console.log("liked value is ",likedvalue);
+        console.log("liked value is ",likedvalue);
         let arr = [];
         arr = JSON.parse(likedvalue);
         console.log(arr.length);
         console.log([...new Set(likedsong)].length);
         arr = [...new Set(arr)]
-        console.log("entering the useeffect");
-        console.log("inside the useeffct in the likedvalueselect");
 
         if(arr.length > ([...new Set(likedsong)].length)){
             setlikedbool1(true);
+
         }
 
         if(likedbool1){
@@ -85,9 +83,19 @@ export default function MainPage({ navigation }) {
                  }
                 }
               }
-              setlikedbool1(false);
         }
         
+        
+        if(likedbool1){
+        console.log("inside the likedvalue select function ",[...new Set(likedsong)]);
+        AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
+        setlikedbool1(false);
+        }
+
+        if(arr.length < ([...new Set(likedsong)].length)){
+            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
+        }
+
         
 
         let a = await TrackPlayer.getActiveTrack();
@@ -113,7 +121,11 @@ export default function MainPage({ navigation }) {
     }
     likedvalueselect();
 
-    console.log("inside the homepage of liked is ", [...new Set(likedsong)]);
+    // if(likedsong.length >0){
+    //     AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
+    // }
+
+
 
 
     if (!artworkbool) {
@@ -317,10 +329,10 @@ export default function MainPage({ navigation }) {
 
     // console.log("likedsong in the home page is ",likedsong);
 
-    async function likedfunc(){
-        console.log("likedsong inside the likedfunc is ",likedtitle);
-        // AsyncStorage.setItem("liked",JSON.stringify())
-    }
+    // async function likedfunc(){
+    //     console.log("likedsong inside the likedfunc is ",likedtitle);
+    //     // AsyncStorage.setItem("liked",JSON.stringify())
+    // }
 
     async function liked(title){
         console.log(title);
@@ -342,7 +354,7 @@ export default function MainPage({ navigation }) {
                         for(var i=0;i<likedsong.length;i++){
                                 if(title === likedsong[i]){
                                     setlikedsong((products) => products.filter(a => a !== likedsong[i]));
-                                    likedfunc();
+                                    // likedfunc();
                                     break;
                             }      
                 }
