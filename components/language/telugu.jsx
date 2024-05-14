@@ -35,6 +35,8 @@ export default function Folk({navigation}){
     const [localbool,setlocalbool] = useState(null);
     const [localimagebool,setlocalimagebool] = useState(true);
     const [songdata,setsongdata] = useState([]);
+    const [songlikedbool,setsonglikedbool] = useState(false);
+    
 
     // console.log("inside folk");
 
@@ -214,8 +216,20 @@ export default function Folk({navigation}){
     });
     useEffect(currentPlaying,[]);
 
-    if(likedsong.length > 0){
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    // if(likedsong.length > 0){
+    //     AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    //     AsyncStorage.setItem("liked-change",JSON.stringify(true));
+    // }
+    if(songlikedbool){
+        if(likedsong.length > 0){
+            let arr = [];
+            for(var i=0;i<likedsong.length;i++){
+                arr.push(likedsong[i]);
+            }
+            AsyncStorage.setItem("liked",JSON.stringify(arr));
+            AsyncStorage.setItem("liked-change",JSON.stringify(true));
+            setsonglikedbool(false);
+        }
     }
     if(history.length > 0){
         AsyncStorage.setItem('history',JSON.stringify(history));
@@ -675,7 +689,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked("telugu",e['title'])}}>
+                    <Pressable onPress={() => {liked("telugu",e['title']),setsonglikedbool(true)}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -747,7 +761,7 @@ export default function Folk({navigation}){
                     {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked("songdata",e['title'])}}>
+                            <Pressable onPress={() => {liked("songdata",e['title']),setsonglikedbool(true)}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )

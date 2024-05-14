@@ -66,43 +66,48 @@ export default function MainPage({ navigation }) {
         arr = JSON.parse(likedvalue);
 
         arr = [...new Set(arr)]
-        if(arr.length > [...new Set(likedsong)].length){
+        // if(arr.length > [...new Set(likedsong)].length){
             
-            setlikedbool1(true);
+        //     setlikedbool1(true);
 
-        }
+        // }
 
         let likedarray = [];
 
-        if(arr.length < [...new Set(likedsong)].length)
-            {
-                if(likedsongbool1 === false){
-                setlikedsong(arr);
-                }
-            }
+        // if(arr.length < [...new Set(likedsong)].length)
+        //     {
+        //         if(likedsongbool1 === false){
+        //         setlikedsong(arr);
+        //         }
+        //     }
 
-
-        if(likedbool1){
-            for(var i=0;i<alldata.length;i++){
-                for(var j=0;j<arr.length;j++){
-                 if(alldata[i]['title'] === arr[j]){
-                   setlikedsong([...current,alldata[i]['title']]);
-                 }
-                }
-              }
+        if(arr.length > [...new Set(likedsong)].length || arr.length < [...new Set(likedsong)].length){
+            setlikedsong(arr);
         }
+
+
+        // if(likedbool1){
+        //     for(var i=0;i<alldata.length;i++){
+        //         for(var j=0;j<arr.length;j++){
+        //          if(alldata[i]['title'] === arr[j]){
+        //            setlikedsong([...current,alldata[i]['title']]);
+        //          }
+        //         }
+        //       }
+        // }
     
-        if(likedbool1){
-            console.log("inside the likedbool1");
-        AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
-        setlikedbool1(false);
+    //     if(likedbool1){
+    //         console.log("inside the likedbool1");
+    //     AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
+    //     setlikedbool1(false);
 
-    }else{
-        if(arr.length > ([...new Set(likedsong)].length) || arr.length < ([...new Set(likedsong)].length)){
-            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
+    // }else{
+    //     if(arr.length > ([...new Set(likedsong)].length) || arr.length < ([...new Set(likedsong)].length)){
+    //         AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
 
-        }
-    }
+    //     }
+    // }
+    AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
     AsyncStorage.setItem("liked-change",JSON.stringify(false));
     }
 

@@ -37,6 +37,8 @@ export default function Folk({navigation}){
     const [data1,setdata1] = useState([]);
     const [likedbool,setlikedbool] = useState(false);
     const [songdata,setsongdata] = useState([]);
+    const [songlikedbool,setsonglikedbool] = useState(false);
+
 
 
 
@@ -208,10 +210,22 @@ export default function Folk({navigation}){
     });
     useEffect(currentPlaying,[]);
 
-    if(likedbool){
+    // if(likedsong.length > 0){
         
-        AsyncStorage.setItem("liked",JSON.stringify(likedsong));
-        setlikedbool(false);
+    //     AsyncStorage.setItem("liked",JSON.stringify(likedsong));
+    //     AsyncStorage.setItem("liked-change",JSON.stringify(true));
+    //     setlikedbool(false);
+    // }
+    if(songlikedbool){
+        if(likedsong.length > 0){
+            let arr = [];
+            for(var i=0;i<likedsong.length;i++){
+                arr.push(likedsong[i]);
+            }
+            AsyncStorage.setItem("liked",JSON.stringify(arr));
+            AsyncStorage.setItem("liked-change",JSON.stringify(true));
+            setsonglikedbool(false);
+        }
     }
 
     // if(likedsong.length > 0){
@@ -558,7 +572,6 @@ export default function Folk({navigation}){
                 // console.log(data[i]['liked'])
                 if(otherdata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,otherdata[i]['title']]);
-                    setlikedbool(true);
 
                 }
                 else{
@@ -588,7 +601,6 @@ export default function Folk({navigation}){
                 songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
                 if(songdata[i]['liked'] === 'cards-heart'){
                     setlikedsong(current => [...current,songdata[i]['title']]);
-                    setlikedbool(true);
                 }
                 else{
                     if(likedsong.length === 1){
@@ -684,7 +696,7 @@ export default function Folk({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked("other",e['title'])}}>
+                    <Pressable onPress={() => {liked("other",e['title']),setsonglikedbool(true)}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -756,7 +768,7 @@ export default function Folk({navigation}){
                     {songdata.map((e) => {
                         if(e['id'] === currentplayingsong){
                             return(
-                            <Pressable onPress={() => {liked("songdata",e['title'])}}>
+                            <Pressable onPress={() => {liked("songdata",e['title']),setsonglikedbool(true)}}>
                                 <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
                             </Pressable>
                         )
