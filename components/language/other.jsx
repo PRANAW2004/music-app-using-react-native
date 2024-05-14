@@ -766,6 +766,7 @@ export default function Folk({navigation}){
                     </Pressable>
                     <View style={{marginLeft: 30}}>
                     {songdata.map((e) => {
+                        console.log(currentplayingsong);
                         if(e['id'] === currentplayingsong){
                             return(
                             <Pressable onPress={() => {liked("songdata",e['title']),setsonglikedbool(true)}}>

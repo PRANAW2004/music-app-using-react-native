@@ -12,6 +12,8 @@ export default function History({navigation}){
     const [history,sethistory] = useState([]);
     const [likedsong,setlikedsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [songlikedbool,setsonglikedbool] = useState(false);
+
 
 
 
@@ -38,8 +40,19 @@ export default function History({navigation}){
         })
     },[])
 
-    if(likedsong.length > 0){
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    // if(likedsong.length > 0){
+    //     AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    // }
+    if(songlikedbool){
+        if(likedsong.length > 0){
+            let arr = [];
+            for(var i=0;i<likedsong.length;i++){
+                arr.push(likedsong[i]);
+            }
+            AsyncStorage.setItem("liked",JSON.stringify(arr));
+            AsyncStorage.setItem("liked-change",JSON.stringify(true));
+            setsonglikedbool(false);
+        }
     }
 
     const likeddata = useCallback(async () => {
@@ -255,7 +268,7 @@ export default function History({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked(b['title'])}}>
+                    <Pressable onPress={() => {liked(b['title']);setsonglikedbool(true)}}>
                         <MaterialCommunityIcons name={b['liked']} size={30} style={{color: b['color']}}/>
                     </Pressable>
                     </View>

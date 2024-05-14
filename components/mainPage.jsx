@@ -295,35 +295,6 @@ export default function MainPage({ navigation }) {
         }
     }
 
-    // const likeddata = useCallback(async() => {
-
-    //     let value1234 = await AsyncStorage.getItem("liked");
-    //     // console.log("liked value inside homepage is ",value1234);
-
-    //     arr = JSON.parse(value1234);
-    //     arr = [...new Set(arr)]
-    //     for(var i=0;i<alldata.length;i++){
-    //       for(var j=0;j<arr.length;j++){
-    //           // console.log("123",data[i]['id'],arr[j]);
-    //        if(alldata[i]['title'] === arr[j]){
-    //         console.log(alldata[i]['title'])
-    //          setlikedsong(current => [...current,alldata[i]['title']]);
-    //        }
-    //       }
-    //     }
-    // })
-    // useEffect(likeddata,[]);
-
-    // if(likedsong.length > 0){
-    //     console.log("likedsong length is greater than 0")
-    // }
-
-    // console.log("likedsong in the home page is ",likedsong);
-
-    // async function likedfunc(){
-    //     console.log("likedsong inside the likedfunc is ",likedtitle);
-    //     // AsyncStorage.setItem("liked",JSON.stringify())
-    // }
 
     async function liked(title){
         let likedvalue = await AsyncStorage.getItem("liked");
