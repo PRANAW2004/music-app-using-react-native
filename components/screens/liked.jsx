@@ -27,6 +27,8 @@ export default function Liked({navigation}){
     const [skipnextbool,setskipnextbool] = useState(false);
     const [skippreviousbool,setskippreviousbool] = useState(false);
     const [songdata,setsongdata] = useState([]);
+    const [songlikedbool,setsonglikedbool] = useState(false);
+
 
 
 
