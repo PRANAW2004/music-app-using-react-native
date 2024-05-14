@@ -55,9 +55,23 @@ export default function MainPage({ navigation }) {
         },
     });
 
+    useEffect(async () => {
+        let likedvalue = await AsyncStorage.getItem("liked");
+        let arr = [];
+        arr = JSON.parse(likedvalue);
+        arr = [...new Set(arr)]
+        setlikedsong(arr);
+    },[])
+
     async function likedvalueselect(){
 
         let likedchangebool = await AsyncStorage.getItem("liked-change");
+        let likedchangebool1 = await AsyncStorage.getItem("liked-change1");
+
+        if(likedchangebool1 === "true"){
+            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
+            AsyncStorage.setItem("liked-change1",JSON.stringify(false));
+        }
 
         if(likedchangebool === "true"){
             console.log("inside likedchangebool")
@@ -66,47 +80,13 @@ export default function MainPage({ navigation }) {
         arr = JSON.parse(likedvalue);
 
         arr = [...new Set(arr)]
-        // if(arr.length > [...new Set(likedsong)].length){
-            
-        //     setlikedbool1(true);
-
-        // }
-
-        let likedarray = [];
-
-        // if(arr.length < [...new Set(likedsong)].length)
-        //     {
-        //         if(likedsongbool1 === false){
-        //         setlikedsong(arr);
-        //         }
-        //     }
 
         if(arr.length > [...new Set(likedsong)].length || arr.length < [...new Set(likedsong)].length){
             setlikedsong(arr);
         }
 
 
-        // if(likedbool1){
-        //     for(var i=0;i<alldata.length;i++){
-        //         for(var j=0;j<arr.length;j++){
-        //          if(alldata[i]['title'] === arr[j]){
-        //            setlikedsong([...current,alldata[i]['title']]);
-        //          }
-        //         }
-        //       }
-        // }
-    
-    //     if(likedbool1){
-    //         console.log("inside the likedbool1");
-    //     AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
-    //     setlikedbool1(false);
-
-    // }else{
-    //     if(arr.length > ([...new Set(likedsong)].length) || arr.length < ([...new Set(likedsong)].length)){
-    //         AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
-
-    //     }
-    // }
+        
     AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
     AsyncStorage.setItem("liked-change",JSON.stringify(false));
     }
@@ -346,7 +326,13 @@ export default function MainPage({ navigation }) {
     // }
 
     async function liked(title){
-        console.log(likedicon);
+        let likedvalue = await AsyncStorage.getItem("liked");
+        let arr = [];
+        arr = JSON.parse(likedvalue);
+        arr = [...new Set(arr)]
+        console.log(arr);
+        setlikedsong(arr);
+        // console.log(likedicon);
         for(var i=0;i<songdata.length;i++){
             if(songdata[i]['title'] === title){
 
@@ -360,13 +346,15 @@ export default function MainPage({ navigation }) {
                 }
                 else{
                 console.log("inside the else in the liked function");
-                    if(likedsong.length === 1){
+                    if(arr.length === 1){
+                        console.log("inside the likedsong length === 1");
                         setlikedsong([]);
                         AsyncStorage.setItem("liked",JSON.stringify(""));
                     }else{
-                        for(var i=0;i<likedsong.length;i++){
-                                if(title === likedsong[i]){
-                                    setlikedsong((products) => products.filter(a => a !== likedsong[i]));
+                        for(var i=0;i<arr.length;i++){
+                                if(title === arr[i]){
+                                    console.log("inside the title === likedsong[i]");
+                                    setlikedsong((products) => products.filter(a => a !== arr[i]));
                                     // likedfunc();
                                     break;
                             }      
@@ -380,6 +368,8 @@ export default function MainPage({ navigation }) {
         }
         // AsyncStorage.setItem("liked-change",JSON.stringify(true));
         setlikedsongbool1(true);
+    AsyncStorage.setItem("liked-change1",JSON.stringify(true));
+
     }
 
 
