@@ -77,10 +77,12 @@ export default function Liked({ navigation }) {
         }
         if (likedbool) {
             setlikedcolor('red');
-            setlikedicon('cards-heart');
         } else {
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
+        }
+        if(likedbool){
+            setlikedicon('cards-heart');
         }
     }
     likedvalueselect();
@@ -306,6 +308,92 @@ export default function Liked({ navigation }) {
         }
     }
 
+    async function play1(id) {
+
+        await AsyncStorage.setItem("current-genre", JSON.stringify("liked"));
+
+        await TrackPlayer.reset();
+        await AsyncStorage.setItem("current-playing-num", JSON.stringify(id));
+        for (var i = 0; i < songdata.length; i++) {
+            if (songdata[i]['id'] === id) {
+                if (i === songdata.length - 1) {
+                    TrackPlayer.updateOptions({
+                        capabilities: [
+                            Capability.Play,
+                            Capability.Pause,
+                            Capability.SkipToPrevious
+                        ]
+                    })
+                } else {
+                    // setskipnextbool(false);
+                    TrackPlayer.updateOptions({
+                        capabilities: [
+                            Capability.Play,
+                            Capability.Pause,
+                            Capability.SkipToPrevious,
+                            Capability.SkipToNext
+                        ]
+                    })
+                }
+                await AsyncStorage.setItem('current-playing-song', JSON.stringify(songdata[i]['title']));
+                AsyncStorage.setItem("current-playing", JSON.stringify(songdata[i]['title']));
+                // AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
+                let arr = [songdata[i]];
+                try {
+                    if (i === 0 && songdata.length > 1) {
+                        for (j = i + 1; j < alldata.length; j++) {
+                            arr.push(songdata[i + j]);
+                        }
+                    }
+                    else {
+                        for (j = i; j < songdata.length - 1; j++) {
+                            arr.push(songdata[i + 1]);
+                        }
+                    }
+
+                    TrackPlayer.addEventListener("remote-play", () => {
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(true));
+                        TrackPlayer.play();
+                    })
+
+                    TrackPlayer.addEventListener("remote-pause", () => {
+
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(false));
+                        TrackPlayer.pause();
+                    })
+
+                    TrackPlayer.addEventListener("remote-previous", async () => {
+                        setcurrentPlaying(currentplayingsong - 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play(a["id"] - 1);
+
+
+                    })
+
+                    TrackPlayer.addEventListener("remote-next", async () => {
+                        setcurrentPlaying(currentplayingsong + 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play(a["id"] + 1);
+                    })
+                    let arr1 = [];
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i] !== undefined) {
+                            arr1.push(arr[i]);
+                        }
+                    }
+                    TrackPlayer.add(arr1);
+                    // AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
+                    TrackPlayer.play();
+                    // console.log(RepeatMode);
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                } catch (err) {
+                    // console.log(1,err);
+                }
+            }
+        }
+    }
+
     TrackPlayer.addEventListener("playback-track-changed", async () => {
         let a = await TrackPlayer.getActiveTrack();
 
@@ -365,13 +453,6 @@ export default function Liked({ navigation }) {
             setRepeatMode('repeat-once');
         }
 
-    }
-
-    function colorchange(title){
-        console.log(title);
-        for(var i=0;i<songname.length;i++){
-            console.log(songname[i]['title'],songname[i]['color']);
-        }
     }
 
 
@@ -539,13 +620,13 @@ export default function Liked({ navigation }) {
                             </Pressable>
                         </View>
 
-                        <Pressable style={{ opacity: skippreviousbool ? 0.5 : 1 }} onPress={() => { play(currentplayingsong - 1); setcurrentPlaying(currentplayingsong - 1) }} disabled={skippreviousbool}>
+                        <Pressable style={{ opacity: skippreviousbool ? 0.5 : 1 }} onPress={() => { play1(currentplayingsong - 1); setcurrentPlaying(currentplayingsong - 1) }} disabled={skippreviousbool}>
                             <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
                         </Pressable>
                         <Pressable onPress={() => handlePlayback()}>
                             <MaterialCommunityIcons name={icon} size={70} color={"white"} />
                         </Pressable>
-                        <Pressable style={{ opacity: skipnextbool ? 0.5 : 1 }} onPress={async () => { play(currentplayingsong + 1); setcurrentPlaying(currentplayingsong + 1) }} disabled={skipnextbool}>
+                        <Pressable style={{ opacity: skipnextbool ? 0.5 : 1 }} onPress={async () => { play1(currentplayingsong + 1); setcurrentPlaying(currentplayingsong + 1) }} disabled={skipnextbool}>
                             <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                         </Pressable>
                         <View style={{ marginLeft: 30 }}>

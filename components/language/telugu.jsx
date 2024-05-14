@@ -617,12 +617,12 @@ export default function Folk({navigation}){
             }
         }
         } else if(genre === "songdata"){
-            for(var i=0;i<songdata.length;i++){
-                if(songdata[i]['title'] === title){
-                    songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                    songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
-                    if(songdata[i]['liked'] === 'cards-heart'){
-                        setlikedsong(current => [...current,songdata[i]['title']]);
+            for(var i=0;i<alldata.length;i++){
+                if(alldata[i]['title'] === title){
+                    alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                    alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
+                    if(alldata[i]['liked'] === 'cards-heart'){
+                        setlikedsong(current => [...current,alldata[i]['title']]);
                     }
                     else{
                         if(likedsong.length === 1){

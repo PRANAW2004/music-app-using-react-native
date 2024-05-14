@@ -109,11 +109,13 @@ export default function MainPage({ navigation }) {
             }
         }
         if(likedbool){
-            setlikedcolor('red');
             setlikedicon('cards-heart');
         }else{
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
+        }
+        if(likedbool){
+            setlikedcolor('red');
         }
             // console.log(arr); 
     }
@@ -284,17 +286,9 @@ export default function MainPage({ navigation }) {
         }
     })
 
-    async function handlePlayback() {
-        seticon(icon === 'motion-play' ? 'motion-pause' : 'motion-play');
-        icon === 'motion-play' ? TrackPlayer.play() : TrackPlayer.pause();
-        if (bool === false) {
-            if (icon === 'motion-play') {
-                let currentplayingsong = await AsyncStorage.getItem("current-playing");
-                play(JSON.parse(currentplayingsong));
-            }
-        }
-    }
+    const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
+    useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
 
     async function liked(title){
         let likedvalue = await AsyncStorage.getItem("liked");
@@ -304,15 +298,15 @@ export default function MainPage({ navigation }) {
         console.log(arr);
         setlikedsong(arr);
         // console.log(likedicon);
-        for(var i=0;i<songdata.length;i++){
-            if(songdata[i]['title'] === title){
+        for(var i=0;i<alldata.length;i++){
+            if(alldata[i]['title'] === title){
 
-                songdata[i]['liked'] = songdata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                songdata[i]['color'] = songdata[i]['color'] === 'red'?'white':'red';
+                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
                 if(likedicon === 'cards-heart-outline'){
                     console.log("inside the if in the liked function");
-                    setlikedsong(current =>[...current,songdata[i]['title']]);  
+                    setlikedsong(current =>[...current,alldata[i]['title']]);  
                     // likedfunc();
                 }
                 else{
@@ -455,6 +449,24 @@ export default function MainPage({ navigation }) {
             }
     }
 
+    async function handlePlayback(){
+        seticon(icon === 'motion-play'?'motion-pause':'motion-play');
+        icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
+        // console.log(icon);
+        if(bool === false){
+            if(icon === 'motion-play'){
+                let currentplayingsong = await AsyncStorage.getItem("current-playing-num");
+                currentplayingsong = currentplayingsong*1;
+                play(currentplayingsong);
+                setcurrentPlaying(currentplayingsong);
+                setbool(true);
+            }
+        }
+        if(icon === 'motion-pause'){
+            await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
+        } 
+    }
+
     return (
         <View style={styles.maincontainer} {...PanResponder1.panHandlers}>
             <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -573,7 +585,7 @@ export default function MainPage({ navigation }) {
                             <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
                         </Pressable>
                         <View style={{ marginLeft: 30 }}>
-                            {alldata.map((e) => {
+                            {/* {alldata.map((e) => {
                                 if (e['id'] === allcurrentplayingnum) {                                    
                                     return (
                                         <Pressable onPress={() => {liked(rendername)}}>
@@ -582,7 +594,10 @@ export default function MainPage({ navigation }) {
                                     )
                                 }
 
-                            })}
+                            })} */}
+                            <Pressable onPress={() => {liked(rendername)}}>
+                                            <MaterialCommunityIcons name={likedicon} size={25} color={likedcolor} />
+                            </Pressable>
                         </View>
 
 
