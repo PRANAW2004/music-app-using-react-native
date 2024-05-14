@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, Text, StyleSheet, Button, BackHandler, TouchableOpacity, Pressable, Image, Modal, PanResponder } from "react-native";
+import { View, Text, StyleSheet, Button, BackHandler, TouchableOpacity, Pressable, Image, Modal, PanResponder, ScrollView } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
+import TrackPlayer, { useProgress, Capability, AppKilledPlaybackBehavior, Event, RepeatMode, useTrackPlayerEvents } from 'react-native-track-player';
 import Slider from 'react-native-slider';
 import { StatusBar } from 'expo-status-bar';
 import alldata from './AllData';
@@ -31,18 +31,18 @@ export default function MainPage({ navigation }) {
     const [likedicon, setlikedicon] = useState("cards-heart-outline");
     const [likedcolor, setlikedcolor] = useState("white");
     const [currentplayingsong, setcurrentPlaying] = useState(0);
-    const [currentplayingsongname,setcurrentplayingsongname] = useState("");
+    const [currentplayingsongname, setcurrentplayingsongname] = useState("");
     const [artworkbool, setartworkbool] = useState(true);
     const [coverbool, setcoverbool] = useState(true);
     const [cover, setcover] = useState("");
     const [likedbool1, setlikedbool1] = useState(true);
-    const [songdata,setsongdata] = useState([]);
-    const [localimagebool,setlocalimagebool] = useState(true);
-    const [localbool,setlocalbool] = useState(null);
-    const [history,sethistory] = useState([]);
-    const [likedsong,setlikedsong] = useState([]);
-    const [allcurrentplayingnum,setallcurrentplayingnum] = useState(0);
-    const [likedsongbool1,setlikedsongbool1] = useState(false);
+    const [songdata, setsongdata] = useState([]);
+    const [localimagebool, setlocalimagebool] = useState(true);
+    const [localbool, setlocalbool] = useState(null);
+    const [history, sethistory] = useState([]);
+    const [likedsong, setlikedsong] = useState([]);
+    const [allcurrentplayingnum, setallcurrentplayingnum] = useState(0);
+    const [likedsongbool1, setlikedsongbool1] = useState(false);
 
     // console.log("inside the main page");
 
@@ -61,37 +61,37 @@ export default function MainPage({ navigation }) {
         arr = JSON.parse(likedvalue);
         arr = [...new Set(arr)]
         setlikedsong(arr);
-    },[])
+    }, [])
 
-    async function likedvalueselect(){
+    async function likedvalueselect() {
 
         let likedchangebool = await AsyncStorage.getItem("liked-change");
         let likedchangebool1 = await AsyncStorage.getItem("liked-change1");
 
-        if(likedchangebool1 === "true"){
-            AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]))
-            AsyncStorage.setItem("liked-change1",JSON.stringify(false));
+        if (likedchangebool1 === "true") {
+            AsyncStorage.setItem("liked", JSON.stringify([...new Set(likedsong)]))
+            AsyncStorage.setItem("liked-change1", JSON.stringify(false));
         }
 
-        if(likedchangebool === "true"){
+        if (likedchangebool === "true") {
             // console.log("inside likedchangebool")
-        let likedvalue = await AsyncStorage.getItem("liked");
-        let arr = [];
-        arr = JSON.parse(likedvalue);
+            let likedvalue = await AsyncStorage.getItem("liked");
+            let arr = [];
+            arr = JSON.parse(likedvalue);
 
-        arr = [...new Set(arr)]
+            arr = [...new Set(arr)]
 
-        if(arr.length > [...new Set(likedsong)].length || arr.length < [...new Set(likedsong)].length){
-            setlikedsong(arr);
+            if (arr.length > [...new Set(likedsong)].length || arr.length < [...new Set(likedsong)].length) {
+                setlikedsong(arr);
+            }
+
+
+
+            AsyncStorage.setItem("liked", JSON.stringify([...new Set(likedsong)]));
+            AsyncStorage.setItem("liked-change", JSON.stringify(false));
         }
 
-
-        
-    AsyncStorage.setItem("liked",JSON.stringify([...new Set(likedsong)]));
-    AsyncStorage.setItem("liked-change",JSON.stringify(false));
-    }
-
-    let likedvalue1 = await AsyncStorage.getItem("liked");
+        let likedvalue1 = await AsyncStorage.getItem("liked");
         let arr1 = [];
         arr1 = JSON.parse(likedvalue1);
 
@@ -99,27 +99,27 @@ export default function MainPage({ navigation }) {
         let a = await TrackPlayer.getActiveTrack();
         // console.log("arr is ",arr);
         let likedbool = false;
-        
+
         // console.log("entering the for loop")
-        for(var i=0;i<arr1.length;i++){
-            if(a['title'] === arr1[i]){
+        for (var i = 0; i < arr1.length; i++) {
+            if (a['title'] === arr1[i]) {
                 // console.log("inside the likedbool set to true");
                 likedbool = true;
 
             }
         }
-        if(likedbool){
+        if (likedbool) {
             setlikedicon('cards-heart');
-        }else{
+        } else {
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
         }
-        if(likedbool){
+        if (likedbool) {
             setlikedcolor('red');
         }
-            // console.log(arr); 
+        // console.log(arr); 
 
-            let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
+        let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
 
         if (localsongsbool === "true") {
             let currentplaying1 = await AsyncStorage.getItem("current-playing");
@@ -176,14 +176,14 @@ export default function MainPage({ navigation }) {
         // console.log("current genre is ", value);
         let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
         // console.log("current playing number is ",currentplayingnumber);
-        setcurrentPlaying(currentplayingnumber*1);
+        setcurrentPlaying(currentplayingnumber * 1);
         let songdata1 = [];
         songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : [];
         setsongdata(songdata1)
         let currentplayingsong = await AsyncStorage.getItem("current-playing");
         setcurrentplayingsongname(currentplayingsong);
         let allcurrentplayingnum = await AsyncStorage.getItem("alldata-playing-num");
-        setallcurrentplayingnum(allcurrentplayingnum*1);
+        setallcurrentplayingnum(allcurrentplayingnum * 1);
     }, [])
 
     let progress = useProgress();
@@ -252,36 +252,36 @@ export default function MainPage({ navigation }) {
 
         let value = await AsyncStorage.getItem("genre");
         let songdata1 = [];
-        
-        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:null;
+
+        songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : null;
         setsongdata(songdata1)
 
         let likedbool = false;
 
-        for(var i=0;i<arr.length;i++){
-            if(a['title'] === arr[i]){
+        for (var i = 0; i < arr.length; i++) {
+            if (a['title'] === arr[i]) {
                 likedbool = true;
 
             }
         }
 
-        if(likedbool){
+        if (likedbool) {
             setlikedcolor('red');
             setlikedicon('cards-heart');
-        }else{
+        } else {
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
         }
 
-        if(a["artwork"] === undefined){
+        if (a["artwork"] === undefined) {
             // console.log("artwork is undefined");
-        }else{
+        } else {
             setlocalbool(true);
         }
-        if(a['id'] === 1){
+        if (a['id'] === 1) {
             setskippreviousbool(true);
         }
-        if(a['id'] >= songdata1.length){
+        if (a['id'] >= songdata1.length) {
             setskipnextbool(true);
         }
         setrenderimage(a['artwork'] === undefined ? coverbool ? a["cover"] : null : a["artwork"]);
@@ -307,11 +307,11 @@ export default function MainPage({ navigation }) {
         }
     })
 
-    const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
+    const setUpTrackPlayer = async () => { try { await TrackPlayer.setupPlayer() } catch (err) { } }
 
-    useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
+    useEffect(() => { setUpTrackPlayer(); return () => TrackPlayer.destroy(); }, [])
 
-    async function liked(title){
+    async function liked(title) {
         let likedvalue = await AsyncStorage.getItem("liked");
         let arr = [];
         arr = JSON.parse(likedvalue);
@@ -319,64 +319,64 @@ export default function MainPage({ navigation }) {
         // console.log(arr);
         setlikedsong(arr);
         // console.log(likedicon);
-        for(var i=0;i<alldata.length;i++){
-            if(alldata[i]['title'] === title){
+        for (var i = 0; i < alldata.length; i++) {
+            if (alldata[i]['title'] === title) {
 
-                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
+                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart' ? 'cards-heart-outline' : 'cards-heart';
+                alldata[i]['color'] = alldata[i]['color'] === 'red' ? 'white' : 'red';
                 // console.log(data[i]['liked'])
-                if(likedicon === 'cards-heart-outline'){
+                if (likedicon === 'cards-heart-outline') {
                     console.log("inside the if in the liked function");
-                    setlikedsong(current =>[...current,alldata[i]['title']]);  
+                    setlikedsong(current => [...current, alldata[i]['title']]);
                     // likedfunc();
                 }
-                else{
-                console.log("inside the else in the liked function");
-                    if(arr.length === 1){
+                else {
+                    console.log("inside the else in the liked function");
+                    if (arr.length === 1) {
                         console.log("inside the likedsong length === 1");
                         setlikedsong([]);
-                        AsyncStorage.setItem("liked",JSON.stringify(""));
-                    }else{
-                        for(var i=0;i<arr.length;i++){
-                                if(title === arr[i]){
-                                    console.log("inside the title === likedsong[i]");
-                                    setlikedsong((products) => products.filter(a => a !== arr[i]));
-                                    // likedfunc();
-                                    break;
-                            }      
+                        AsyncStorage.setItem("liked", JSON.stringify(""));
+                    } else {
+                        for (var i = 0; i < arr.length; i++) {
+                            if (title === arr[i]) {
+                                console.log("inside the title === likedsong[i]");
+                                setlikedsong((products) => products.filter(a => a !== arr[i]));
+                                // likedfunc();
+                                break;
+                            }
+                        }
+                    }
                 }
-            }
-            }
-                setlikedicon(likedicon === 'cards-heart-outline'?'cards-heart':'cards-heart-outline');
+                setlikedicon(likedicon === 'cards-heart-outline' ? 'cards-heart' : 'cards-heart-outline');
                 // setbool(true);
                 break;
             }
         }
         // AsyncStorage.setItem("liked-change",JSON.stringify(true));
         setlikedsongbool1(true);
-    AsyncStorage.setItem("liked-change1",JSON.stringify(true));
+        AsyncStorage.setItem("liked-change1", JSON.stringify(true));
 
     }
 
 
-    async function play(id){
+    async function play(id) {
 
         console.log(id);
 
-        await TrackPlayer.reset(); 
-        await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await TrackPlayer.reset();
+        await AsyncStorage.setItem("current-playing-num", JSON.stringify(id));
 
 
-        if(id === 1){
+        if (id === 1) {
             setskippreviousbool(true);
-            TrackPlayer.updateOptions({     
+            TrackPlayer.updateOptions({
                 capabilities: [
                     Capability.Play,
                     Capability.Pause,
                     Capability.SkipToNext
                 ]
             })
-        }else{
+        } else {
             setskippreviousbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -388,7 +388,7 @@ export default function MainPage({ navigation }) {
             })
         }
 
-        if(id >= songdata.length){
+        if (id >= songdata.length) {
             setskipnextbool(true)
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -397,7 +397,7 @@ export default function MainPage({ navigation }) {
                     Capability.SkipToPrevious
                 ]
             })
-        }else{
+        } else {
             setskipnextbool(false);
             TrackPlayer.updateOptions({
                 capabilities: [
@@ -408,84 +408,106 @@ export default function MainPage({ navigation }) {
                 ]
             })
         }
-            for(var i=0;i<songdata.length;i++){
-                if(songdata[i]['id'] === id){
-                    await AsyncStorage.setItem('current-playing-song',JSON.stringify(songdata[i]['title']));
-                    AsyncStorage.setItem("current-playing",JSON.stringify(songdata[i]['title']));
-                    AsyncStorage.setItem("current-genre",JSON.stringify('folk'));
-                    if(history.length > 50){
-                        sethistory((songdata) => songdata.filter((_,index) => index !== 0));
-                    }else{
-                        let date = new Date().toLocaleDateString();
-                        let date1 = date;
-                        // console.log(date1);
-                        let data11 = date1 + ":"+songdata[i]['title']
-                        sethistory((current) => [...current,data11]);
+        for (var i = 0; i < songdata.length; i++) {
+            if (songdata[i]['id'] === id) {
+                await AsyncStorage.setItem('current-playing-song', JSON.stringify(songdata[i]['title']));
+                AsyncStorage.setItem("current-playing", JSON.stringify(songdata[i]['title']));
+                AsyncStorage.setItem("current-genre", JSON.stringify('folk'));
+                if (history.length > 50) {
+                    sethistory((songdata) => songdata.filter((_, index) => index !== 0));
+                } else {
+                    let date = new Date().toLocaleDateString();
+                    let date1 = date;
+                    // console.log(date1);
+                    let data11 = date1 + ":" + songdata[i]['title']
+                    sethistory((current) => [...current, data11]);
+                }
+                // await AsyncStorage.setItem("history",JSON.stringify(history));
+
+                let arr = [songdata[i]];
+                try {
+                    if (i === 0) {
+                        for (j = i + 1; j < songdata.length; j++) {
+                            arr.push(songdata[i + j]);
+                        }
                     }
-                    // await AsyncStorage.setItem("history",JSON.stringify(history));
-
-                    let arr = [songdata[i]];
-                    try{
-                        if(i === 0){
-                            for(j=i+1;j<songdata.length;j++){
-                                arr.push(songdata[i+j]);
-                            }
+                    else {
+                        for (j = i; j < songdata.length - 1; j++) {
+                            arr.push(songdata[j + 1]);
                         }
-                        else{
-                        for(j=i;j<songdata.length-1;j++){
-                            arr.push(songdata[j+1]);
-                        }
-                        }
+                    }
 
-                        TrackPlayer.addEventListener("remote-play", ()=>{
-                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(true));
-                            seticon("motion-pause");
-                            TrackPlayer.play();
-                        })
-                        
-                        TrackPlayer.addEventListener("remote-pause", () => {
-                            AsyncStorage.setItem("song-playing-bool",JSON.stringify(false));
-                            seticon("motion-play");
-                            TrackPlayer.pause();
-                        })
-                        
-                        TrackPlayer.addEventListener("remote-previous",async () => {
-                            setcurrentPlaying(currentplayingsong-1);
-                            let a = await TrackPlayer.getActiveTrack();
-                            play(a["id"]-1); 
-                        })
+                    TrackPlayer.addEventListener("remote-play", () => {
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(true));
+                        seticon("motion-pause");
+                        TrackPlayer.play();
+                    })
 
-                        TrackPlayer.addEventListener("remote-next", async () => {
-                            setcurrentPlaying(currentplayingsong+1);
-                            let a = await TrackPlayer.getActiveTrack();
-                            play(a["id"]+1);
-                        })
+                    TrackPlayer.addEventListener("remote-pause", () => {
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(false));
+                        seticon("motion-play");
+                        TrackPlayer.pause();
+                    })
+
+                    TrackPlayer.addEventListener("remote-previous", async () => {
+                        setcurrentPlaying(currentplayingsong - 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play(a["id"] - 1);
+                    })
+
+                    TrackPlayer.addEventListener("remote-next", async () => {
+                        setcurrentPlaying(currentplayingsong + 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play(a["id"] + 1);
+                    })
                     TrackPlayer.add(arr);
                     TrackPlayer.play();
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
                     break;
-                    }catch(err){
-                    }
+                } catch (err) {
                 }
             }
+        }
     }
 
-    async function handlePlayback(){
-        seticon(icon === 'motion-play'?'motion-pause':'motion-play');
-        icon === 'motion-play'?TrackPlayer.play():TrackPlayer.pause();
+    async function handlePlayback() {
+        seticon(icon === 'motion-play' ? 'motion-pause' : 'motion-play');
+        icon === 'motion-play' ? TrackPlayer.play() : TrackPlayer.pause();
         // console.log(icon);
-        if(bool === false){
-            if(icon === 'motion-play'){
+        if (bool === false) {
+            if (icon === 'motion-play') {
                 let currentplayingsong = await AsyncStorage.getItem("current-playing-num");
-                currentplayingsong = currentplayingsong*1;
+                currentplayingsong = currentplayingsong * 1;
                 play(currentplayingsong);
                 setcurrentPlaying(currentplayingsong);
                 setbool(true);
             }
         }
-        if(icon === 'motion-pause'){
-            await AsyncStorage.setItem('song-playing-bool',JSON.stringify('false'));
-        } 
+        if (icon === 'motion-pause') {
+            await AsyncStorage.setItem('song-playing-bool', JSON.stringify('false'));
+        }
+    }
+
+    // useEffect(async () => {
+    //     let historydata = await AsyncStorage.getItem("history");
+    //     historydata = JSON.parse(historydata);
+    //     let arr = []
+    //     for(var i=0;i<5;i++){
+    //         arr = historydata[i].split(":");
+    //         console.log(arr[1]);
+    //     }
+    // },[])
+
+    async function historyCarousal() {
+        let historydata = await AsyncStorage.getItem("history");
+        historydata = JSON.parse(historydata);
+        let arr = []
+        let arr1 = []
+        for (var i = 0; i < 5; i++) {
+            arr = historydata[i].split(":");
+            arr1.push(arr[1]);
+        }
+
     }
 
     return (
@@ -547,7 +569,35 @@ export default function MainPage({ navigation }) {
                         </Pressable>
                     </View>
                 </View>
+                <View style={[{marginTop: 30,gap:10}]}>
+                    <Text style={[{ color: "white",marginBottom: 30 }]}>Recently Played</Text>
+                    <ScrollView style={[{ horizontal: true, showsHorizontalScrollIndicator: false, display:"flex",flexDirection: "column"}]}>
+                        <Pressable onPress={() => navigation.navigate("Best Songs of all time")} style={{ backgroundColor: "#222831", height: 50, width: 150, marginRight: 30, display: "flex", flexDirection: "row", alignItems: "center" }}>
+
+                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/best-songs-cover.jpg?alt=media&token=68d63d2a-7d79-430f-b688-77b316bf1357" }} style={{ height: 50, width: 50, marginRight: 7 }} />
+                            <Text style={{ color: "white", width: 100 }}>Best songs of all time</Text>
+                        </Pressable>
+                        <Pressable onPress={() => navigation.navigate("Other Language")} style={{ backgroundColor: "#222831", height: 50, width: 150, display: "flex", flexDirection: "row", alignItems: "center" }}>
+
+                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/other-langauge-songs.jpeg?alt=media&token=2e44c0b7-456c-4ae8-b8e9-9d801b4ef8c7" }} style={{ height: 50, width: 50, marginRight: 7 }} />
+                            <Text style={{ color: "white", width: 90, fontSize: 13 }}>Other langauge songs</Text>
+
+                        </Pressable>
+                        <Pressable onPress={() => navigation.navigate("Best Songs of all time")} style={{ backgroundColor: "#222831", height: 50, width: 150, marginRight: 30, display: "flex", flexDirection: "row", alignItems: "center" }}>
+
+                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/best-songs-cover.jpg?alt=media&token=68d63d2a-7d79-430f-b688-77b316bf1357" }} style={{ height: 50, width: 50, marginRight: 7 }} />
+                            <Text style={{ color: "white", width: 100 }}>Best songs of all time</Text>
+                        </Pressable>
+                        <Pressable onPress={() => navigation.navigate("Other Language")} style={{ backgroundColor: "#222831", height: 50, width: 150, display: "flex", flexDirection: "row", alignItems: "center" }}>
+
+                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/other-langauge-songs.jpeg?alt=media&token=2e44c0b7-456c-4ae8-b8e9-9d801b4ef8c7" }} style={{ height: 50, width: 50, marginRight: 7 }} />
+                            <Text style={{ color: "white", width: 90, fontSize: 13 }}>Other langauge songs</Text>
+
+                        </Pressable>
+                    </ScrollView>
+                </View>
             </View>
+
 
 
             <Modal visible={visible} animationType='slide'>
@@ -557,8 +607,8 @@ export default function MainPage({ navigation }) {
                     </View>
                     <View style={styles.modelcontent}>
                         {/* <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/> */}
-                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../images/song-cover.jpg")} style={{height: 300,width:300,marginBottom: 20}}/>
-                    
+                        <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 300, width: 300, marginBottom: 20 }} />
+
                         <View style={{ marginBottom: 30, display: "flex", alignItems: "center" }}>
                             <Text style={{ color: "white", fontSize: 40 }}>{rendername}</Text>
                             <Text style={{ color: "white", fontSize: 20 }}>{renderauthor}</Text>
@@ -616,8 +666,8 @@ export default function MainPage({ navigation }) {
                                 }
 
                             })} */}
-                            <Pressable onPress={() => {liked(rendername)}}>
-                                            <MaterialCommunityIcons name={likedicon} size={25} color={likedcolor} />
+                            <Pressable onPress={() => { liked(rendername) }}>
+                                <MaterialCommunityIcons name={likedicon} size={25} color={likedcolor} />
                             </Pressable>
                         </View>
 
