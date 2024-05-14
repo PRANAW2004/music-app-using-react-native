@@ -239,13 +239,13 @@ export default function Liked({navigation}){
     async function liked(title){
 
 
-        for(var i=0;i<alldata.length;i++){
-            if(alldata[i]['title'] === title){
-                alldata[i]['liked'] = alldata[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
-                alldata[i]['color'] = alldata[i]['color'] === 'red'?'white':'red';
+        for(var i=0;i<songname.length;i++){
+            if(songname[i]['title'] === title){
+                songname[i]['liked'] = songname[i]['liked'] === 'cards-heart'?'cards-heart-outline':'cards-heart';
+                songname[i]['color'] = songname[i]['color'] === 'red'?'white':'red';
                 // console.log(data[i]['liked'])
-                if(alldata[i]['liked'] === 'cards-heart'){
-                    setlikedsong(current => [...current,alldata[i]['title']]);
+                if(songname[i]['liked'] === 'cards-heart'){
+                    setlikedsong(current => [...current,songname[i]['title']]);
                 }
                 else{
                     if(likedsong.length === 1){

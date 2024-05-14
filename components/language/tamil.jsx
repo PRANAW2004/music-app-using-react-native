@@ -128,6 +128,7 @@ export default function Folk({navigation}){
         let value1234 = await AsyncStorage.getItem("liked");
         arr = JSON.parse(value1234);
         arr = [...new Set(arr)]
+        console.log
         for(var i=0;i<alldata.length;i++){
           for(var j=0;j<arr.length;j++){
            if(alldata[i]['title'] === arr[j]){
@@ -213,6 +214,7 @@ export default function Folk({navigation}){
                 arr.push(likedsong[i]);
             }
             AsyncStorage.setItem("liked",JSON.stringify(arr));
+            AsyncStorage.setItem("liked-change",JSON.stringify(true));
             setsonglikedbool(false);
         }
     }
