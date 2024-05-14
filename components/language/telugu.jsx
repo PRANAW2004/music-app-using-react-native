@@ -88,6 +88,25 @@ export default function Folk({navigation}){
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
         }
+        let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
+
+        if (localsongsbool === "true") {
+            let currentplaying1 = await AsyncStorage.getItem("current-playing");
+            console.log(currentplaying1);
+            setrendername(JSON.parse(currentplaying1));
+            let localauthor = await AsyncStorage.getItem("data-author");
+            setrenderauthor(JSON.parse(localauthor));
+            let localartwork = await AsyncStorage.getItem("data-artwork");
+            if (JSON.parse(localartwork).length === 0) {
+                setrenderimage("null")
+                setlocalimagebool(false);
+            } else {
+                setrenderimage(JSON.parse(localartwork));
+                setlocalimagebool(true);
+
+            }
+            // await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
+        }
     }
     telugulikedvalueselect();
 
@@ -301,6 +320,7 @@ export default function Folk({navigation}){
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
 
         
 
@@ -420,6 +440,7 @@ export default function Folk({navigation}){
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
 
 
         if(id === 1){

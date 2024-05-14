@@ -74,7 +74,7 @@ export default function MainPage({ navigation }) {
         }
 
         if(likedchangebool === "true"){
-            console.log("inside likedchangebool")
+            // console.log("inside likedchangebool")
         let likedvalue = await AsyncStorage.getItem("liked");
         let arr = [];
         arr = JSON.parse(likedvalue);
@@ -118,12 +118,33 @@ export default function MainPage({ navigation }) {
             setlikedcolor('red');
         }
             // console.log(arr); 
+
+            let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
+
+        if (localsongsbool === "true") {
+            let currentplaying1 = await AsyncStorage.getItem("current-playing");
+            setrendername(JSON.parse(currentplaying1));
+            let localauthor = await AsyncStorage.getItem("data-author");
+            setrenderauthor(JSON.parse(localauthor));
+            let localartwork = await AsyncStorage.getItem("data-artwork");
+            // console.log("localartowrk length is ",JSON.parse(localartwork).length);
+            if (JSON.parse(localartwork).length === 0) {
+                setrenderimage("null")
+                setlocalimagebool(false);
+            } else {
+                setrenderimage(JSON.parse(localartwork));
+                // setlocalimagebool(true);
+                setlocalimagebool(true);
+
+            }
+            // await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
+        }
     }
     likedvalueselect();
 
     if (!artworkbool) {
         // console.log(coverbool);
-        AsyncStorage.setItem("data-artwork", JSON.stringify(coverbool ? cover : "null"));
+        // AsyncStorage.setItem("data-artwork", JSON.stringify(coverbool ? cover : "null"));
         AsyncStorage.setItem("data-author", JSON.stringify(renderauthor));
     }
 
@@ -194,7 +215,7 @@ export default function MainPage({ navigation }) {
             let localauthor = await AsyncStorage.getItem("data-author");
             setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
-            if (JSON.parse(localartwork).length === 4) {
+            if (JSON.parse(localartwork).length === 0) {
                 setrenderimage("null")
                 setlocalimagebool(false);
             } else {
@@ -295,7 +316,7 @@ export default function MainPage({ navigation }) {
         let arr = [];
         arr = JSON.parse(likedvalue);
         arr = [...new Set(arr)]
-        console.log(arr);
+        // console.log(arr);
         setlikedsong(arr);
         // console.log(likedicon);
         for(var i=0;i<alldata.length;i++){
@@ -615,7 +636,7 @@ export default function MainPage({ navigation }) {
                     <View style={{ backgroundColor: "#40A2E3", height: 60, width: "100%", display: "flex", flexDirection: "row", alignItems: "center", borderRadius: 36 }}>
                         {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                         <View style={{ display: "flex", flexDirection: "row", borderRadius: 36, width: '50%' }}>
-                            <Image source={artworkbool ? { uri: renderimage } : coverbool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 60, width: 60, borderRadius: 36, marginRight: 10 }} />
+                            <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 60, width: 60, borderRadius: 36, marginRight: 10 }} />
                             <View style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
                                 <Text style={{ color: "white", fontSize: 15 }}>{rendername === '' ? 'Press any song to play' : rendername}</Text>
                                 <Text style={{ color: "white", fontSize: 15 }}>{renderauthor === '' ? 'play' : renderauthor}</Text>

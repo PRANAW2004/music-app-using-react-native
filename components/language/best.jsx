@@ -91,6 +91,25 @@ export default function Best({navigation}){
             setlikedcolor('white');
             setlikedicon('cards-heart-outline');
         }
+        let localsongsbool = await AsyncStorage.getItem("local-songs-bool");
+
+        if (localsongsbool === "true") {
+            let currentplaying1 = await AsyncStorage.getItem("current-playing");
+            console.log(currentplaying1);
+            setrendername(JSON.parse(currentplaying1));
+            let localauthor = await AsyncStorage.getItem("data-author");
+            setrenderauthor(JSON.parse(localauthor));
+            let localartwork = await AsyncStorage.getItem("data-artwork");
+            if (JSON.parse(localartwork).length === 0) {
+                setrenderimage("null")
+                setlocalimagebool(false);
+            } else {
+                setrenderimage(JSON.parse(localartwork));
+                setlocalimagebool(true);
+
+            }
+            // await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
+        }
     }
     bestlikedvalueselect();
 
@@ -193,14 +212,12 @@ export default function Best({navigation}){
             let localauthor = await AsyncStorage.getItem("data-author");
             setrenderauthor(JSON.parse(localauthor));
             let localartwork = await AsyncStorage.getItem("data-artwork");
-            if(JSON.parse(localartwork).length === 4){
+            if(JSON.parse(localartwork).length === 0){
                 setrenderimage("null")
                 setlocalimagebool(false);
-
             }else{
                 setrenderimage(JSON.parse(localartwork));
                 setlocalimagebool(true);
-
             }
         }else{
         currentplaying = await AsyncStorage.getItem("current-playing");
@@ -267,6 +284,7 @@ export default function Best({navigation}){
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+            await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
 
 
         if(id === 1){
@@ -387,6 +405,7 @@ export default function Best({navigation}){
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
 
 
 
@@ -510,6 +529,7 @@ export default function Best({navigation}){
         arr1 = JSON.parse(likedvalue);
         arr1 = [...new Set(arr1)]
         let a = await TrackPlayer.getActiveTrack();
+        console.log(a);
 
         let likedbool = false;
 
@@ -551,7 +571,7 @@ export default function Best({navigation}){
             setskipnextbool(true);
         }
         // console.log("playback track changed");
-        setrenderimage(a['artwork']);
+        setrenderimage(a['artwork'] === undefined ? coverbool ? a["cover"] : null : a["artwork"]);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
         // setlocalbool(true);

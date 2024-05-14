@@ -127,6 +127,8 @@ export default function History({navigation}){
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
+
             for(var i=0;i<alldata.length;i++){
                 if(alldata[i]['id'] === id){
                     if(i === alldata.length-1){

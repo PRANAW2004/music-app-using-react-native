@@ -136,6 +136,8 @@ export default function YourLibrary({navigation}){
     async function play(id){
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
+        await AsyncStorage.setItem("local-songs-bool",JSON.stringify(true));
+
         if(id === 1){
             // setskippreviousbool(true);
             TrackPlayer.updateOptions({     
@@ -179,6 +181,9 @@ export default function YourLibrary({navigation}){
         }
             for(var i=0;i<song.length;i++){
                 if(song[i]['id'] === id){
+                    // console.log(song[i]);
+                    await AsyncStorage.setItem("data-author",JSON.stringify(song[i]['artist']));
+                    await AsyncStorage.setItem("data-artwork",JSON.stringify(song[i]['cover']));
                     await AsyncStorage.setItem('current-playing-song',JSON.stringify(song[i]['title']));
                     AsyncStorage.setItem("current-playing",JSON.stringify(song[i]['title']));
                     AsyncStorage.setItem("current-genre",JSON.stringify('local'));
