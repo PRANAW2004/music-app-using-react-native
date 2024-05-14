@@ -1,10 +1,12 @@
-import { View,Text,BackHandler,StyleSheet,ScrollView,Pressable,Image } from 'react-native';
+import { View,Text,BackHandler,StyleSheet,ScrollView,Pressable,Image,Modal } from 'react-native';
 import {useEffect,useState,useCallback} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import alldata from '../AllData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
-
+import { MaterialIcons } from '@expo/vector-icons';
+import Slider from 'react-native-slider';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Liked({navigation}){
 
@@ -18,10 +20,30 @@ export default function Liked({navigation}){
     const [rendername,setrendername] = useState('');
     const [renderauthor,setrenderauthor] = useState('');
     const [icon,seticon] = useState("motion-play");
+    const [visible,modalvisible] = useState(false);
+    const [localbool,setlocalbool] = useState(null);
+    const [localimagebool,setlocalimagebool] = useState(true);
+    const [repeatMode,setRepeatMode] = useState('repeat');
+    const [skipnextbool,setskipnextbool] = useState(false);
+    const [skippreviousbool,setskippreviousbool] = useState(false);
+    const [songdata,setsongdata] = useState([]);
+
 
 
     // console.log(songname);
     // console.log(likedsong);
+
+    const progress = useProgress();
+
+    useEffect(async () => {
+        let value = await AsyncStorage.getItem("genre");
+        let currentplayingnumber = await AsyncStorage.getItem("current-playing-num");
+        setcurrentPlaying(currentplayingnumber*1);
+        let songdata1 = [];
+        songdata1 = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:[];
+        setsongdata(songdata1)
+    },[])
+
     
 
     const events = [
@@ -135,8 +157,16 @@ export default function Liked({navigation}){
 
     useEffect(liked1,[])
 
-    if(likedsong.length > 0){
-        AsyncStorage.setItem('liked',JSON.stringify(likedsong));
+    if(songlikedbool){
+        if(likedsong.length > 0){
+            let arr = [];
+            for(var i=0;i<likedsong.length;i++){
+                arr.push(likedsong[i]);
+            }
+            AsyncStorage.setItem("liked",JSON.stringify(arr));
+            AsyncStorage.setItem("liked-change",JSON.stringify(true));
+            setsonglikedbool(false);
+        }
     }
 
     async function play(id){
@@ -227,6 +257,22 @@ export default function Liked({navigation}){
 
     TrackPlayer.addEventListener("playback-track-changed",async () => {
         let a = await TrackPlayer.getActiveTrack();
+
+
+        songdata = JSON.parse(value) === 'folk'?folkdata:JSON.parse(value) === 'best'?bestdata:JSON.parse(value)==='english'?englishdata:JSON.parse(value)==='other'?otherdata:JSON.parse(value)==='hindi'?hindidata:JSON.parse(value)==='tamil'?tamildata:JSON.parse(value)==='telugu'?telugudata:JSON.parse(value)==='soul'?souldata:JSON.parse(value)==='rock'?rockdata:JSON.parse(value)==='pop'?popdata:[];
+        setsongdata(songdata);
+        if(a["artwork"] === undefined){
+            // console.log("artwork is undefined");
+        }else{
+            setlocalbool(true);
+        }
+        if(a['id'] === 1){
+            setskippreviousbool(true);
+        }
+        if(a['id'] >= songdata.length){
+            setskipnextbool(true);
+        }
+
         setrenderimage(a['artwork']);
         setrendername(a['title']);
         setrenderauthor(a['artist'])
@@ -234,6 +280,24 @@ export default function Liked({navigation}){
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
     })
 
+    function repeatmode(){
+        if(repeatMode === 'repeat-once'){
+            // console.log("inside repeat once")
+            TrackPlayer.setRepeatMode(RepeatMode.Queue);
+            setRepeatMode('repeat')
+        }
+        if(repeatMode === 'repeat'){
+            // console.log("inside repeat")
+            TrackPlayer.setRepeatMode(RepeatMode.Off);
+            setRepeatMode('repeat-off')
+        }
+        if(repeatMode === 'repeat-off'){
+            // console.log("inside repeat off")
+            TrackPlayer.setRepeatMode(RepeatMode.Track);
+            setRepeatMode('repeat-once');
+        }
+
+    }
 
 
     async function liked(title){
@@ -317,7 +381,7 @@ export default function Liked({navigation}){
                     </View>
                     </View>
                     <View style={{display:"flex",alignItems: 'flex-end',width:'50%',padding: 10}} >
-                    <Pressable onPress={() => {liked(e['title'])}}>
+                    <Pressable onPress={() => {liked(e['title']),setsonglikedbool(true)}}>
                         <MaterialCommunityIcons name={e['liked']} size={30} style={{color: e['color']}}/>
                     </Pressable>
                     </View>
@@ -331,6 +395,78 @@ export default function Liked({navigation}){
             </View>
             </ScrollView>
         </View>
+        <Modal visible={visible} animationType='slide'>
+            <View style={styles.modalview}>
+                <View>
+                    <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
+                </View>
+                <View style={styles.modelcontent}>
+                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height: 300,width:300,marginBottom: 20}}/>
+                    <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
+                    <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
+                    <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
+                    </View>
+
+                    <Slider 
+                        style={styles.progressBar}
+                        value = {progress.position}
+                        minimumValue = {0}
+                        maximumValue = {progress.duration}
+                        thumbTintColor = "grey"
+                        minimumTrackTintColor="#006550"
+                        maximumTrackTintColor="white"
+                        onSlidingComplete = {async value => {
+                            await TrackPlayer.seekTo(value);
+                        }}
+                    />
+                </View>
+                <View style={{display: "flex",alignItems: "center"}}>
+                <View style={{width: '90%',flexDirection: "row"}}>
+                <View style={{width: '50%'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.position*1000).toLocaleTimeString().substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                <View style={{width: '50%',alignItems: 'flex-end'}}>
+                <Text style={{color: "white",fontSize: 15}}>{new Date(progress.duration* 1000)
+                .toLocaleTimeString()
+                .substring(3).replace("am","").replace("pm","")}</Text>
+                </View>
+                </View>
+                </View>
+                <View style={{display:"flex",flexDirection: "row",justifyContent: "center",alignItems: "center",gap:20,marginTop:30}}>
+                <View style={{marginRight: 30}}>
+                <Pressable onPress={() => repeatmode()}>
+                        <MaterialCommunityIcons name={repeatMode} size={25} color={'white'}/>
+                    </Pressable>
+                </View>
+                      
+                    <Pressable style={{opacity: skippreviousbool?0.5:1}} onPress={() => {play(currentplayingsong-1);setcurrentPlaying(currentplayingsong-1)}} disabled={skippreviousbool}>
+                        <MaterialCommunityIcons name={'skip-previous'} size={40} color={'white'} />
+                    </Pressable>
+                    <Pressable onPress={() => handlePlayback()}>
+                    <MaterialCommunityIcons name={icon} size={70} color={"white"} />
+                    </Pressable>
+                    <Pressable style={{opacity: skipnextbool?0.5:1}} onPress={async () => {play(currentplayingsong+1);setcurrentPlaying(currentplayingsong+1)}} disabled={skipnextbool}>
+                        <MaterialCommunityIcons name={'skip-next'} size={40} color={"white"} />
+                    </Pressable>
+                    <View style={{marginLeft: 30}}>
+                    {songdata.map((e) => {
+                        if(e['id'] === currentplayingsong){
+                            return(
+                            <Pressable onPress={() => {liked("songdata",e['title']),setsonglikedbool(true)}}>
+                                <MaterialCommunityIcons name={e['liked']} size={25} color={e['color']}/>
+                            </Pressable>
+                        )
+                        }
+                    })}
+                    </View>
+                </View>
+
+                    
+                {/* <Image source={} /> */}
+            </View>
+                <StatusBar backgroundColor='#00898a' />
+        
+            </Modal>
         <View style={{width:"90%",marginBottom: 20}}>
             <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
             <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
@@ -375,4 +511,27 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
+    modalview: {
+        backgroundColor: "#00898a",
+        flex: 1,
+        display: "flex",
+        // justifyContent: "center",
+        // alignItems: "center",
+    },
+    modelcontent: {
+        display:"flex",
+        justifyContent: "center",
+        alignItems:"center",
+        marginTop: 70,
+        marginBottom: 20
+        // marginBottom: 40,
+    },
+    progressBar: {
+        width: '90%',
+        height: 1,
+        // marginTop: 25,
+        // flexDirection: 'row',
+        color: 'white',
+        backgroundColor :"white"
+      },
 })
