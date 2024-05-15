@@ -829,7 +829,7 @@ export default function Folk({navigation}){
 
             <View style={{width:"90%",marginBottom: 20,marginTop:10}}>
             <Pressable style={{width: "100%",borderRadius:36}} onPress={() => {modalvisible(true)}}>
-            <View style={{backgroundColor: "#40A2E3",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
+            <View style={{backgroundColor: "#205295",height:60,width: "100%",display:"flex",flexDirection: "row",alignItems: "center",borderRadius:36}}>
                 {/* {console.log(<Image source={{uri: renderimage}} />)} */}
                 <View style={{display: "flex",flexDirection: "row",borderRadius: 36,width:'50%'}}>
                     {/* <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/> */}
