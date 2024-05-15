@@ -279,7 +279,7 @@ export default function SearchPage({navigation}) {
                     <Image source={{uri: e['artwork']}} style={{height: 60,width:60,borderRadius:36}}/>
                     </View> 
                     <View>
-                    <Text style={{color: "white",fontSize: 20}}>{e['title']}</Text>
+                    <Text style={{color: "white",fontSize: 17}}>{e['title']}</Text>
                     <Text style={{color: "white"}}>{e['artist']}</Text>
                     </View>
                     </View>
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     },
     songblock: {
         display: "flex",
-        backgroundColor: "#50C4ED",
+        backgroundColor: "#27496D",
         // marginBottom: 10,
         // padding: 10,
         width: '90%',

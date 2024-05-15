@@ -256,7 +256,7 @@ export default function YourLibrary({navigation}){
             <ScrollView>
             {song.map((e) => {
                 return(
-                    <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center"}} {...PanResponder1.panHandlers}>
+                    <View style={{flex:1,width:'100%',display:"flex",justifyContent:"center",marginBottom:10}} {...PanResponder1.panHandlers}>
                     <Pressable style={{width:'100%',display:"flex",alignItems:"center"}} onPress={()=>{play(e['id']);setcurrentPlaying(e['id'])}}>
                     <View style={styles.songblock}>
                     <View style={{display: "flex",flexDirection: "row",alignItems: "center",width:'100%'}}>
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     },
     songblock: {
         display: "flex",
-        backgroundColor: "#492E87",
+        backgroundColor: "#4A47A3",
         // marginBottom: 10,
         // padding: 10,
         width: '95%',
