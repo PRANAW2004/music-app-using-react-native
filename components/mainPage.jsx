@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, Text, StyleSheet, Button, BackHandler, TouchableOpacity, Pressable, Image, Modal, PanResponder, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Dimensions,ImageBackground,Button, BackHandler, TouchableOpacity, Pressable, Image, Modal, PanResponder, ScrollView } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrackPlayer, { useProgress, Capability, AppKilledPlaybackBehavior, Event, RepeatMode, useTrackPlayerEvents } from 'react-native-track-player';
@@ -18,6 +18,9 @@ import souldata from './screens/souldata';
 import rockdata from './screens/rockdata';
 
 export default function MainPage({ navigation }) {
+
+  let width = Dimensions.get('window').width;
+
 
     const [visible, modalvisible] = useState(false);
     const [renderimage, setrenderimage] = useState(null);
@@ -358,6 +361,11 @@ export default function MainPage({ navigation }) {
         AsyncStorage.setItem("liked-change1", JSON.stringify(true));
 
     }
+
+   
+    // BackHandler.addEventListener("hardwareBackPress", () => {
+    //     modalvisible(false);
+    //     })
 
 
     async function play(id) {
@@ -708,16 +716,19 @@ export default function MainPage({ navigation }) {
 
 
             <Modal visible={visible} animationType='slide'>
-                <View style={styles.modalview}>
+                <View style={[styles.modalview]}>
+                
+                {/* <ImageBackground source={{uri: renderimage}} style={{height:height+50,opacity: 1}}> */}
+
                     <View>
                         <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)} />
                     </View>
                     <View style={styles.modelcontent}>
                         {/* <Image source={{uri: renderimage}} style={{height: 300,width:300,marginBottom: 20}}/> */}
-                        <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 300, width: 300, marginBottom: 20 }} />
+                        <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 380, width: width-30, marginBottom: 20 }} />
 
                         <View style={{ marginBottom: 30, display: "flex", alignItems: "center" }}>
-                            <Text style={{ color: "white", fontSize: 40 }}>{rendername}</Text>
+                            <Text style={{ color: "white", fontSize: 20}}>{rendername}</Text>
                             <Text style={{ color: "white", fontSize: 20 }}>{renderauthor}</Text>
                         </View>
 
@@ -746,7 +757,7 @@ export default function MainPage({ navigation }) {
                             </View>
                         </View>
                     </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 30 }}>
+                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20}}>
                         <View style={{ marginRight: 30 }}>
                             <Pressable onPress={() => repeatmode()}>
                                 <MaterialCommunityIcons name={repeatMode} size={25} color={'white'} />
@@ -781,11 +792,10 @@ export default function MainPage({ navigation }) {
 
                     </View>
 
-
+                    {/* </ImageBackground> */}
                     {/* <Image source={} /> */}
                 </View>
-                <StatusBar backgroundColor='#00898a' />
-
+                <StatusBar backgroundColor='transparent' />
             </Modal>
 
             <View style={{ width: "90%", marginBottom: 20 }}>
@@ -833,11 +843,12 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     modalview: {
-        backgroundColor: "#00898a",
+        backgroundColor: "#212529",
         flex: 1,
         display: "flex",
         // justifyContent: "center",
         // alignItems: "center",
+    
     },
     modelcontent: {
         display: "flex",
