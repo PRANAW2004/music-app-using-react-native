@@ -805,7 +805,7 @@ export default function MainPage({ navigation }) {
                         <View style={{ display: "flex", flexDirection: "row", borderRadius: 36, width: '50%' }}>
                             <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../images/song-cover.jpg")} style={{ height: 60, width: 60, borderRadius: 36, marginRight: 10 }} />
                             <View style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                                <Text style={{ color: "white", fontSize: 15 }}>{rendername === '' ? 'Press any song to play' : rendername}</Text>
+                                <Text style={{ color: "white", fontSize: 15,width:'100%' }}>{rendername === '' ? 'Press any song to play' : rendername.length>20?rendername.substring(0,20)+"...":rendername}</Text>
                                 <Text style={{ color: "white", fontSize: 15 }}>{renderauthor === '' ? 'play' : renderauthor}</Text>
                             </View>
                         </View>

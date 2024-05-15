@@ -265,7 +265,7 @@ export default function History({navigation}){
                     <Image source={{uri: b['artwork']}} style={{height: 60,width:60,borderRadius:36}}/>
                     </View> 
                     <View>
-                    <Text style={{color: "white",fontSize: 20}}>{b['title']}</Text>
+                    <Text style={{color: "white",fontSize: 15}}>{b['title']}</Text>
                     <Text style={{color: "white"}}>{b['artist']}</Text>
                     </View>
                     </View>

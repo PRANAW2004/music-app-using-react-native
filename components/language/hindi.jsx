@@ -739,7 +739,7 @@ export default function Folk({navigation}){
                     <Image source={{uri: e['artwork']}} style={{height: 60,width:60,borderRadius:36}}/>
                     </View> 
                     <View>
-                    <Text style={{color: "white",fontSize: 20}}>{e['title']}</Text>
+                    <Text style={{color: "white",fontSize: 15}}>{e['title']}</Text>
                     <Text style={{color: "white"}}>{e['artist']}</Text>
                     </View>
                     </View>
@@ -843,7 +843,7 @@ export default function Folk({navigation}){
                     {/* <Image source={{uri: renderimage}} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/> */}
                     <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
                     <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
-                        <Text style={{color: "white",fontSize: 20}}>{rendername === ''?'Press any song to play':rendername}</Text>
+                        <Text style={{color: "white",fontSize: 17,width:'100%'}}>{rendername === ''?'Press any song to play':rendername.length>20?rendername.substring(0,20)+"...":rendername}</Text>
                         <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
                     </View>
                 </View>
