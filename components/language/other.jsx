@@ -850,7 +850,7 @@ export default function Folk({navigation}){
                     <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height:60,width:60,borderRadius:36,marginRight: 10}}/>
                     <View style={{display:"flex",flexDirection: "column",justifyContent: "center"}}>
                         <Text style={{color: "white",fontSize: 17,width:'100%'}}>{rendername === ''?'Press any song to play':rendername.length>20?rendername.substring(0,20)+"...":rendername}</Text>
-                        <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor}</Text>
+                        <Text style={{color: "white",fontSize: 15}}>{renderauthor === ''?'play':renderauthor.length>20?renderauthor.substring(0,20)+"...":renderauthor}</Text>
                     </View>
                 </View>
                 <View style={{width: "50%",justifyContent: "center",alignItems: "flex-end"}}>
@@ -877,7 +877,7 @@ const styles = StyleSheet.create({
     },
     songblock: {
         display: "flex",
-        backgroundColor: "#492E87",
+        backgroundColor: "#0A2647",
         // marginBottom: 10,
         // padding: 10,
         width: '90%',
