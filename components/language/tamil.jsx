@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal } from 'react-native';
+import { View, Text,StyleSheet,BackHandler,ScrollView,Image, Pressable,Modal,Dimensions } from 'react-native';
 import { useEffect,useState,useCallback } from 'react';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -18,6 +18,9 @@ import souldata from '../screens/souldata';
 import rockdata from '../screens/rockdata';
 
 export default function Folk({navigation}){
+
+  let width = Dimensions.get('window').width;
+
 
     const [renderimage,setrenderimage] = useState(null);
     const [rendername,setrendername] = useState('');
@@ -754,7 +757,7 @@ export default function Folk({navigation}){
                     <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)}/>
                 </View>
                 <View style={styles.modelcontent}>
-                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height: 300,width:300,marginBottom: 20}}/>
+                    <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height: 380,width:width-30,marginBottom: 20}}/>
                     <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
                     <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
                     <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
@@ -820,7 +823,7 @@ export default function Folk({navigation}){
                     
                 {/* <Image source={} /> */}
             </View>
-                <StatusBar backgroundColor='#00898a' />
+                <StatusBar backgroundColor='#212529' />
         
             </Modal>
 
@@ -871,7 +874,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalview: {
-        backgroundColor: "#00898a",
+        backgroundColor: "#212529",
         flex: 1,
         display: "flex",
         // justifyContent: "center",

@@ -1,4 +1,4 @@
-import { View, Text, BackHandler, StyleSheet, ScrollView, Pressable, Image, Modal } from 'react-native';
+import { View, Text, BackHandler, StyleSheet, ScrollView, Pressable, Image, Modal,Dimensions } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import alldata from '../AllData';
@@ -20,6 +20,9 @@ import souldata from './souldata';
 import rockdata from './rockdata';
 
 export default function Liked({ navigation }) {
+
+  let width = Dimensions.get('window').width;
+
 
     const [currentplayingsong, setcurrentPlaying] = useState(0);
     const [songname, setsongname] = useState([]);
@@ -602,7 +605,7 @@ export default function Liked({ navigation }) {
                         <MaterialIcons name='keyboard-arrow-down' size={40} color='white' onPress={() => modalvisible(false)} />
                     </View>
                     <View style={styles.modelcontent}>
-                        <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../../images/song-cover.jpg")} style={{ height: 300, width: 300, marginBottom: 20 }} />
+                        <Image source={localbool ? { uri: renderimage } : localimagebool ? { uri: renderimage } : require("../../images/song-cover.jpg")} style={{ height: 380, width: width-30, marginBottom: 20 }} />
                         <View style={{ marginBottom: 30, display: "flex", alignItems: "center" }}>
                             <Text style={{ color: "white", fontSize: 40 }}>{rendername}</Text>
                             <Text style={{ color: "white", fontSize: 20 }}>{renderauthor}</Text>
@@ -668,7 +671,7 @@ export default function Liked({ navigation }) {
 
                     {/* <Image source={} /> */}
                 </View>
-                <StatusBar backgroundColor='#00898a' />
+                <StatusBar backgroundColor='#212529' />
 
             </Modal>
             <View style={{ width: "90%", marginBottom: 20 }}>
@@ -716,7 +719,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalview: {
-        backgroundColor: "#00898a",
+        backgroundColor: "#212529",
         flex: 1,
         display: "flex",
         // justifyContent: "center",
