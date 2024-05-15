@@ -503,13 +503,13 @@ export default function Best({navigation}){
                         TrackPlayer.addEventListener("remote-previous",async () => {
                             setcurrentPlaying(currentplayingsong-1);
                             let a = await TrackPlayer.getActiveTrack();
-                            play(a["id"]-1); 
+                            play1(a["id"]-1); 
                         })
 
                         TrackPlayer.addEventListener("remote-next", async () => {
                             setcurrentPlaying(currentplayingsong+1);
                             let a = await TrackPlayer.getActiveTrack();
-                            play(a["id"]+1);
+                            play1(a["id"]+1);
                         })
                     TrackPlayer.add(arr);
                     TrackPlayer.play();

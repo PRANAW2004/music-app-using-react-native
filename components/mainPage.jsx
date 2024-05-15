@@ -43,6 +43,7 @@ export default function MainPage({ navigation }) {
     const [likedsong, setlikedsong] = useState([]);
     const [allcurrentplayingnum, setallcurrentplayingnum] = useState(0);
     const [likedsongbool1, setlikedsongbool1] = useState(false);
+    const [recentdata, setrecentdata] = useState([]);
 
     // console.log("inside the main page");
 
@@ -498,22 +499,30 @@ export default function MainPage({ navigation }) {
     //     }
     // },[])
 
-    async function historyCarousal() {
-        let historydata = await AsyncStorage.getItem("history");
-        historydata = JSON.parse(historydata);
-        let arr = []
-        let arr1 = []
+    useEffect(async () => {
+        let arr = [];
+        let arr1 = [];
         for (var i = 0; i < 5; i++) {
-            arr = historydata[i].split(":");
-            arr1.push(arr[1]);
+            let value = Math.floor(Math.random() * 470);
+            arr.push(value);
         }
+        console.log(arr);
 
-    }
+        for (var j = 0; j < alldata.length; j++) {
+            for (var k = 0; k < arr.length; k++) {
+                if (alldata[j]['id'] === arr[k]) {
+                    arr1.push(alldata[j]);
+                }
+            }
+        }
+        console.log(arr1);
+        setrecentdata(arr1);
+    }, [])
 
     return (
-        <View style={styles.maincontainer} {...PanResponder1.panHandlers}>
+        <View style={styles.maincontainer}>
             <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                <View style={styles.firstsection} {...PanResponder1.panHandlers}>
+                <View style={styles.firstsection}>
                     <Pressable onPress={() => { navigation.navigate("Liked Songs") }} style={{ height: 60 }} >
                         <View style={{ height: 60, width: 150, borderColor: "grey", borderWidth: 1, flexDirection: 'row', alignItems: "center", borderRadius: 36 }}>
                             <Image source={require("../images/main-page-icons/liked.png")} style={[{ height: 60, width: 60, marginRight: 10 }]} />
@@ -569,31 +578,19 @@ export default function MainPage({ navigation }) {
                         </Pressable>
                     </View>
                 </View>
-                <View style={[{marginTop: 30,gap:10}]}>
-                    <Text style={[{ color: "white",marginBottom: 30 }]}>Recently Played</Text>
-                    <ScrollView style={[{ horizontal: true, showsHorizontalScrollIndicator: false, display:"flex",flexDirection: "column"}]}>
-                        <Pressable onPress={() => navigation.navigate("Best Songs of all time")} style={{ backgroundColor: "#222831", height: 50, width: 150, marginRight: 30, display: "flex", flexDirection: "row", alignItems: "center" }}>
-
-                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/best-songs-cover.jpg?alt=media&token=68d63d2a-7d79-430f-b688-77b316bf1357" }} style={{ height: 50, width: 50, marginRight: 7 }} />
-                            <Text style={{ color: "white", width: 100 }}>Best songs of all time</Text>
-                        </Pressable>
-                        <Pressable onPress={() => navigation.navigate("Other Language")} style={{ backgroundColor: "#222831", height: 50, width: 150, display: "flex", flexDirection: "row", alignItems: "center" }}>
-
-                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/other-langauge-songs.jpeg?alt=media&token=2e44c0b7-456c-4ae8-b8e9-9d801b4ef8c7" }} style={{ height: 50, width: 50, marginRight: 7 }} />
-                            <Text style={{ color: "white", width: 90, fontSize: 13 }}>Other langauge songs</Text>
-
-                        </Pressable>
-                        <Pressable onPress={() => navigation.navigate("Best Songs of all time")} style={{ backgroundColor: "#222831", height: 50, width: 150, marginRight: 30, display: "flex", flexDirection: "row", alignItems: "center" }}>
-
-                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/best-songs-cover.jpg?alt=media&token=68d63d2a-7d79-430f-b688-77b316bf1357" }} style={{ height: 50, width: 50, marginRight: 7 }} />
-                            <Text style={{ color: "white", width: 100 }}>Best songs of all time</Text>
-                        </Pressable>
-                        <Pressable onPress={() => navigation.navigate("Other Language")} style={{ backgroundColor: "#222831", height: 50, width: 150, display: "flex", flexDirection: "row", alignItems: "center" }}>
-
-                            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/musicapp-c920a.appspot.com/o/other-langauge-songs.jpeg?alt=media&token=2e44c0b7-456c-4ae8-b8e9-9d801b4ef8c7" }} style={{ height: 50, width: 50, marginRight: 7 }} />
-                            <Text style={{ color: "white", width: 90, fontSize: 13 }}>Other langauge songs</Text>
-
-                        </Pressable>
+                <View style={[{ marginTop: 30, gap: 10, display: "flex" }]}>
+                    <Text style={[{ color: "white", marginBottom: 20,marginLeft: 20,fontSize: 20 }]}>Suggested for You</Text>
+                    <ScrollView horizontal={true} style={[{ howsHorizontalScrollIndicator: false }]}>
+                    {recentdata.map((e) => {
+                        {/* console.log(e['title']) */}
+                        return (
+                                <Pressable style={{display:"flex",marginRight: 10,marginLeft: 20}} onPress={() => {play(e['id']);console.log(e['id'])}}>
+                                    <Image source={{ uri: e['artwork'] }} style={{ height: 140, width: 140, marginRight: 7 }}/>
+                                    <Text style={{ color: "white" }}>{e['title']}</Text>
+                                    <Text style={{ color: "white" }}>{e['artist']}</Text>
+                                </Pressable>
+                        )
+                    })}
                     </ScrollView>
                 </View>
             </View>
