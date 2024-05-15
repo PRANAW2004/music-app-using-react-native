@@ -759,7 +759,7 @@ export default function Folk({navigation}){
                 <View style={styles.modelcontent}>
                     <Image source={localbool?{uri: renderimage}:localimagebool?{uri: renderimage}:require("../../images/song-cover.jpg")} style={{height: 380,width:width-30,marginBottom: 20}}/>
                     <View style={{marginBottom: 30,display:"flex",alignItems: "center"}}>
-                    <Text style={{color: "white",fontSize: 40}}>{rendername}</Text>
+                    <Text style={{color: "white",fontSize: 20}}>{rendername}</Text>
                     <Text style={{color: "white",fontSize:20}}>{renderauthor}</Text>
                     </View>
 
