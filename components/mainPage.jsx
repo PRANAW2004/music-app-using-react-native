@@ -470,6 +470,116 @@ export default function MainPage({ navigation }) {
             }
         }
     }
+    async function play1(id) {
+
+        console.log(id);
+
+        await TrackPlayer.reset();
+        await AsyncStorage.setItem("current-playing-num", JSON.stringify(id));
+
+
+        if (id === 1) {
+            setskippreviousbool(true);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToNext
+                ]
+            })
+        } else {
+            setskippreviousbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    // Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+
+        if (id >= alldata.length) {
+            setskipnextbool(true)
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious
+                ]
+            })
+        } else {
+            setskipnextbool(false);
+            TrackPlayer.updateOptions({
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToPrevious,
+                    Capability.SkipToNext
+                ]
+            })
+        }
+        for (var i = 0; i < alldata.length; i++) {
+            if (alldata[i]['id'] === id) {
+                await AsyncStorage.setItem('current-playing-song', JSON.stringify(alldata[i]['title']));
+                AsyncStorage.setItem("current-playing", JSON.stringify(alldata[i]['title']));
+                AsyncStorage.setItem("current-genre", JSON.stringify('folk'));
+                if (history.length > 50) {
+                    sethistory((alldata) => alldata.filter((_, index) => index !== 0));
+                } else {
+                    let date = new Date().toLocaleDateString();
+                    let date1 = date;
+                    // console.log(date1);
+                    let data11 = date1 + ":" + alldata[i]['title']
+                    sethistory((current) => [...current, data11]);
+                }
+                // await AsyncStorage.setItem("history",JSON.stringify(history));
+
+                let arr = [alldata[i]];
+                try {
+                    if (i === 0) {
+                        for (j = i + 1; j < alldata.length; j++) {
+                            arr.push(alldata[i + j]);
+                        }
+                    }
+                    else {
+                        for (j = i; j < alldata.length - 1; j++) {
+                            arr.push(alldata[j + 1]);
+                        }
+                    }
+
+                    TrackPlayer.addEventListener("remote-play", () => {
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(true));
+                        seticon("motion-pause");
+                        TrackPlayer.play();
+                    })
+
+                    TrackPlayer.addEventListener("remote-pause", () => {
+                        AsyncStorage.setItem("song-playing-bool", JSON.stringify(false));
+                        seticon("motion-play");
+                        TrackPlayer.pause();
+                    })
+
+                    TrackPlayer.addEventListener("remote-previous", async () => {
+                        setcurrentPlaying(currentplayingsong - 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play1(a["id"] - 1);
+                    })
+
+                    TrackPlayer.addEventListener("remote-next", async () => {
+                        setcurrentPlaying(currentplayingsong + 1);
+                        let a = await TrackPlayer.getActiveTrack();
+                        play1(a["id"] + 1);
+                    })
+                    TrackPlayer.add(arr);
+                    TrackPlayer.play();
+                    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    break;
+                } catch (err) {
+                }
+            }
+        }
+    }
 
     async function handlePlayback() {
         seticon(icon === 'motion-play' ? 'motion-pause' : 'motion-play');
@@ -584,7 +694,7 @@ export default function MainPage({ navigation }) {
                     {recentdata.map((e) => {
                         {/* console.log(e['title']) */}
                         return (
-                                <Pressable style={{display:"flex",marginRight: 10,marginLeft: 20}} onPress={() => {play(e['id']);console.log(e['id'])}}>
+                                <Pressable style={{display:"flex",marginRight: 10,marginLeft: 20}} onPress={() => {play1(e['id']);console.log(e['id'])}}>
                                     <Image source={{ uri: e['artwork'] }} style={{ height: 140, width: 140, marginRight: 7 }}/>
                                     <Text style={{ color: "white" }}>{e['title']}</Text>
                                     <Text style={{ color: "white" }}>{e['artist']}</Text>
