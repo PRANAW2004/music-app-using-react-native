@@ -78,7 +78,7 @@ export default function Settings({navigation}){
             Data
         </Text> 
         <Pressable onPress={() => {Data()}} style={{display:"flex",flexDirection:'row'}}>
-        <MaterialIcons name={'info-outline'} color={'grey'} style={{fontSize:20,marginTop: 20,marginLeft:10}} />
+        <MaterialIcons name={'perm-device-information'} color={'grey'} style={{fontSize:20,marginTop: 20,marginLeft:10}} />
             <Text style={[styles.settingText,{marginTop:20,marginLeft:10}]}>Diagnostics</Text>
         </Pressable>
         <Pressable onPress={() => {history1()}} style={{display:"flex",flexDirection:'row',marginBottom:20}}>
