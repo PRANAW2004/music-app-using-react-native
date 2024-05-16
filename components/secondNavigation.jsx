@@ -33,7 +33,6 @@ export default function SecondNavigation({navigation}){
 
   const date = new Date();
   const time = date.getHours();
-
  
     return(
         <View style={{display:"flex",flex:1,backgroundColor: "#212529"}}>

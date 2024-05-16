@@ -26,7 +26,6 @@ import Tamil from './language/tamil';
 import Telugu from './language/telugu';
 import Other from './language/other';
 import Best from './language/best';
-// import { addEventListener } from '@react-native-community/netinfo';
 
 const Stack = createNativeStackNavigator();
 

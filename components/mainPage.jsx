@@ -16,8 +16,12 @@ import folkdata from './screens/folkdata';
 import popdata from './screens/popdata';
 import souldata from './screens/souldata';
 import rockdata from './screens/rockdata';
+import { NetInfoCellularGeneration, addEventListener } from "@react-native-community/netinfo";
+import Toast from "react-native-root-toast";
 
 export default function MainPage({ navigation }) {
+
+    
 
   let width = Dimensions.get('window').width;
 
@@ -47,6 +51,7 @@ export default function MainPage({ navigation }) {
     const [allcurrentplayingnum, setallcurrentplayingnum] = useState(0);
     const [likedsongbool1, setlikedsongbool1] = useState(false);
     const [recentdata, setrecentdata] = useState([]);
+    const [connectionStatus,setconnectionStatus] = useState(null);
 
     // console.log("inside the main page");
 
@@ -67,7 +72,27 @@ export default function MainPage({ navigation }) {
         setlikedsong(arr);
     }, [])
 
+    
+
     async function likedvalueselect() {
+
+        addEventListener(state => {
+            // console.log(state);
+            if(connectionStatus === null){
+            if(state.isConnected === false){
+                Toast.show("No Connection",Toast.durations.LONG);
+                setconnectionStatus(false);
+            }
+            }
+            if (connectionStatus === false){
+                if(state.isConnected === true){
+                    Toast.show("Back Online",Toast.durations.LONG);
+                    setconnectionStatus(null);
+                }
+            }
+        })
+
+        
 
         let likedchangebool = await AsyncStorage.getItem("liked-change");
         let likedchangebool1 = await AsyncStorage.getItem("liked-change1");
@@ -370,6 +395,10 @@ export default function MainPage({ navigation }) {
 
     async function play(id) {
 
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
+
         console.log(id);
 
         await TrackPlayer.reset();
@@ -474,11 +503,16 @@ export default function MainPage({ navigation }) {
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
                     break;
                 } catch (err) {
+                    console.log(err);
                 }
             }
         }
     }
     async function play1(id) {
+
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
 
         console.log(id);
 
@@ -584,6 +618,7 @@ export default function MainPage({ navigation }) {
                     TrackPlayer.setRepeatMode(RepeatMode.Queue);
                     break;
                 } catch (err) {
+                    console.log(err);
                 }
             }
         }
@@ -817,7 +852,8 @@ export default function MainPage({ navigation }) {
                     </View>
                 </Pressable>
             </View>
-
+            {/* {console.log(connectionStatus)}
+            {connectionStatus && <Toast message='No internt connection'/>} */}
 
 
         </View>

@@ -18,6 +18,7 @@ import folkdata from './folkdata';
 import popdata from './popdata';
 import souldata from './souldata';
 import rockdata from './rockdata';
+import { addEventListener } from '@react-native-community/netinfo';
 
 export default function Liked({ navigation }) {
 
@@ -44,6 +45,7 @@ export default function Liked({ navigation }) {
     const [songlikedbool, setsonglikedbool] = useState(false);
     const [likedcolor, setlikedcolor] = useState("white");
     const [allcurrentplayingnum, setallcurrentplayingnum] = useState(0);
+    const [connectionStatus,setconnectionStatus] = useState(null);
 
 
 
@@ -66,6 +68,23 @@ export default function Liked({ navigation }) {
     }, [])
 
     async function likedvalueselect() {
+
+        addEventListener(state => {
+            // console.log(state);
+            if(connectionStatus === null){
+            if(state.isConnected === false){
+                Toast.show("No Connection",Toast.durations.LONG);
+                setconnectionStatus(false);
+            }
+            }
+            if (connectionStatus === false){
+                if(state.isConnected === true){
+                    Toast.show("Back Online",Toast.durations.LONG);
+                    setconnectionStatus(null);
+                }
+            }
+        })
+
         let likedvalue1 = await AsyncStorage.getItem("liked");
         let arr1 = [];
         arr1 = JSON.parse(likedvalue1);
@@ -246,6 +265,10 @@ export default function Liked({ navigation }) {
 
     async function play(id) {
 
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
+
         await AsyncStorage.setItem("current-genre", JSON.stringify("liked"));
         await AsyncStorage.setItem("local-songs-bool",JSON.stringify(false));
 
@@ -332,6 +355,10 @@ export default function Liked({ navigation }) {
     }
 
     async function play1(id) {
+
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
 
         await AsyncStorage.setItem("current-genre", JSON.stringify("liked"));
 

@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import alldata from "../AllData";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
-
+import { addEventListener } from "@react-native-community/netinfo";
 
 export default function History({navigation}){
 
@@ -13,6 +13,7 @@ export default function History({navigation}){
     const [likedsong,setlikedsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
     const [songlikedbool,setsonglikedbool] = useState(false);
+    const [connectionStatus,setconnectionStatus] = useState(null);
 
 
 
@@ -124,6 +125,10 @@ export default function History({navigation}){
     useEffect(historydata,[]);
 
     async function play(id){
+
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));

@@ -16,6 +16,7 @@ import folkdata from '../screens/folkdata';
 import popdata from '../screens/popdata';
 import souldata from '../screens/souldata';
 import rockdata from '../screens/rockdata';
+import { addEventListener } from '@react-native-community/netinfo';
 
 export default function Folk({navigation}){
 
@@ -42,6 +43,7 @@ export default function Folk({navigation}){
     const [songdata,setsongdata] = useState([]);
     const [songlikedbool,setsonglikedbool] = useState(false);
     const [likedcolor, setlikedcolor] = useState("white");
+    const [connectionStatus,setconnectionStatus] = useState(null);
 
 
 
@@ -75,6 +77,23 @@ export default function Folk({navigation}){
     // console.log("song data is ",songdata);
 
     async function englishlikedvalueselect(){
+
+        addEventListener(state => {
+            // console.log(state);
+            if(connectionStatus === null){
+            if(state.isConnected === false){
+                Toast.show("No Connection",Toast.durations.LONG);
+                setconnectionStatus(false);
+            }
+            }
+            if (connectionStatus === false){
+                if(state.isConnected === true){
+                    Toast.show("Back Online",Toast.durations.LONG);
+                    setconnectionStatus(null);
+                }
+            }
+        })
+
         let likedvalue1 = await AsyncStorage.getItem("liked");
         let arr1 = [];
         arr1 = JSON.parse(likedvalue1);
@@ -323,6 +342,9 @@ export default function Folk({navigation}){
 
     async function play(id){
 
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
 
         await TrackPlayer.reset(); 
         await AsyncStorage.setItem("current-playing-num",JSON.stringify(id));
@@ -443,6 +465,10 @@ export default function Folk({navigation}){
     }
 
     async function play1(id){
+
+        if(connectionStatus === false){
+            Toast.show("No Connection",Toast.durations.LONG);
+        }
 
 
         await TrackPlayer.reset(); 
