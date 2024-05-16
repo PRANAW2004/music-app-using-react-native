@@ -1,4 +1,4 @@
-rootProject.name = 'music'
+rootProject.name = 'HearFree'
 
 dependencyResolutionManagement {
   versionCatalogs {
