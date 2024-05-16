@@ -272,17 +272,25 @@ export default function MainPage({ navigation }) {
 
     TrackPlayer.addEventListener("playback-track-changed", async () => {
 
+        console.log("inside the add event listener in the main page");
+
         let likedvalue = await AsyncStorage.getItem("liked");
         let arr = [];
         arr = JSON.parse(likedvalue);
         arr = [...new Set(arr)]
 
         let a = await TrackPlayer.getActiveTrack();
+        console.log(a);
+
+        setrenderimage(a['artwork'] === undefined ? coverbool ? a["cover"] : null : a["artwork"]);
+        setrendername(a['title']);
+        setrenderauthor(a['artist'])
+        setcurrentplayingsongname(a['title'])
 
         let value = await AsyncStorage.getItem("genre");
         let songdata1 = [];
 
-        songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : null;
+        songdata1 = JSON.parse(value) === 'folk' ? folkdata : JSON.parse(value) === 'best' ? bestdata : JSON.parse(value) === 'english' ? englishdata : JSON.parse(value) === 'other' ? otherdata : JSON.parse(value) === 'hindi' ? hindidata : JSON.parse(value) === 'tamil' ? tamildata : JSON.parse(value) === 'telugu' ? telugudata : JSON.parse(value) === 'soul' ? souldata : JSON.parse(value) === 'rock' ? rockdata : JSON.parse(value) === 'pop' ? popdata : [];
         setsongdata(songdata1)
 
         let likedbool = false;
@@ -313,10 +321,7 @@ export default function MainPage({ navigation }) {
         if (a['id'] >= songdata1.length) {
             setskipnextbool(true);
         }
-        setrenderimage(a['artwork'] === undefined ? coverbool ? a["cover"] : null : a["artwork"]);
-        setrendername(a['title']);
-        setrenderauthor(a['artist'])
-        setcurrentplayingsongname(a['title'])
+        
         AsyncStorage.setItem("current-playing", JSON.stringify(a['title']));
 
         let value1 = await AsyncStorage.getItem("liked");
