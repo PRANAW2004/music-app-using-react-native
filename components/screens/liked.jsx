@@ -708,8 +708,8 @@ export default function Liked({ navigation }) {
                         <View style={{ display: "flex", flexDirection: "row", borderRadius: 36, width: '50%' }}>
                             <Image source={{ uri: renderimage }} style={{ height: 60, width: 60, borderRadius: 36, marginRight: 10 }} />
                             <View style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                                <Text style={{ color: "white", fontSize: 17,width:'100%' }}>{rendername === '' ? 'Press any song to play' : rendername.length>20?rendername.substring(0,20)+"...":rendername}</Text>
-                                <Text style={{ color: "white", fontSize: 15 }}>{renderauthor === '' ? 'play' : renderauthor.length>20?renderauthor.substring(0,20)+"...":renderauthor}</Text>
+                                <Text style={{ color: "white", fontSize: 17,width:'100%' }}>{rendername === '' ? '' : rendername.length>20?rendername.substring(0,20)+"...":rendername}</Text>
+                                <Text style={{ color: "white", fontSize: 15 }}>{renderauthor === '' ? '' : renderauthor.length>20?renderauthor.substring(0,20)+"...":renderauthor}</Text>
                             </View>
                         </View>
                         <View style={{ width: "50%", justifyContent: "center", alignItems: "flex-end", borderRadius: 36 }}>
