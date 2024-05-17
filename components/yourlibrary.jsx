@@ -1,18 +1,63 @@
-import { View,Text,StyleSheet,Platform,Image, ScrollView,Pressable,PanResponder,ActivityIndicator } from "react-native";
+import { View,Text,StyleSheet,Platform,Image, ScrollView,TouchableOpacity,PanResponder,ActivityIndicator,Alert,Pressable,AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
 import { getAll,SortSongFields,SortSongOrder,searchSongs } from "react-native-get-music-files";
 import Toast from 'react-native-root-toast';
-import { check, PERMISSIONS, request, RESULTS, requestMultiple } from 'react-native-permissions';
+import { check, PERMISSIONS, request, RESULTS, requestMultiple,openSettings } from 'react-native-permissions';
 import TrackPlayer,{useProgress,Capability, AppKilledPlaybackBehavior,Event,RepeatMode,useTrackPlayerEvents} from 'react-native-track-player';
 import { useState } from "react";
 import Slider from 'react-native-slider';
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function YourLibrary({navigation}){
 
     const [song,setsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
+    const [permission,setpermission] = useState("");
+    const [hasPermission, setHasPermission] = useState(false);
+    const [appState, setAppState] = useState(false);
+    
+    // console.log("app state is ",appState);
+
+    
+  useEffect(() => {
+ AppState.addEventListener('change', async (res) => {
+        if(res === 'background'){
+            console.log("inside the background")
+        }
+        if(res === 'active'){
+            console.log("inside the res is active");
+            // hasPermissions();
+                let hasPermission =
+            (await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)) ===
+            RESULTS.GRANTED || (await check(PERMISSIONS.ANDROID.READ_MEDIA_AUDIO)) ===
+            RESULTS.GRANTED;
+            console.log(hasPermission);
+            if(hasPermission){
+            setpermission(true);
+            const songsResults = await getAll({
+                limit: 100000,
+                offset: 0,
+                coverQuality: 50,
+                minSongDuration: 1000,
+                sortOrder: SortSongOrder.DESC,
+                sortBy: SortSongFields.TITLE,
+              }).then((res,time) => {
+                setsong(res);
+            }).catch((err) => {
+                console.log(err);
+            })
+        }
+            
+        }
+    });
+  }, []);
+
+
+
+
+    // console.log("has permission is ",hasPermission);
 
     const PanResponder1 =  PanResponder.create({
         onStartShouldSetPanResponder: () => true,
@@ -26,21 +71,34 @@ export default function YourLibrary({navigation}){
  
 
     const hasPermissions = async () => {
+        console.log("inside the hasPermissions")
         if (Platform.OS === 'android') {
           let hasPermission =
             (await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)) ===
             RESULTS.GRANTED || (await check(PERMISSIONS.ANDROID.READ_MEDIA_AUDIO)) ===
             RESULTS.GRANTED;
-    
+            console.log(hasPermission);
           if (!hasPermission) {
-            hasPermission = await requestMultiple([
-              PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-              PERMISSIONS.ANDROID.READ_MEDIA_AUDIO,
-            ]);
+            // console.log("inside !hasPermission");
+
+            let requestResults = await requestMultiple([PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,PERMISSIONS.ANDROID.READ_MEDIA_AUDIO]);
+                // let requestResults2 = await request(PERMISSIONS.ANDROID.READ_MEDIA_AUDIO)
+
+    // {"android.permission.READ_EXTERNAL_STORAGE": "blocked", "android.permission.READ_MEDIA_AUDIO": "unavailable"
+      
+              hasPermission =
+                requestResults[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE] === RESULTS.GRANTED ||
+                requestResults[PERMISSIONS.ANDROID.READ_MEDIA_AUDIO] === RESULTS.GRANTED;
+
+            }
+            // console.log("hasPermission is ",hasPermission);
+
+            setHasPermission(hasPermission);
+            return hasPermission;
+            
           }
     
-          return hasPermission;
-        }
+        
     
         if (Platform.OS === 'ios') {
           let hasPermission =
@@ -56,18 +114,42 @@ export default function YourLibrary({navigation}){
         return false;
       };
 
+      const hasPermissions1 = async () => {
+        Alert.alert(
+            'Permission Required',
+            'Storage permissions are required to proceed. Please go to settings to enable them.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Open Settings', onPress: () => {setAppState(true);openSettings() }},
+            ],
+          );
+      };
+
+
     // console.log("inside local");
 
     const setUpTrackPlayer = async () => {try{await TrackPlayer.setupPlayer()}catch(err){}}    
 
     useEffect(() => {setUpTrackPlayer();return () => TrackPlayer.destroy();}, [])
-    
 
 
     useEffect(async () => {
-        console.log("inside the music files getall");
+        
+        // console.log("inside the music files getall");
         const permissions = await hasPermissions();
+        // console.log("permissions is ",permissions);
+
+        if(permissions === false){
+            setpermission(false);
+        }
+        
         if(permissions){
+            console.log(permissions["android.permission.READ_EXTERNAL_STORAGE"])
+            if(permissions["android.permission.READ_EXTERNAL_STORAGE"] === "blocked"){
+                setpermission(false)
+            }else{
+            
+            setpermission(true);
             const songsResults = await getAll({
                 limit: 100000,
                 offset: 0,
@@ -77,12 +159,14 @@ export default function YourLibrary({navigation}){
                 sortBy: SortSongFields.TITLE,
               }).then((res,time) => {
                 // console.log(res);
+                
                 setsong(res);
 
             }).catch((err) => {
                 console.log(err);
             })
         }
+    }
         
     },[])
 
@@ -240,8 +324,19 @@ export default function YourLibrary({navigation}){
             }}
     }
 
+    if(permission === false){
+        return(
+            <View style={styles.localcontainer}>
+                <Text style={{color:"white"}}>Allow permissions to access your Local MP3 files</Text>
+                <TouchableOpacity style={{display:'flex',flexDirection:'row',backgroundColor:'green',justifyContent:"center",alignItems:"center",marginTop: 20,height: 50,width:150}} onPress={() => {hasPermissions1()}}>
+                    <MaterialIcons name={'lock-open'} color={'white'} size={15}/>
+                    <Text style={{color:"white",fontSize: 15}}>Allow Access</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
 
-
+    if(permission){
     if(song.length === 0){
         return(
             <View style={styles.localcontainer}>
@@ -250,7 +345,6 @@ export default function YourLibrary({navigation}){
             </View>
         )
     }else{
-
     return(
         <View style={styles.localcontainer} {...PanResponder1.panHandlers}>
             <ScrollView>
@@ -277,6 +371,7 @@ export default function YourLibrary({navigation}){
         </View>
     )
 }
+    }
 }
 
 const styles = StyleSheet.create({
