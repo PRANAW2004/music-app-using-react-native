@@ -1,4 +1,4 @@
-import { View,Text,StyleSheet,Platform,Image, ScrollView,TouchableOpacity,PanResponder,ActivityIndicator,Alert,Pressable,AppState } from "react-native";
+import { View,Text,StyleSheet,Platform,Image, ScrollView,TouchableOpacity,PanResponder,ActivityIndicator,Alert,Pressable,AppState, FlatListComponent } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler } from "react-native";
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ export default function YourLibrary({navigation}){
 
     const [song,setsong] = useState([]);
     const [currentplayingsong,setcurrentPlaying] = useState(0);
-    const [permission,setpermission] = useState("");
+    const [permission,setpermission] = useState(FlatListComponent);
     const [hasPermission, setHasPermission] = useState(false);
     const [appState, setAppState] = useState(false);
     
